@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -9,8 +7,7 @@ group = "io.github.oliinyk.maksym.rijksmuseum"
 version = "1.0.0"
 
 kotlin {
-    //explicitApi()
-    jvm()
+    explicitApi()
 
     android {
         namespace = "io.github.oliinyk.maksym.rijksmuseum"
@@ -21,14 +18,6 @@ kotlin {
         withHostTestBuilder {}.configure {}
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
-        }
-
-        compilations.configureEach {
-            compileTaskProvider.configure {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_17)
-                }
-            }
         }
     }
     iosX64()

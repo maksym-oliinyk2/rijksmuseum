@@ -1,9 +1,7 @@
-pluginManagement {
-    includeBuild("plugins")
+rootProject.name = "plugins"
 
+pluginManagement {
     repositories {
-        google()
-        mavenCentral()
         gradlePluginPortal()
     }
 }
@@ -12,11 +10,14 @@ dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
 
     repositories {
+        maven("https://plugins.gradle.org/m2/")
         mavenCentral()
         google()
     }
-}
 
-rootProject.name = "Rijksmuseum"
-include(":library")
-include(":android-app")
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
+}
