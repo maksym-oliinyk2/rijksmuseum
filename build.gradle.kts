@@ -15,3 +15,7 @@ allprojects {
 tasks.register("check") {
     dependsOn(gradle.includedBuild("plugins").task(":check"))
 }
+
+tasks.register<Delete>("clean") {
+    delete(layout.buildDirectory)
+}

@@ -29,6 +29,8 @@ android {
     }
 }
 
+configureTests()
+
 dependencies {
     implementation(project(":library"))
     implementation(libs.lifecycle.runtime.ktx)

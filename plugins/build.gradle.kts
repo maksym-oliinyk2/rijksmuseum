@@ -9,6 +9,18 @@ kotlin {
     jvmToolchain(17)
 }
 
+afterEvaluate {
+    tasks.withType<Test>().configureEach {
+        val buildDir = File(File(File(rootProject.rootDir.parentFile, "build"), "junit-reports"), project.name)
+
+        description = "$description Also copies test reports to $buildDir"
+
+        reports {
+            html.outputLocation.set(File(buildDir, "html"))
+        }
+    }
+}
+
 dependencies {
     implementation(libs.convention.kotlin)
     implementation(libs.convention.detekt)

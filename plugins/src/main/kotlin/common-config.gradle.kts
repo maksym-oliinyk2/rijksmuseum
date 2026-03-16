@@ -10,11 +10,7 @@ dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }
 
-tasks.withType<Test>().configureEach {
-    reports {
-        html.outputLocation.set(htmlTestReportsDir)
-    }
-}
+configureTestReporting()
 
 detekt {
     parallel = true

@@ -78,7 +78,6 @@ val Project.testReportsDir: Provider<out Directory>
 val Project.htmlTestReportsDir: Provider<out Directory>
     get() = testReportsDir.map { it.dir("html") }
 
-
 fun Project.testReportsDir(
     vararg subdirs: String,
 ): Provider<out Directory> = testReportsDir.map { subdirs.fold(it) { acc, path -> acc.dir(path) } }
