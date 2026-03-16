@@ -4,39 +4,19 @@ kotlin = "2.3.20"
 android-minSdk = "24"
 android-compileSdk = "36"
 android-targetSdk = "36"
-#junit = "4.13.2"
-#junitVersion = "1.3.0"
-#espressoCore = "3.7.0"
-#lifecycleRuntimeKtx = "2.10.0"
-#activityCompose = "1.13.0"
-#composeBom = "2024.09.00"
 
 ktor = "3.4.1"
 coroutines = "1.10.2"
-sqldelight = "2.3.1"
-arrow = "2.2.2"
 coil = "3.4.0"
 compose = "1.10.2"
 
 [libraries]
 # Convention plugins
 convention-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-convention-intellij-platform = { module = "org.jetbrains.intellij.platform:intellij-platform-gradle-plugin", version = "2.3.0" }
-convention-agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-convention-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "2.1.0" }
-convention-serializtion = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
-convention-sqldelight = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
-convention-compose-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose" }
-convention-compose-compiler = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
-convention-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version = "0.53.0" }
-convention-nexus-publish = { module = "io.github.gradle-nexus:publish-plugin", version = "2.0.0" }
 convention-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version = "1.23.8" }
 
-decompose-backHandler = { module = "com.arkivanov.essenty:back-handler", version = "2.5.0" }
-decompose-extensions = { module = "com.arkivanov.decompose:extensions-compose", version = "3.4.0" }
 junit = { module = "junit:junit", version = "4.13.2" }
-junit-runner = { module = "io.kotlintest:kotlintest-runner-junit4", version = "3.4.2" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-common" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 kotlin-test-annotations = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common" }
 compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
 android-test-orchestrator = { module = "androidx.test:orchestrator", version = "1.6.1" }
@@ -44,7 +24,6 @@ coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
-stdlib-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-ios = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
@@ -63,8 +42,9 @@ serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cor
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
 splashscreen = { module = "androidx.core:core-splashscreen", version = "1.2.0" }
+ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose" }
 ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" }
+ui-test-junit4 = { group = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 
 [bundles]
 coil = ["coil-compose", "coil-network"]
