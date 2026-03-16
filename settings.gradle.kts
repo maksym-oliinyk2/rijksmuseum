@@ -18,5 +18,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Rijksmuseum"
-include(":library")
+include(":rijksmuseum-library")
 include(":android-app")

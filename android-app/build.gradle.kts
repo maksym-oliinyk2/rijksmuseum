@@ -32,7 +32,7 @@ android {
 configureTests()
 
 dependencies {
-    implementation(project(":library"))
+    implementation(project(":rijksmuseum-library"))
     implementation(libs.compose.ui)
     implementation(libs.compose.material)
     implementation(libs.compose.activity)
