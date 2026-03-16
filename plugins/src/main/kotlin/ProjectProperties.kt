@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
+import org.gradle.api.Project
+import org.gradle.api.file.Directory
+import org.gradle.api.provider.Provider
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.nio.file.Paths
-import org.gradle.api.Project
-import org.gradle.api.file.Directory
-import org.gradle.api.provider.Provider
 
 const val CommitHashLength = 6
 private const val RefBranch = "refs/heads/"

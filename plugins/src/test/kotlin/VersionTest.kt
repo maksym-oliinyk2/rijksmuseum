@@ -1,6 +1,6 @@
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import org.junit.Test
 
 internal class VersionTest {
 
