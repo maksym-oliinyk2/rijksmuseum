@@ -1,9 +1,9 @@
 package io.github.kotlin.fibonacci
 
 public fun generateFibi(): Sequence<Int> = sequence {
-    var a = firstElement
+    var a = FirstElement
     yield(a)
-    var b = secondElement
+    var b = SecondElement
     yield(b)
     while (true) {
         val c = a + b
@@ -13,5 +13,5 @@ public fun generateFibi(): Sequence<Int> = sequence {
     }
 }
 
-public expect val firstElement: Int
-public expect val secondElement: Int
+public expect val FirstElement: Int
+public expect val SecondElement: Int
