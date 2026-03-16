@@ -1,4 +1,3 @@
-import com.android.build.api.dsl.androidLibrary
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -13,7 +12,7 @@ kotlin {
     //explicitApi()
     jvm()
 
-    androidLibrary {
+    android {
         namespace = "io.github.oliinyk.maksym.rijksmuseum"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -27,7 +26,7 @@ kotlin {
         compilations.configureEach {
             compileTaskProvider.configure {
                 compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_11)
+                    jvmTarget.set(JvmTarget.JVM_17)
                 }
             }
         }
