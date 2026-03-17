@@ -7,7 +7,7 @@ public data class SearchResponse(
     //@SerialName("@context")
     // val context: String,
     val id: String,
-    //val type: String,
+    val type: String,
     val partOf: Collection,//todo do we need it?
     val next: OrderedCollectionPage? = null,
     val prev: OrderedCollectionPage? = null,

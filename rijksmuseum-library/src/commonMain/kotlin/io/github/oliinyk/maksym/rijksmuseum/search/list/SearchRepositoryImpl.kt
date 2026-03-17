@@ -1,6 +1,9 @@
 package io.github.oliinyk.maksym.rijksmuseum.search.list
 
 import arrow.core.Either
+import io.github.oliinyk.maksym.rijksmuseum.artworks.details.DigitalObjectDetails
+import io.github.oliinyk.maksym.rijksmuseum.artworks.details.HumanMadeObjectResponse
+import io.github.oliinyk.maksym.rijksmuseum.artworks.details.VisualItemDetails
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -43,10 +46,10 @@ private val SearchUrl = buildUrl {
     path("search", "collection")
 }
 
-private val DetailsUrl = buildUrl {
+private fun DetailsUrl(id: String) = buildUrl {
     protocol = HTTPS
-    host = "data.rijksmuseum.nl"
-    path("search", "collection")
+    host = "id.rijksmuseum.nl"
+    path(id)
 }
 
 internal class RijksmuseumApiImpl(
@@ -54,7 +57,24 @@ internal class RijksmuseumApiImpl(
 ) : RijksmuseumApi {
     override suspend fun searchArtworks(): Either<AppException, SearchResponse> =
         client.runRequest {
-            get(SearchUrl).body()
+            val all = get(SearchUrl).body<SearchResponse>()
+
+            for (item in all.orderedItems) {
+                println("checking: ${item.id}")
+                val humanMadeObject = get(item.id).body<HumanMadeObjectResponse>()
+                val visualItemDetails = humanMadeObject.shows.firstNotNullOfOrNull {
+                    get(it.id).body<VisualItemDetails>()
+                } ?: continue
+
+                val digitalObjectDetails =
+                    visualItemDetails.digitallyShownBy.firstNotNullOfOrNull { get(it.id).body<DigitalObjectDetails>() }
+                        ?: continue
+                val urls = digitalObjectDetails.accessPoint.map { it.id }
+
+                println("FOUND URLS for ${item.id} $urls")
+            }
+
+            all
         }
 
 }
