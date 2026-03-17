@@ -12,6 +12,13 @@ kotlin {
     explicitApi()
     applyDefaultHierarchyTemplate()
 
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes",
+            "-Xconsistent-data-class-copy-visibility"
+        )
+    }
+
     android {
         namespace = "io.github.oliinyk.maksym.rijksmuseum"
         compileSdk = libs.versions.android.compileSdk.get().toInt()

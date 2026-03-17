@@ -147,16 +147,8 @@ public data class TypeObjectOrString(
 
 @Serializable
 public data class Identification(
-    val type: String,
+    val type: String,// filter for Name
     val content: String? = null,
-    val language: List<TypeObject> = emptyList(),
-    @SerialName("carried_by")
-    val carriedBy: List<String> = emptyList(),
-    @SerialName("identified_by")
-    val identifiedBy: List<Identification> = emptyList(),
-    @SerialName("classified_as")
-    val classifiedAs: List<TypeObject> = emptyList(),
-    val part: List<Identification> = emptyList()
 )
 
 /*
