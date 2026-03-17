@@ -53,6 +53,7 @@ kotlin {
                 implementation(libs.compose.material.icons.extended)
                 implementation(libs.stdlib)
                 implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.ktor.client.negotiation)
                 implementation(libs.ktor.serialization.json)
@@ -67,6 +68,7 @@ kotlin {
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.compose.nav3)
                 implementation(libs.koin.compose.viewmodel)
+                implementation(libs.arrow.core)
             }
         }
 
@@ -83,12 +85,6 @@ kotlin {
                 implementation(libs.ktor.client.logging)
                 implementation(libs.coroutines.android)
                 implementation(libs.ktor.client.cio)
-            }
-        }
-
-        iosMain {
-            dependencies {
-                implementation(libs.ktor.client.ios)
             }
         }
     }

@@ -9,7 +9,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import io.github.oliinyk.maksym.rijksmuseum.artworks.details.ArtworkDetailsScreen
-import io.github.oliinyk.maksym.rijksmuseum.artworks.list.ArtworksScreen
+import io.github.oliinyk.maksym.rijksmuseum.search.list.ArtworksScreen
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
