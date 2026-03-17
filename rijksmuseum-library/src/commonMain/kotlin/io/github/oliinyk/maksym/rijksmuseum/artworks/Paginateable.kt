@@ -17,7 +17,7 @@ public data class Paginateable<out T>(
             data: List<T> = listOf(),
         ): Paginateable<T> = Paginateable(data = data, state = Loading)
 
-        public fun <T, P> idleList(
+        public fun <T> idleList(
             data: List<T> = listOf(),
         ): Paginateable<T> = Paginateable(data = data, state = Idle)
     }
@@ -80,12 +80,12 @@ internal fun <T> Paginateable<T>.toIdle(
         )
     }
 
-
+/*
 internal fun <T> Paginateable<T>.toIdle(
     page: Page<T>,
 ): Paginateable<T> = toIdle(page.data, page.next)
 
 internal fun <T> Paginateable<T>.toException(
     cause: AppException,
-): Paginateable<T> = copy(state = Paginateable.Exception(cause))
+): Paginateable<T> = copy(state = Paginateable.Exception(cause))*/
 
