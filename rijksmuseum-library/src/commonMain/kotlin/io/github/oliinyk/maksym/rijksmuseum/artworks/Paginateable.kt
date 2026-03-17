@@ -1,7 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks
 
 import androidx.compose.runtime.Immutable
-import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.search.list.AppException
 import kotlin.jvm.JvmInline
 
@@ -9,7 +8,7 @@ import kotlin.jvm.JvmInline
 public data class Paginateable<out T>(
     val data: List<T>,
     val state: State,
-    val next: Url? = null,
+    val hasMore: Boolean = false,
 ) {
     public companion object {
 
@@ -45,7 +44,7 @@ public val Paginateable<*>.isRefreshable: Boolean
 
 public fun Paginateable<*>.canLoadNextForIndex(
     index: Int,
-): Boolean = next != null && index == data.lastIndex
+): Boolean = hasMore && index == data.lastIndex
 
 public val Paginateable<*>.isLoading: Boolean
     get() = state === Paginateable.Loading
@@ -64,28 +63,28 @@ public val Paginateable<*>.isException: Boolean
 
 internal fun <T> Paginateable<T>.toIdle(
     data: List<T>,
-    next: Url?,
+    hasMore: Boolean,
 ): Paginateable<T> =
     when (state) {
         Paginateable.LoadingNext, is Paginateable.Exception -> copy(
             data = this.data + data,
             state = Paginateable.Idle,
-            next = next
+            hasMore = hasMore
         )
 
         Paginateable.Loading, Paginateable.Refreshing, Paginateable.Idle -> copy(
             data = data,
             state = Paginateable.Idle,
-            next = next
+            hasMore = hasMore
         )
     }
 
-/*
+
 internal fun <T> Paginateable<T>.toIdle(
     page: Page<T>,
-): Paginateable<T> = toIdle(page.data, page.next)
+): Paginateable<T> = toIdle(page.data, page.hasMore)
 
 internal fun <T> Paginateable<T>.toException(
     cause: AppException,
-): Paginateable<T> = copy(state = Paginateable.Exception(cause))*/
+): Paginateable<T> = copy(state = Paginateable.Exception(cause))
 

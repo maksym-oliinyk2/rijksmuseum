@@ -9,15 +9,12 @@ public data class Page<out T>(
     }
 }
 
-/*public inline val Page<*>.hasMore: Boolean
-    get() = next != null*/
-
 public data class Paging(
     val currentSize: Int,
     val resultsPerPage: Int = ItemsPerPage
 ) {
     internal companion object {
-        const val ItemsPerPage = 20
+        const val ItemsPerPage = 10
         val FirstPage = Paging(currentSize = 0)
     }
 }

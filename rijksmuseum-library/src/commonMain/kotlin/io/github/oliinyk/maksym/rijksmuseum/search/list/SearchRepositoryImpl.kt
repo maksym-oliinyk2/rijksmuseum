@@ -87,11 +87,11 @@ internal class SearchRepositoryImpl(
     override suspend fun searchArtworks(paging: Paging): Either<AppException, Page<Artwork>> =
         client.safeRequest {
 
-            val cResp = cachedSearchResponse
+            val currentCachedResponse = cachedSearchResponse
 
             val page: Page<Artwork> = when {
                 // no cache hit
-                cResp == null -> {
+                currentCachedResponse == null -> {
                     val curr = get(SearchUrl).body<SearchResponse>().also {
                         cachedSearchResponse = it
                     }
@@ -107,55 +107,57 @@ internal class SearchRepositoryImpl(
                     val items = itemsAsync.awaitAll()
 
                     Page(
-                        hasMore = true,
+                        hasMore = curr.orderedItems.size - paging.currentSize - paging.resultsPerPage > 0 || curr.next != null,
                         data = items
                     )
                 }
-                // this unchecked case never fails
-                cResp.next == null -> @Suppress("UNCHECKED_CAST") (Page.End as Page<Artwork>)
-                // there is cached value but we need to fetch more
-                cResp.orderedItems.size >= paging.currentSize + paging.resultsPerPage -> {
-                    val itemsToGrab = cResp.orderedItems
+                // there is a cached response and it can provide enough items
+                currentCachedResponse.orderedItems.size >= paging.currentSize + paging.resultsPerPage -> {
+                    val itemsToGrab = currentCachedResponse.orderedItems
                         .subList(paging.currentSize, paging.currentSize + paging.resultsPerPage)
 
                     val itemsAsync = itemsToGrab.map { async { fetchDetails(UrlFrom(it.id)) } }
                     val items = itemsAsync.awaitAll()
 
                     Page(
-                        hasMore = true,
+                        hasMore = currentCachedResponse.orderedItems.size - paging.currentSize - paging.resultsPerPage > 0 || currentCachedResponse.next != null,
                         data = items
                     )
                 }
-
+                // this unchecked case never fails
+                currentCachedResponse.next == null -> @Suppress("UNCHECKED_CAST") (Page.End as Page<Artwork>)
                 else -> {
-                    val fromPreviousPage = if (cResp.orderedItems.size > paging.currentSize) {
-                        cResp.orderedItems.takeLast(cResp.orderedItems.size - paging.currentSize)
+                    val fromPreviousPage =
+                        if (currentCachedResponse.orderedItems.size > paging.currentSize) {
+                            // cached response can provide some items but not all
+                            currentCachedResponse.orderedItems.takeLast(currentCachedResponse.orderedItems.size - paging.currentSize)
                     } else {
-                        emptyList()
+                            listOf()
                     }
-                    val nextPage =
-                        get(cResp.next.id).body<SearchResponse>().also { cachedSearchResponse = it }
+                    val newPage =
+                        get(currentCachedResponse.next.id).body<SearchResponse>()
+                            .also { cachedSearchResponse = it }
                     val prevAsync = fromPreviousPage.map { async { fetchDetails(UrlFrom(it.id)) } }
                     val currAsync =
-                        nextPage.orderedItems.takeLast(paging.resultsPerPage - fromPreviousPage.size)
+                        newPage.orderedItems.takeLast(paging.resultsPerPage - fromPreviousPage.size)
                             .map { async { fetchDetails(UrlFrom(it.id)) } }
 
                     val prev = prevAsync.awaitAll()
                     val curr = currAsync.awaitAll()
 
                     Page(
-                        hasMore = true,
+                        hasMore = newPage.orderedItems.size - curr.size > 0 || newPage.next != null,
                         data = prev + curr
                     )
                 }
             }
 
-            println("Page $page")
             page
         }
 }
 
 private suspend fun HttpClient.fetchDetails(url: Url): Artwork {
+    println("Fetching details for $url")
     val humanMadeObject = get(url.toExternalValue()).body<HumanMadeObjectResponse>()
     val name = humanMadeObject.identifiedBy.filter { it.type == "Name" }
         .firstNotNullOfOrNull { it.content } ?: error("No name found for ${humanMadeObject.id}")

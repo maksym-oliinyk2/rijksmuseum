@@ -4,30 +4,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
-import kotlinx.coroutines.flow.Flow
+import io.github.oliinyk.maksym.rijksmuseum.artworks.toException
+import io.github.oliinyk.maksym.rijksmuseum.artworks.toIdle
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class ArtworksViewModel(private val searchUseCase: SearchUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow(ViewState())
-    val state: Flow<ViewState> by ::_state
+    val state: StateFlow<ViewState> by ::_state
 
     init {
         viewModelScope.launch {
-            //   _state.update { state ->
+            _state.update { state ->
                 val nextState = searchUseCase
                     .searchArtworks(Paging.FirstPage)
                     .fold({
-                        it.printStackTrace()
-                        //state.artworks.toException(it)
+                        state.artworks.toException(it)
                     }, {
-
-                        println("Art $it")
+                        state.artworks.toIdle(it)
                     })
 
-            //   state.copy(artworks = nextState)
-            //   }
+                state.copy(artworks = nextState)
+            }
         }
     }
 
