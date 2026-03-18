@@ -53,11 +53,10 @@ internal class SearchRepositoryImpl(
     // in this case hiding the API behind the interface looks like overkill to me,
     // so I'll use a pre-configured http client
     private val api: RijksmuseumApi,
+    private val searchResponseCache: InMemoryCache<SearchResponse> = InMemoryCache(),
 ) : SearchRepository {
 
     override suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> = TODO()
-
-    private val searchResponseCache = InMemoryCache<SearchResponse>()
 
     override suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>> =
         either {
@@ -130,8 +129,8 @@ internal class SearchRepositoryImpl(
 
 }
 
-private class InMemoryCache<T> {
-    private var cachedSearchResponse: T? = null
+internal class InMemoryCache<T>(initial: T? = null) {
+    private var cachedSearchResponse: T? = initial
     private val mutex = Mutex()
 
     // if another coroutine is trying to update the cached response, this function suspends
