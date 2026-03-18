@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -23,6 +24,7 @@ kotlin {
         namespace = "io.github.oliinyk.maksym.rijksmuseum"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        androidResources.enable = true
 
         withJava() // enable java compilation support
         withHostTestBuilder {}.configure {}
@@ -54,6 +56,7 @@ kotlin {
                 api(libs.compose.runtime)
                 api(libs.compose.foundation)
                 api(libs.compose.components.ui.tooling.preview)
+                api(libs.tea.core)
                 implementation(libs.compose.components.resources)
                 implementation(libs.bundles.coil)
                 implementation(libs.compose.material)
@@ -92,17 +95,27 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.coroutines.android)
-                implementation(libs.ktor.client.cio)
             }
         }
 
-        androidUnitTest {
+        appleMain {
+            dependencies {
+                implementation(libs.ktor.client.darwin)
+            }
+        }
+
+        val androidHostTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.junit)
             }
         }
     }
+}
+
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "io.github.oliinyk.maksym.rijksmuseum.res"
 }
 
 dependencies {

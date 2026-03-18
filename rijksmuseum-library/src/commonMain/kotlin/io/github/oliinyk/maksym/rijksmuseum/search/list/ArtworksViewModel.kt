@@ -2,39 +2,31 @@ package io.github.oliinyk.maksym.rijksmuseum.search.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
-import io.github.oliinyk.maksym.rijksmuseum.artworks.toException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.toIdle
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import io.github.xlopec.tea.core.Component
+import io.github.xlopec.tea.core.ExperimentalTeaApi
+import io.github.xlopec.tea.core.Initializer
+import io.github.xlopec.tea.core.ShareOptions
+import io.github.xlopec.tea.core.effect
+import io.github.xlopec.tea.core.toStatesComponent
+import kotlinx.coroutines.flow.SharingStarted
 
-internal class ArtworksViewModel(private val searchUseCase: SearchUseCase) : ViewModel() {
+internal class ArtworksViewModel(
+    private val searchUseCase: SearchUseCase,
+    initialState: ArtworksViewState = ArtworksViewState(),
+) : ViewModel() {
 
-    private val _state = MutableStateFlow(ViewState())
-    val state: StateFlow<ViewState> by ::_state
-
-    init {
-        viewModelScope.launch {
-            _state.update { state ->
-                val nextState = searchUseCase
-                    .searchArtworks(Paging.FirstPage)
-                    .fold({
-                        state.artworks.toException(it)
-                    }, {
-                        state.artworks.toIdle(it)
-                    })
-
-                state.copy(artworks = nextState)
+    @OptIn(ExperimentalTeaApi::class)
+    val component = Component(
+        initializer = Initializer(initialState, LoadCommand(Paging.FirstPage)),
+        updater = ::update,
+        resolver = { snapshot, ctx ->
+            snapshot.commands.forEach { command ->
+                ctx effect { Message.OnDataLoaded(searchUseCase.searchArtworks(command.paging)) }
             }
-        }
-    }
+        },
+        scope = viewModelScope,
+        shareOptions = ShareOptions(SharingStarted.Lazily, 1u)
+    ).toStatesComponent()
 }
-
-internal data class ViewState(
-    val artworks: Paginateable<Artwork> = Paginateable.loadingList(),
-)

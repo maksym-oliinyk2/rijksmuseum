@@ -5,9 +5,6 @@ import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.cache.HttpCache
-import io.ktor.client.plugins.cache.storage.CacheStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -16,24 +13,22 @@ import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
 
-internal val searchModule = module {
-    // todo replace with db or file
-    single { CacheStorage.Unlimited() }.bind(CacheStorage::class)
-    single { HttpClient(LogLevel.ALL, get()) }
+@Suppress("FunctionName")
+internal fun SearchModule(engine: HttpClientEngineFactory<HttpClientEngineConfig>) = module {
+    single { HttpClient(LogLevel.ALL, engine) }
     singleOf(::ApiImpl).bind(Api::class)
-    singleOf(::SearchRepositoryImpl).bind(SearchRepository::class)
+    single { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)
     singleOf(::SearchUseCase)
-    viewModelOf(::ArtworksViewModel)
+    viewModel { ArtworksViewModel(get()) }
 }
 
 private fun HttpClient(
     logLevel: LogLevel,
-    cacheStorage: CacheStorage,
-    engine: HttpClientEngineFactory<HttpClientEngineConfig> = CIO,
+    engine: HttpClientEngineFactory<HttpClientEngineConfig>,
 ): HttpClient = HttpClient(engine) {
     expectSuccess = true
     install(ContentNegotiation) {
@@ -44,10 +39,6 @@ private fun HttpClient(
                 isLenient = true
             }
         )
-    }
-
-    install(HttpCache) {
-        privateStorage(cacheStorage)
     }
 
     Logging {

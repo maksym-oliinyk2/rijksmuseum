@@ -5,6 +5,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 
 private val DarkColorScheme = darkColors(
     primary = Purple80,
@@ -25,9 +27,19 @@ public fun RijksmuseumTheme(
 ) {
     val colors = if (darkTheme) DarkColorScheme else LightColorScheme
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalPaddings provides Paddings(),
+    ) {
+        MaterialTheme(
+            colors = colors,
+            typography = Typography,
+            content = content
+        )
+    }
 }
+
+@Suppress("UnusedReceiverParameter")
+public val MaterialTheme.paddings: Paddings
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalPaddings.current
