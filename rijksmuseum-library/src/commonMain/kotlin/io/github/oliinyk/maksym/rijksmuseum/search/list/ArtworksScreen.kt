@@ -5,10 +5,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -19,6 +23,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -68,6 +73,7 @@ internal fun ArtworksScreen(
     }
 }
 
+
 @Composable
 private fun ArtworksContent(
     state: ViewState,
@@ -75,13 +81,14 @@ private fun ArtworksContent(
     onNavigateToDetails: (Artwork) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Scaffold(
+        modifier = modifier.navigationBarsPadding(),
+    ) { paddingValues ->
+
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier
+                .padding(paddingValues),
+            contentPadding = contentPaddingValues(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
@@ -243,3 +250,13 @@ private fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatf
     .data(toExternalValue())
     .crossfade(true)
     .build()
+
+@Composable
+private fun contentPaddingValues(): PaddingValues {
+    return PaddingValues(
+        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 16.dp,
+        start = 16.dp,
+        end = 16.dp,
+        bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    )
+}

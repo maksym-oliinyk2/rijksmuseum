@@ -10,6 +10,8 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.isIdle
 import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toIdle
+import io.github.oliinyk.maksym.rijksmuseum.artworks.toLoadingNextPage
+import io.github.oliinyk.maksym.rijksmuseum.artworks.toRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
@@ -53,19 +55,21 @@ internal fun update(message: Message, state: ViewState): Update<ViewState, LoadC
 }
 
 private fun ViewState.onLoadNext(): Update<ViewState, LoadCommand> {
-    if (artworks.hasMore && artworks.isIdle) {
-        return copy(artworks = artworks.copy(state = Paginateable.LoadingNext))
+    return if (artworks.hasMore && artworks.isIdle) {
+        copy(artworks = artworks.toLoadingNextPage())
             .command(LoadCommand(Paging(artworks.data.size)))
+    } else {
+        noCommand()
     }
-    return noCommand()
 }
 
 private fun ViewState.onRefresh(): Update<ViewState, LoadCommand> {
-    if (artworks.isRefreshable) {
-        return copy(artworks = artworks.copy(state = Paginateable.Refreshing))
+    return if (artworks.isRefreshable) {
+        copy(artworks = artworks.toRefreshing())
             .command(LoadCommand(Paging.FirstPage))
+    } else {
+        noCommand()
     }
-    return noCommand()
 }
 
 private fun ViewState.onLoaded(

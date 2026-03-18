@@ -39,7 +39,7 @@ public data class Paginateable<out T>(
 }
 
 public val Paginateable<*>.isRefreshable: Boolean
-    get() = isIdle
+    get() = isIdle && data.isEmpty()
 
 public fun Paginateable<*>.canLoadNextForIndex(
     index: Int,
@@ -85,3 +85,15 @@ internal fun <T> Paginateable<T>.toIdle(
 internal fun <T> Paginateable<T>.toException(
     cause: AppException,
 ): Paginateable<T> = copy(state = Paginateable.Exception(cause))
+
+internal fun <T : Any> Paginateable<T>.toLoadingNextPage(): Paginateable<T> {
+    require(data.isNotEmpty()) { "data should be loaded first" }
+    return copy(state = Paginateable.LoadingNext)
+}
+
+internal fun <T : Any> Paginateable<T>.toLoading(): Paginateable<T> =
+    // reset data on (re)load
+    copy(state = Paginateable.Loading, data = listOf())
+
+internal fun <T : Any> Paginateable<T>.toRefreshing(): Paginateable<T> =
+    copy(state = Paginateable.Refreshing)
