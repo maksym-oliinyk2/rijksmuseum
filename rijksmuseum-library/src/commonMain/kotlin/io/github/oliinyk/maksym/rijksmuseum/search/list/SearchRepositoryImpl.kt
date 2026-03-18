@@ -52,12 +52,14 @@ internal interface SearchRepository {
 internal class SearchRepositoryImpl(
     // in this case hiding the API behind the interface looks like overkill to me,
     // so I'll use a pre-configured http client
-    private val api: RijksmuseumApi,
+    private val api: Api,
     private val searchResponseCache: InMemoryCache<SearchResponse> = InMemoryCache(),
 ) : SearchRepository {
 
     override suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> = TODO()
 
+    // for now only forward pagination is supported!
+    // todo as improvement add support for backward pagination too
     override suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>> =
         either {
             // if another coroutine is updating the cache, we suspend here

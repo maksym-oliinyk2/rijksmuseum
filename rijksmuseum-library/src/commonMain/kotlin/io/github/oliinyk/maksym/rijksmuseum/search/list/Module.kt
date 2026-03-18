@@ -22,7 +22,7 @@ internal val searchModule = module {
     // todo replace with db or file
     single { CacheStorage.Unlimited() }.bind(CacheStorage::class)
     single { HttpClient(LogLevel.ALL, get()) }
-    singleOf(::RijksmuseumApiImpl).bind(RijksmuseumApi::class)
+    singleOf(::ApiImpl).bind(Api::class)
     singleOf(::SearchRepositoryImpl).bind(SearchRepository::class)
     single<SearchUseCase> { SearchUseCase(get()) }
     viewModelOf(::ArtworksViewModel)

@@ -13,15 +13,15 @@ import io.ktor.client.request.get
 
 internal val SearchUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
 
-internal interface RijksmuseumApi {
+internal interface Api {
     suspend fun searchArtworks(url: Url): Either<AppException, SearchResponse>
 
     suspend fun fetchDetails(url: Url): Either<AppException, Artwork>
 }
 
-internal class RijksmuseumApiImpl(
+internal class ApiImpl(
     private val client: HttpClient,
-) : RijksmuseumApi {
+) : Api {
     override suspend fun searchArtworks(url: Url): Either<AppException, SearchResponse> =
         Either.catch {
             client.get(url.toExternalValue()).body<SearchResponse>()

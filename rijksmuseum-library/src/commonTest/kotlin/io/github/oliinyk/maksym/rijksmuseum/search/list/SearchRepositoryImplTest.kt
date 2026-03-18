@@ -1,33 +1,16 @@
 package io.github.oliinyk.maksym.rijksmuseum.search.list
 
-import arrow.core.Either
-import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
-import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class SearchRepositoryImplTest {
-
-    private class FakeRijksmuseumApi(
-        private val artworksDetails: Map<String, Artwork>,
-        private val searchResponses: Map<Url, SearchResponse> = emptyMap(),
-        private val defaultSearchResponse: SearchResponse? = null,
-    ) : RijksmuseumApi {
-        override suspend fun searchArtworks(url: Url): Either<AppException, SearchResponse> =
-            (searchResponses[url] ?: defaultSearchResponse
-            ?: throw IllegalArgumentException("No search response for $url")).right()
-
-        override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
-            artworksDetails[url.toExternalValue()]?.right()
-                ?: throw IllegalArgumentException("No artwork for $url")
-    }
 
     @Test
     fun `test fetchArtworks when cache is null`() = runTest {
@@ -75,9 +58,9 @@ class SearchRepositoryImplTest {
         artworksDetails[item1Id] = artwork1
         artworksDetails[item2Id] = artwork2
 
-        val api = FakeRijksmuseumApi(
+        val api = TestApi(
             artworksDetails = artworksDetails,
-            defaultSearchResponse = searchResponse
+            searchResponses = mapOf(SearchUrl to searchResponse)
         )
         val repository = SearchRepositoryImpl(api)
 
@@ -117,7 +100,7 @@ class SearchRepositoryImplTest {
             )
         }
 
-        val api = FakeRijksmuseumApi(artworksDetails = artworksDetails)
+        val api = TestApi(artworksDetails = artworksDetails)
         val cache = InMemoryCache(initialSearchResponse)
         val repository = SearchRepositoryImpl(api, cache)
 
@@ -127,9 +110,7 @@ class SearchRepositoryImplTest {
 
         // Verify
         assertNotNull(page)
-        assertEquals(2, page.data.size)
-        assertEquals("Title for $item1Id", page.data[0].title.value)
-        assertEquals("Title for $item2Id", page.data[1].title.value)
+        assertEquals(artworksDetails.values.take(paging.resultsPerPage), page.data)
         assertTrue(page.hasMore) // 3 items total, 0+2 < 3
     }
 
@@ -143,7 +124,7 @@ class SearchRepositoryImplTest {
             orderedItems = listOf(Item(id = item1Id))
         )
 
-        val api = FakeRijksmuseumApi(artworksDetails = emptyMap())
+        val api = TestApi(artworksDetails = emptyMap())
         val cache = InMemoryCache(initialSearchResponse)
         val repository = SearchRepositoryImpl(api, cache)
 
@@ -155,7 +136,7 @@ class SearchRepositoryImplTest {
         val page = repository.fetchArtworks(paging).getOrNull()
 
         // Verify
-        assertEquals(Page.End as Page<Artwork>, page)
+        assertSame(Page.End, page as Page<*>)
     }
 
     @Test
@@ -184,7 +165,7 @@ class SearchRepositoryImplTest {
                 )
             }.mapKeys { it.key } // The map keys are already correct strings
 
-            val api = FakeRijksmuseumApi(
+            val api = TestApi(
                 artworksDetails = artworksDetails,
                 searchResponses = mapOf(UrlFrom("next-page-url") to nextSearchResponse)
             )
@@ -201,9 +182,7 @@ class SearchRepositoryImplTest {
 
             // Verify
             assertNotNull(page)
-            assertEquals(2, page.data.size)
-            assertEquals("Title for $item1Id", page.data[0].title.value)
-            assertEquals("Title for $item2Id", page.data[1].title.value)
+            assertEquals(artworksDetails.values.take(paging.resultsPerPage), page.data)
             assertTrue(page.hasMore) // nextSearchResponse has 2 items, we took 1. 2 - 1 > 0.
-    }
+        }
 }
