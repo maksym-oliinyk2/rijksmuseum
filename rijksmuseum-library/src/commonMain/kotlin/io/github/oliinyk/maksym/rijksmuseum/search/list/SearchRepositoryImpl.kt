@@ -52,7 +52,7 @@ internal interface SearchRepository {
 internal class SearchRepositoryImpl(
     // in this case hiding the API behind the interface looks like overkill to me,
     // so I'll use a pre-configured http client
-    private val api: RijksmuseumApiImpl,
+    private val api: RijksmuseumApi,
 ) : SearchRepository {
 
     override suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> = TODO()
