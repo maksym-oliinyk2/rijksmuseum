@@ -1,5 +1,7 @@
 package io.github.oliinyk.maksym.rijksmuseum.search.list
 
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchRepository
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
@@ -24,7 +26,7 @@ internal val searchModule = module {
     single { HttpClient(LogLevel.ALL, get()) }
     singleOf(::ApiImpl).bind(Api::class)
     singleOf(::SearchRepositoryImpl).bind(SearchRepository::class)
-    single<SearchUseCase> { SearchUseCase(get()) }
+    singleOf(::SearchUseCase)
     viewModelOf(::ArtworksViewModel)
 }
 

@@ -7,46 +7,11 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchRepository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlin.jvm.JvmInline
-
-// extract
-public typealias AppException = Throwable
-
-@JvmInline
-public value class Title internal constructor(
-    public val value: String
-) {
-    init {
-        require(value.isNotEmpty()) { "Title cannot be empty" }
-    }
-}
-
-public data class Artwork internal constructor(
-    val url: Url,
-    val title: Title,
-    val images: List<Url>
-)
-
-internal class SearchUseCase(
-    private val searchRepository: SearchRepositoryImpl
-) {
-    suspend fun searchArtworks(paging: Paging): Either<AppException, Page<Artwork>> {
-        return searchRepository.fetchArtworks(paging)
-    }
-
-    suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> {
-        return searchRepository.fetchArtworkDetails(url)
-    }
-}
-
-// extract
-
-internal interface SearchRepository {
-    suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>>
-    suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork>
-}
 
 internal class SearchRepositoryImpl(
     private val api: Api,

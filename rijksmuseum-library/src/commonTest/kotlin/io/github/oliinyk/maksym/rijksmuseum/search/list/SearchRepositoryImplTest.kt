@@ -6,6 +6,9 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.Title
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -130,7 +133,7 @@ class SearchRepositoryImplTest {
         )
 
         val api = TestApi(
-            artworksDetails = emptyMap(),
+            artworksDetails = emptyMap<String, Artwork>(),
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
         val repository = SearchRepositoryImpl(
@@ -205,7 +208,7 @@ class SearchRepositoryImplTest {
             orderedItems = listOf(Item(id = item1Id))
         )
         val api = TestApi(
-            artworksDetails = emptyMap(),
+            artworksDetails = emptyMap<String, Artwork>(),
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
         val repository = SearchRepositoryImpl(

@@ -1,7 +1,7 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks
 
 import androidx.compose.runtime.Immutable
-import io.github.oliinyk.maksym.rijksmuseum.search.list.AppException
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
 import kotlin.jvm.JvmInline
 
 @Immutable

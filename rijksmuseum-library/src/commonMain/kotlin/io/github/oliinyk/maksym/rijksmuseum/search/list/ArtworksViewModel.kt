@@ -6,6 +6,8 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toIdle
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
