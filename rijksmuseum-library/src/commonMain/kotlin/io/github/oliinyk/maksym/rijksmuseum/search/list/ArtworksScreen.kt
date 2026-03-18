@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -26,6 +27,9 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,9 +46,12 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshable
+import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.search.domain.displayMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -75,37 +82,56 @@ internal fun ArtworksScreen(
 
 
 @Composable
+@OptIn(ExperimentalMaterialApi::class)
 private fun ArtworksContent(
     state: ViewState,
     onMessage: (Message) -> Unit,
     onNavigateToDetails: (Artwork) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val refreshState = rememberPullRefreshState(
+        refreshing = state.artworks.isRefreshing,
+        onRefresh = { onMessage(Message.OnRefresh) },
+    )
+
     Scaffold(
         modifier = modifier.navigationBarsPadding(),
     ) { paddingValues ->
 
-        LazyColumn(
+        Box(
             modifier = Modifier
-                .padding(paddingValues),
-            contentPadding = contentPaddingValues(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(paddingValues)
+                .pullRefresh(refreshState, state.artworks.isRefreshable),
+            contentAlignment = Alignment.TopCenter
         ) {
-            if (state.artworks.data.isNotEmpty()) {
-                artworkItems(state.artworks, onNavigateToDetails)
-            }
 
-            paginateableContent(
-                paginateable = state.artworks,
-                onMessage = onMessage
-            )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = contentPaddingValues(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                if (state.artworks.data.isNotEmpty()) {
+                    artworkItems(state.artworks, onNavigateToDetails)
+                }
 
-            item {
-                LaunchedEffect(Unit) {
-                    onMessage(Message.OnLoadNext)
+                paginateableContent(
+                    paginateable = state.artworks,
+                    onMessage = onMessage
+                )
+
+                item {
+                    LaunchedEffect(Unit) {
+                        onMessage(Message.OnLoadNext)
+                    }
                 }
             }
+
+            PullRefreshIndicator(
+                modifier = Modifier.padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()),
+                refreshing = state.artworks.isRefreshing,
+                state = refreshState,
+            )
         }
     }
 }
@@ -136,8 +162,8 @@ private fun LazyListScope.paginateableContent(
         is Paginateable.Exception ->
             ArtworksError(
                 modifier = if (paginateable.data.isEmpty()) Modifier.fillParentMaxSize() else Modifier.fillParentMaxWidth(),
-                message = state.exception.message ?: "Unknown error",
-                onRetry = { onMessage(if (paginateable.data.isEmpty()) Message.OnRefresh else Message.OnLoadNext) }
+                message = state.exception.displayMessage,
+                onRetry = { onMessage(if (paginateable.data.isEmpty()) Message.OnReload else Message.OnLoadNext) }
             )
 
         is Paginateable.Loading -> ArtworksProgress(modifier = Modifier.fillParentMaxSize())

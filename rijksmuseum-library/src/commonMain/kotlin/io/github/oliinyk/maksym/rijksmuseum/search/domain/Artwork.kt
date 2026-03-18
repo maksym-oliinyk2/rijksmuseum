@@ -8,6 +8,9 @@ import kotlin.jvm.JvmInline
  */
 public typealias AppException = Throwable
 
+public val AppException.displayMessage: String
+    get() = this.message ?: "Unknown error"
+
 /**
  * Represents the title of an artwork.
  */

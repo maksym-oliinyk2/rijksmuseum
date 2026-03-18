@@ -10,6 +10,7 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.isIdle
 import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toIdle
+import io.github.oliinyk.maksym.rijksmuseum.artworks.toLoading
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toLoadingNextPage
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
@@ -51,6 +52,7 @@ internal fun update(message: Message, state: ViewState): Update<ViewState, LoadC
         is Message.OnDataLoaded -> state.onLoaded(message.result)
         Message.OnLoadNext -> state.onLoadNext()
         Message.OnRefresh -> state.onRefresh()
+        Message.OnReload -> state.onReload()
     }
 }
 
@@ -61,6 +63,11 @@ private fun ViewState.onLoadNext(): Update<ViewState, LoadCommand> {
     } else {
         noCommand()
     }
+}
+
+private fun ViewState.onReload(): Update<ViewState, LoadCommand> {
+    return copy(artworks = artworks.toLoading())
+            .command(LoadCommand(Paging.FirstPage))
 }
 
 private fun ViewState.onRefresh(): Update<ViewState, LoadCommand> {
@@ -86,6 +93,7 @@ internal data class LoadCommand(val paging: Paging)
 
 internal sealed interface Message {
     data object OnLoadNext : Message
+    data object OnReload : Message
     data object OnRefresh : Message
     data class OnDataLoaded(val result: Either<AppException, Page<Artwork>>) : Message
 }
