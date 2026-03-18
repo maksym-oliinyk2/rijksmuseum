@@ -5,7 +5,6 @@ import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -18,8 +17,9 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
 
-internal val searchModule = module {
-    single { HttpClient(LogLevel.ALL, CIO) }
+@Suppress("FunctionName")
+internal fun SearchModule(engine: HttpClientEngineFactory<HttpClientEngineConfig>) = module {
+    single { HttpClient(LogLevel.ALL, engine) }
     singleOf(::ApiImpl).bind(Api::class)
     single { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)
     singleOf(::SearchUseCase)

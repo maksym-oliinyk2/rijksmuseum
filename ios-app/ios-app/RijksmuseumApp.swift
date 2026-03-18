@@ -10,10 +10,15 @@ import RijksmuseumLib
 
 @main
 struct ios_appApp: App {
+    
+    init() {
+        RijksmuseumAppKt.startKoinApp()
+    }
+    
     var body: some Scene {
         WindowGroup {
             ComposeViewController()
-                .ignoresSafeArea()
+                .ignoresSafeArea(.all)
         }
     }
 }

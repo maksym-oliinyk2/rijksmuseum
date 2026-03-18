@@ -95,7 +95,12 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.coroutines.android)
-                implementation(libs.ktor.client.cio)
+            }
+        }
+
+        appleMain {
+            dependencies {
+                implementation(libs.ktor.client.darwin)
             }
         }
 
