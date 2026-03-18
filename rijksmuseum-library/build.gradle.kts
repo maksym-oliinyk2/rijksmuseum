@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -23,6 +24,7 @@ kotlin {
         namespace = "io.github.oliinyk.maksym.rijksmuseum"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        androidResources.enable = true
 
         withJava() // enable java compilation support
         withHostTestBuilder {}.configure {}
@@ -104,6 +106,11 @@ kotlin {
             }
         }
     }
+}
+
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "io.github.oliinyk.maksym.rijksmuseum.res"
 }
 
 dependencies {

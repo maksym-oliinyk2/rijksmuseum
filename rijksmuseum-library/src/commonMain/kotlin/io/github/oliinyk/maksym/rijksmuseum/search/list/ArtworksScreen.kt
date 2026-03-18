@@ -50,11 +50,16 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.artworks_action_retry
+import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
+import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.displayMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -172,7 +177,7 @@ private fun LazyListScope.paginateableContent(
             if (paginateable.data.isEmpty()) {
                 ArtworksError(
                     modifier = Modifier.fillParentMaxSize(),
-                    message = "No artworks found",
+                    message = stringResource(Res.string.artworks_no_data_message),
                     onRetry = { onMessage(Message.OnRefresh) }
                 )
             }
@@ -214,7 +219,7 @@ private fun ArtworkImage(
         if (imageUrl != null) {
             AsyncImage(
                 model = imageUrl.toImageRequest(),
-                contentDescription = "Artwork Image",
+                contentDescription = stringResource(Res.string.artworks_image_description),
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Crop,
             )
@@ -266,7 +271,7 @@ private fun ArtworksError(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text(stringResource(Res.string.artworks_action_retry))
         }
     }
 }

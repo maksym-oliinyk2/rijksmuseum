@@ -69,8 +69,9 @@ tea-core = { module = "io.github.xlopec:tea-core", version = "1.0.0-alpha9" }
 coil = ["coil-compose", "coil-network"]
 
 [plugins]
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
