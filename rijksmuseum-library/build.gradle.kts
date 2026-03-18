@@ -84,6 +84,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.kotlin.test.annotations)
+                implementation(libs.coroutines.test)
             }
         }
 
