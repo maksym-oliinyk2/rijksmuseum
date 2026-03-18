@@ -114,7 +114,7 @@ internal class SearchRepositoryImpl(
                     val prevAsync =
                         fromPreviousPage.parMap { api.fetchDetails(UrlFrom(it.id)).bind() }
                     val currAsync =
-                        newPage.orderedItems.takeLast(paging.resultsPerPage - fromPreviousPage.size)
+                        newPage.orderedItems.take(paging.resultsPerPage - fromPreviousPage.size)
                             .parMap { api.fetchDetails(UrlFrom(it.id)).bind() }
 
                     Page(
