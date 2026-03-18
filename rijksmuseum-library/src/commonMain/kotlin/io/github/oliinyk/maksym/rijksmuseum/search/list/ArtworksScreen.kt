@@ -22,6 +22,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
@@ -56,6 +57,7 @@ import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.displayMessage
+import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -112,7 +114,7 @@ private fun ArtworksContent(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
             ) {
                 if (state.artworks.data.isNotEmpty()) {
                     artworkItems(state.artworks, onNavigateToDetails)
@@ -200,15 +202,15 @@ private fun ArtworkItem(
     onClick: () -> Unit,
 ) {
     Card(
-        elevation = 4.dp,
-        shape = RoundedCornerShape(8.dp),
+        elevation = MaterialTheme.paddings.small,
+        shape = RoundedCornerShape(MaterialTheme.paddings.medium),
         onClick = onClick
     ) {
         Column {
             ArtworkImage(imageUrl = artwork.images.firstOrNull())
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.paddings.medium))
             ArtworkContents(artwork = artwork)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.paddings.medium))
         }
     }
 }
@@ -221,7 +223,7 @@ private fun ArtworkImage(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+        shape = RoundedCornerShape(topStart = MaterialTheme.paddings.medium, topEnd = MaterialTheme.paddings.medium),
         color = colors.onSurface.copy(alpha = 0.2f)
     ) {
         if (imageUrl != null) {
@@ -240,7 +242,7 @@ private fun ArtworkContents(
     artwork: Artwork,
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = 8.dp)
+        modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium)
     ) {
         Text(
             text = artwork.title.value,
@@ -268,7 +270,7 @@ private fun ArtworksError(
     onRetry: () -> Unit,
 ) {
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(MaterialTheme.paddings.normal),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -277,7 +279,7 @@ private fun ArtworksError(
             textAlign = TextAlign.Center,
             style = typography.body1
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.paddings.normal))
         Button(onClick = onRetry) {
             Text(stringResource(Res.string.artworks_action_retry))
         }
@@ -293,9 +295,9 @@ private fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatf
 @Composable
 private fun contentPaddingValues(): PaddingValues {
     return PaddingValues(
-        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 16.dp,
-        start = 16.dp,
-        end = 16.dp,
+        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + MaterialTheme.paddings.normal,
+        start = MaterialTheme.paddings.normal,
+        end = MaterialTheme.paddings.normal,
         bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     )
 }
