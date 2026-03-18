@@ -9,6 +9,7 @@ import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class SearchRepositoryImplTest {
@@ -76,11 +77,10 @@ class SearchRepositoryImplTest {
 
         // Execute
         val paging = Paging(currentSize = 0, resultsPerPage = 2)
-        val result = repository.fetchArtworks(paging)
+        val page = repository.fetchArtworks(paging).getOrNull()
 
         // Verify
-        assertTrue(result.isRight(), "Result should be Right but was $result")
-        val page = result.getOrNull()!!
+        assertNotNull(page)
         assertEquals(2, page.data.size)
         assertEquals(artwork1, page.data[0])
         assertEquals(artwork2, page.data[1])
