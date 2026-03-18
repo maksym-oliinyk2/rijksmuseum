@@ -85,11 +85,10 @@ internal fun ArtworksScreen(
     }
 }
 
-
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 private fun ArtworksContent(
-    state: ViewState,
+    state: ArtworksViewState,
     onMessage: (Message) -> Unit,
     onNavigateToDetails: (Artwork) -> Unit,
     modifier: Modifier = Modifier,
