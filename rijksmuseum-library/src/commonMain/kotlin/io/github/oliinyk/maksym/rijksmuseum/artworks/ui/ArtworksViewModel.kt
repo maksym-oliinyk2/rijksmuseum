@@ -18,9 +18,9 @@ internal class ArtworksViewModel(
 ) : ViewModel() {
 
     @OptIn(ExperimentalTeaApi::class)
-    val component = Component(
+    val component = Component<Message, ArtworksViewState, LoadCommand>(
         initializer = Initializer(initialState, LoadCommand(Paging.FirstPage)),
-        updater = ::update,
+        updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->
             snapshot.commands.forEach { command ->
                 ctx effect { Message.OnDataLoaded(searchUseCase.searchArtworks(command.paging)) }
