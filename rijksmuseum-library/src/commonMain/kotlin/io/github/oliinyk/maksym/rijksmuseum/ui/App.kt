@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import io.github.oliinyk.maksym.rijksmuseum.artworks.details.ArtworkDetailsScreen
+import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.search.list.ArtworksScreen
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import kotlinx.serialization.Serializable
@@ -48,7 +49,11 @@ public fun App() {
             ),
             entryProvider = entryProvider {
                 entry<RouteA> {
-                    ArtworksScreen()
+                    ArtworksScreen(
+                        onNavigateToDetails = { artwork ->
+                            backStack.add(RouteB(artwork.url.toExternalValue()))
+                        }
+                    )
                 }
                 entry<RouteB> { key ->
                     ArtworkDetailsScreen(key)
