@@ -83,7 +83,6 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
-                implementation(libs.kotlin.test.annotations)
                 implementation(libs.coroutines.test)
             }
         }
@@ -94,6 +93,13 @@ kotlin {
                 implementation(libs.ktor.client.logging)
                 implementation(libs.coroutines.android)
                 implementation(libs.ktor.client.cio)
+            }
+        }
+
+        val androidHostTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.junit)
             }
         }
     }

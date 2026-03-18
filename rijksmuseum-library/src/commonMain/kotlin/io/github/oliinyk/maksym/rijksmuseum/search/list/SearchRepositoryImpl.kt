@@ -2,7 +2,6 @@ package io.github.oliinyk.maksym.rijksmuseum.search.list
 
 import arrow.core.Either
 import arrow.core.raise.either
-import arrow.core.raise.ensure
 import arrow.fx.coroutines.parMap
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
@@ -50,102 +49,66 @@ internal interface SearchRepository {
 }
 
 internal class SearchRepositoryImpl(
-    // in this case hiding the API behind the interface looks like overkill to me,
-    // so I'll use a pre-configured http client
     private val api: Api,
-    private val searchResponseCache: InMemoryCache<SearchResponse> = InMemoryCache(),
+    cachedIds: List<Url> = emptyList(),
+    nextUrl: Url? = SearchUrl,
 ) : SearchRepository {
+
+    private val cachedIds = cachedIds.toMutableList()
+    private var nextPage: Url? = nextUrl
+    private val mutex = Mutex()
 
     override suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> = TODO()
 
-    // for now only forward pagination is supported!
-    // todo as improvement add support for backward pagination too
     override suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>> =
         either {
-            // if another coroutine is updating the cache, we suspend here
-            val currentCachedResponse = searchResponseCache.get()
-            val page: Page<Artwork> = when {
-                // no cache hit
-                currentCachedResponse == null -> {
-                    val curr = searchResponseCache.update { api.searchArtworks(SearchUrl).bind() }
-                    // oh come on, 100 items should be enough for everyone
-                    ensure(curr.orderedItems.size >= paging.currentSize + paging.resultsPerPage) {
-                        IllegalArgumentException("Too large page size")
-                    }
+            val ids = fetchArtworkIds(paging).bind()
 
-                    val itemsToGrab = curr.orderedItems
-                        .subList(paging.currentSize, paging.currentSize + paging.resultsPerPage)
-
-                    val artworks = itemsToGrab.parMap { item ->
-                        api.fetchDetails(UrlFrom(item.id)).bind()
-                    }
-
-                    Page(
-                        hasMore = curr.orderedItems.size - paging.currentSize - paging.resultsPerPage > 0 || curr.next != null,
-                        data = artworks
-                    )
+            if (ids.isEmpty() && paging.currentSize > 0) {
+                @Suppress("UNCHECKED_CAST")
+                Page.End as Page<Artwork>
+            } else {
+                val artworks = ids.parMap { id ->
+                    api.fetchDetails(id).bind()
                 }
-                // there is a cached response and it can provide enough items
-                currentCachedResponse.orderedItems.size >= paging.currentSize + paging.resultsPerPage -> {
-                    val itemsToGrab = currentCachedResponse.orderedItems
-                        .subList(paging.currentSize, paging.currentSize + paging.resultsPerPage)
 
-                    val artworks =
-                        itemsToGrab.parMap { api.fetchDetails(UrlFrom(it.id)).bind() }
-
-                    Page(
-                        hasMore = currentCachedResponse.orderedItems.size - paging.currentSize - paging.resultsPerPage > 0 || currentCachedResponse.next != null,
-                        data = artworks
-                    )
-                }
-                // this unchecked case never fails
-                currentCachedResponse.next == null -> @Suppress("UNCHECKED_CAST") (Page.End as Page<Artwork>)
-                else -> {
-                    val fromPreviousPage =
-                        if (currentCachedResponse.orderedItems.size > paging.currentSize) {
-                            // cached response can provide some items but not all
-                            currentCachedResponse.orderedItems.takeLast(currentCachedResponse.orderedItems.size - paging.currentSize)
-                        } else {
-                            listOf()
-                        }
-                    val newPage = searchResponseCache.update {
-                        api.searchArtworks(
-                            UrlFrom(currentCachedResponse.next.id)
-                        ).bind()
-                    }
-                    val prevAsync =
-                        fromPreviousPage.parMap { api.fetchDetails(UrlFrom(it.id)).bind() }
-                    val currAsync =
-                        newPage.orderedItems.take(paging.resultsPerPage - fromPreviousPage.size)
-                            .parMap { api.fetchDetails(UrlFrom(it.id)).bind() }
-
-                    Page(
-                        hasMore = newPage.orderedItems.size - currAsync.size > 0 || newPage.next != null,
-                        data = prevAsync + currAsync
-                    )
-                }
+                Page(
+                    hasMore = hasMore(paging),
+                    data = artworks
+                )
             }
-
-            page
         }
 
-}
+    private suspend fun fetchArtworkIds(
+        paging: Paging,
+    ): Either<AppException, List<Url>> = mutex.withLock {
+        // only one coroutine at a time can access the cache
+        either {
+            val limit = paging.currentSize + paging.resultsPerPage
+            // Incrementally fetch next pages until we have enough ids in the cache
+            var currentUrl = nextPage
+            while (cachedIds.size < limit && currentUrl != null) {
+                val response = api.searchArtworks(currentUrl).bind()
+                cachedIds.addAll(response.orderedItems.map { UrlFrom(it.id) })
+                currentUrl = response.next?.let { UrlFrom(it.id) }
+            }
 
-internal class InMemoryCache<T>(initial: T? = null) {
-    private var cachedSearchResponse: T? = initial
-    private val mutex = Mutex()
+            nextPage = currentUrl
 
-    // if another coroutine is trying to update the cached response, this function suspends
-    suspend fun get(): T? = mutex.withLock {
-        cachedSearchResponse
+            if (paging.currentSize >= cachedIds.size) {
+                listOf()
+            } else {
+                cachedIds.subList(
+                    paging.currentSize,
+                    limit.coerceAtMost(cachedIds.size)
+                )
+            }
+        }
     }
 
-    // fetches artworks list response and caches if api response is successful
-    suspend fun update(block: suspend () -> T) = mutex.withLock {
-        val updated = block()
-
-        cachedSearchResponse = updated
-
-        updated
+    private suspend fun hasMore(paging: Paging): Boolean = mutex.withLock {
+        val limit = paging.currentSize + paging.resultsPerPage
+        cachedIds.size > limit || nextPage != null
     }
+
 }

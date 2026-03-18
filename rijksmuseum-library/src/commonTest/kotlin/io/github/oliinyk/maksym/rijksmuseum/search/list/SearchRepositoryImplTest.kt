@@ -1,5 +1,7 @@
 package io.github.oliinyk.maksym.rijksmuseum.search.list
 
+import arrow.core.Either
+import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
@@ -15,23 +17,23 @@ class SearchRepositoryImplTest {
     @Test
     fun `test fetchArtworks when cache is null`() = runTest {
         // Setup
-        val item1Id = "en-SK-A-3262"
-        val item2Id = "en-SK-A-4878"
+        val item1Id = "https://data.rijksmuseum.nl/api/en/collection/en-SK-A-3262"
+        val item2Id = "https://data.rijksmuseum.nl/api/en/collection/en-SK-A-4878"
 
         val searchResponse = SearchResponse(
-            next = OrderedCollectionPage(id = "next-page-id"),
+            next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
             orderedItems = listOf(
                 Item(id = item1Id),
                 Item(id = item2Id),
-                Item(id = "item-3"),
-                Item(id = "item-4"),
-                Item(id = "item-5"),
-                Item(id = "item-6"),
-                Item(id = "item-7"),
-                Item(id = "item-8"),
-                Item(id = "item-9"),
-                Item(id = "item-10"),
-                Item(id = "item-11")
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-3"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-4"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-5"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-6"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-7"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-8"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-9"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-10"),
+                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-11")
             )
         )
 
@@ -79,9 +81,9 @@ class SearchRepositoryImplTest {
     @Test
     fun `test fetchArtworks when cache hit with enough items`() = runTest {
         // Setup
-        val item1Id = "item-1"
-        val item2Id = "item-2"
-        val item3Id = "item-3"
+        val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
+        val item2Id = "https://data.rijksmuseum.nl/api/en/collection/item-2"
+        val item3Id = "https://data.rijksmuseum.nl/api/en/collection/item-3"
 
         val initialSearchResponse = SearchResponse(
             next = null,
@@ -100,9 +102,11 @@ class SearchRepositoryImplTest {
             )
         }
 
-        val api = TestApi(artworksDetails = artworksDetails)
-        val cache = InMemoryCache(initialSearchResponse)
-        val repository = SearchRepositoryImpl(api, cache)
+        val api = TestApi(
+            artworksDetails = artworksDetails,
+            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+        )
+        val repository = SearchRepositoryImpl(api)
 
         // Execute: Ask for 2 items starting from index 0
         val paging = Paging(currentSize = 0, resultsPerPage = 2)
@@ -117,21 +121,24 @@ class SearchRepositoryImplTest {
     @Test
     fun `test fetchArtworks when cache hit and it's the end of pagination`() = runTest {
         // Setup
-        val item1Id = "item-1"
+        val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
 
         val initialSearchResponse = SearchResponse(
             next = null,
             orderedItems = listOf(Item(id = item1Id))
         )
 
-        val api = TestApi(artworksDetails = emptyMap())
-        val cache = InMemoryCache(initialSearchResponse)
-        val repository = SearchRepositoryImpl(api, cache)
+        val api = TestApi(
+            artworksDetails = emptyMap(),
+            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+        )
+        val repository = SearchRepositoryImpl(
+            api = api,
+            cachedIds = listOf(UrlFrom(item1Id)),
+            nextUrl = null
+        )
 
         // Execute: currentSize = 1, resultsPerPage = 1. items.size = 1.
-        // The condition currentCachedResponse.orderedItems.size >= paging.currentSize + paging.resultsPerPage
-        // becomes 1 >= 1 + 1, which is false.
-        // Then currentCachedResponse.next == null is true.
         val paging = Paging(currentSize = 1, resultsPerPage = 1)
         val page = repository.fetchArtworks(paging).getOrNull()
 
@@ -143,12 +150,12 @@ class SearchRepositoryImplTest {
     fun `test fetchArtworks when cache hit but not enough items needs to fetch next page`() =
         runTest {
             // Setup
-            val item1Id = "item-1"
-            val item2Id = "item-2"
-            val item3Id = "item-3"
+            val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
+            val item2Id = "https://data.rijksmuseum.nl/api/en/collection/item-2"
+            val item3Id = "https://data.rijksmuseum.nl/api/en/collection/item-3"
 
             val initialSearchResponse = SearchResponse(
-                next = OrderedCollectionPage(id = "next-page-url"),
+                next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
                 orderedItems = listOf(Item(id = item1Id))
             )
 
@@ -161,16 +168,18 @@ class SearchRepositoryImplTest {
                 Artwork(
                     url = UrlFrom(id),
                     title = Title("Title for $id"),
-                    images = listOf(UrlFrom("https://image.url/$id"))
+                    images = listOf(UrlFrom("https://image.url/${id.substringAfterLast("/")}"))
                 )
-            }.mapKeys { it.key } // The map keys are already correct strings
+            }.mapKeys { it.key }
 
             val api = TestApi(
                 artworksDetails = artworksDetails,
-                searchResponses = mapOf(UrlFrom("next-page-url") to nextSearchResponse)
+                searchResponses = mapOf(
+                    SearchUrl to initialSearchResponse,
+                    UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2") to nextSearchResponse
+                )
             )
-            val cache = InMemoryCache(initialSearchResponse)
-            val repository = SearchRepositoryImpl(api, cache)
+            val repository = SearchRepositoryImpl(api)
 
             // Execute: currentSize = 0, resultsPerPage = 2.
             // cache has only 1 item. Need to fetch next page.
@@ -185,4 +194,142 @@ class SearchRepositoryImplTest {
             assertEquals(artworksDetails.values.take(paging.resultsPerPage), page.data)
             assertTrue(page.hasMore) // nextSearchResponse has 2 items, we took 1. 2 - 1 > 0.
         }
+
+    @Test
+    fun `test fetchArtworks when request is beyond cache and no more pages`() = runTest {
+        // Setup
+        val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
+        val initialSearchResponse = SearchResponse(
+            next = null,
+            orderedItems = listOf(Item(id = item1Id))
+        )
+        val api = TestApi(
+            artworksDetails = emptyMap(),
+            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+        )
+        val repository = SearchRepositoryImpl(
+            api = api,
+            cachedIds = listOf(UrlFrom(item1Id)),
+            nextUrl = null
+        )
+
+        // Execute: Ask for items at index 5, but only 1 exists
+        val paging = Paging(currentSize = 5, resultsPerPage = 2)
+        val page = repository.fetchArtworks(paging).getOrNull()
+
+        // Verify
+        assertSame(Page.End, page as Page<*>)
+    }
+
+    @Test
+    fun `test fetchArtworks when multiple pages need to be fetched`() = runTest {
+        // Setup
+        val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
+        val item2Id = "https://data.rijksmuseum.nl/api/en/collection/item-2"
+        val item3Id = "https://data.rijksmuseum.nl/api/en/collection/item-3"
+
+        val response1 = SearchResponse(
+            next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
+            orderedItems = listOf(Item(id = item1Id))
+        )
+        val response2 = SearchResponse(
+            next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=3"),
+            orderedItems = listOf(Item(id = item2Id))
+        )
+        val response3 = SearchResponse(
+            next = null,
+            orderedItems = listOf(Item(id = item3Id))
+        )
+
+        val artworksDetails = listOf(item1Id, item2Id, item3Id).associateWith { id ->
+            Artwork(
+                url = UrlFrom(id),
+                title = Title("Title for $id"),
+                images = listOf(UrlFrom("https://image.url/${id.substringAfterLast("/")}"))
+            )
+        }
+
+        val api = TestApi(
+            artworksDetails = artworksDetails,
+            searchResponses = mapOf(
+                SearchUrl to response1,
+                UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2") to response2,
+                UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=3") to response3
+            )
+        )
+        val repository = SearchRepositoryImpl(api)
+
+        // Execute: resultsPerPage = 3. Cache only has 1 initially. Need to fetch page-2 and page-3.
+        val paging = Paging(currentSize = 0, resultsPerPage = 3)
+        val page = repository.fetchArtworks(paging).getOrNull()
+
+        // Verify
+        assertNotNull(page)
+        assertEquals(3, page.data.size)
+        assertEquals(artworksDetails.values.toList(), page.data)
+    }
+
+    @Test
+    fun `test fetchArtworks when fetching details fails`() = runTest {
+        // Setup
+        val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
+        val initialSearchResponse = SearchResponse(
+            next = null,
+            orderedItems = listOf(Item(id = item1Id))
+        )
+
+        val exception = AppException("Network error")
+        val api = object : Api {
+            override suspend fun searchArtworks(url: io.github.oliinyk.maksym.rijksmuseum.domain.Url): Either<AppException, SearchResponse> =
+                initialSearchResponse.right()
+
+            override suspend fun fetchDetails(url: io.github.oliinyk.maksym.rijksmuseum.domain.Url): Either<AppException, Artwork> =
+                Either.Left(exception)
+        }
+        val repository = SearchRepositoryImpl(api)
+
+        // Execute
+        val paging = Paging(currentSize = 0, resultsPerPage = 1)
+        val result = repository.fetchArtworks(paging)
+
+        // Verify
+        assertTrue(result.isLeft())
+        val actualException = (result as Either.Left<AppException>).value
+        assertEquals(exception, actualException)
+    }
+
+    @Test
+    fun `test hasMore when exactly at the end of items and no next page`() = runTest {
+        // Setup
+        val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
+        val initialSearchResponse = SearchResponse(
+            next = null,
+            orderedItems = listOf(Item(id = item1Id))
+        )
+        val artworksDetails = mapOf(
+            item1Id to Artwork(
+                url = UrlFrom(item1Id),
+                title = Title("Title"),
+                images = emptyList()
+            )
+        )
+        val api = TestApi(
+            artworksDetails = artworksDetails,
+            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+        )
+        val repository = SearchRepositoryImpl(
+            api = api,
+            cachedIds = listOf(UrlFrom(item1Id)),
+            nextUrl = null
+        )
+
+        // Execute: currentSize = 0, resultsPerPage = 1. items.size = 1.
+        // limit = 0 + 1 = 1.
+        // cachedIds.size (1) > limit (1) is false. nextUrl is null.
+        val hasMore = repository.fetchArtworks(Paging(currentSize = 0, resultsPerPage = 1))
+            .getOrNull()?.hasMore
+
+        // Verify
+        assertEquals(false, hasMore)
+    }
 }
