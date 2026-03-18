@@ -15,6 +15,7 @@ kotlinx-serialization = "1.10.0"
 kotlinxCoroutines = "1.10.2"
 material3 = "1.9.0"
 androidx-nav3 = "1.0.0-alpha06"
+arrow = "2.2.2"
 
 [libraries]
 # Convention plugins
@@ -60,7 +61,8 @@ koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-compose-nav3 = { module = "io.insert-koin:koin-compose-navigation3" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
-arrow-core = { module = "io.arrow-kt:arrow-core", version = "2.2.2" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+arrow-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrow" }
 
 [bundles]
 coil = ["coil-compose", "coil-network"]

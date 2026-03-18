@@ -76,6 +76,7 @@ kotlin {
                 implementation(libs.koin.compose.nav3)
                 implementation(libs.koin.compose.viewmodel)
                 implementation(libs.arrow.core)
+                implementation(libs.arrow.coroutines)
             }
         }
 
