@@ -31,11 +31,6 @@ internal class ArtworksViewModel(private val searchUseCase: SearchUseCase) : Vie
             }
         }
     }
-
-    fun onLoadMore() {
-
-    }
-
 }
 
 internal data class ViewState(

@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
+import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -279,22 +280,15 @@ class SearchRepositoryImplTest {
         )
 
         val exception = AppException("Network error")
-        val api = object : Api {
-            override suspend fun searchArtworks(url: io.github.oliinyk.maksym.rijksmuseum.domain.Url): Either<AppException, SearchResponse> =
-                initialSearchResponse.right()
-
-            override suspend fun fetchDetails(url: io.github.oliinyk.maksym.rijksmuseum.domain.Url): Either<AppException, Artwork> =
-                Either.Left(exception)
-        }
-        val repository = SearchRepositoryImpl(api)
+        val repository = SearchRepositoryImpl(FailingApi(initialSearchResponse, exception))
 
         // Execute
         val paging = Paging(currentSize = 0, resultsPerPage = 1)
         val result = repository.fetchArtworks(paging)
 
         // Verify
-        assertTrue(result.isLeft())
-        val actualException = (result as Either.Left<AppException>).value
+        val actualException = result.leftOrNull()
+        assertNotNull(actualException)
         assertEquals(exception, actualException)
     }
 
@@ -332,4 +326,17 @@ class SearchRepositoryImplTest {
         // Verify
         assertEquals(false, hasMore)
     }
+}
+
+private class FailingApi(
+    private val searchResponse: SearchResponse,
+    private val exception: AppException,
+) : Api {
+    override suspend fun searchArtworks(
+        url: Url
+    ): Either<AppException, SearchResponse> =
+        searchResponse.right()
+
+    override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
+        Either.Left(exception)
 }

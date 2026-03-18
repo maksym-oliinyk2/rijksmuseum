@@ -96,7 +96,7 @@ kotlin {
             }
         }
 
-        val androidHostTest by getting {
+        androidUnitTest {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.junit)

@@ -12,7 +12,7 @@ public data class HumanMadeObjectResponse(
 
 @Serializable
 public data class Identification(
-    val type: String,// filter for Name
+    val type: String, // filter for Name
     val content: String? = null,
 )
 
@@ -20,5 +20,3 @@ public data class Identification(
 public data class VisualItemBrief(
     val id: String,
 )
-
-

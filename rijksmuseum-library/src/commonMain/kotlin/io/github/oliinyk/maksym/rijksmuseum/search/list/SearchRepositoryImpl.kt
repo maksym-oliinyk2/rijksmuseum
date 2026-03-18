@@ -110,5 +110,4 @@ internal class SearchRepositoryImpl(
         val limit = paging.currentSize + paging.resultsPerPage
         cachedIds.size > limit || nextPage != null
     }
-
 }

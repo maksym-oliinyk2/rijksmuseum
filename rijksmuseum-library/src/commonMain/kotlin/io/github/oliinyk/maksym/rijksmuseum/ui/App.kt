@@ -48,7 +48,7 @@ public fun App() {
             ),
             entryProvider = entryProvider {
                 entry<RouteA> {
-                    ArtworksScreen(onDetails = { backStack.add(RouteB("$it")) })
+                    ArtworksScreen()
                 }
                 entry<RouteB> { key ->
                     ArtworkDetailsScreen(key)

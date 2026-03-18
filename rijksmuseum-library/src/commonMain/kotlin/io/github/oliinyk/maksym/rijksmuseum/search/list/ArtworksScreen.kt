@@ -13,21 +13,18 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ArtworksScreen(
-    onDetails: (index: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArtworksViewModel = koinViewModel<ArtworksViewModel>()
 ) {
-
     val state by viewModel.state.collectAsState()
 
     LazyColumn(modifier = modifier) {
-
         items(
             items = state.artworks.data,
             key = { it.url.toExternalValue() }
         ) { i ->
             Button(onClick = {
-                //onDetails(i)
+                // onDetails(i)
             }) {
                 Text(i.title.value)
             }

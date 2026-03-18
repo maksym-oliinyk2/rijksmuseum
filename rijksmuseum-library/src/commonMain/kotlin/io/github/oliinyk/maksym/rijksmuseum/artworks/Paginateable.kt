@@ -38,7 +38,6 @@ public data class Paginateable<out T>(
     public data object Idle : State
 }
 
-
 public val Paginateable<*>.isRefreshable: Boolean
     get() = isIdle
 
@@ -79,7 +78,6 @@ internal fun <T> Paginateable<T>.toIdle(
         )
     }
 
-
 internal fun <T> Paginateable<T>.toIdle(
     page: Page<T>,
 ): Paginateable<T> = toIdle(page.data, page.hasMore)
@@ -87,4 +85,3 @@ internal fun <T> Paginateable<T>.toIdle(
 internal fun <T> Paginateable<T>.toException(
     cause: AppException,
 ): Paginateable<T> = copy(state = Paginateable.Exception(cause))
-

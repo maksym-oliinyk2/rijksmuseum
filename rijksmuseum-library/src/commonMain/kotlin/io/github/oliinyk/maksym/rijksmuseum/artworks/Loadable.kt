@@ -66,4 +66,3 @@ public val Loadable<*>.isIdle: Boolean
 
 public val Loadable<*>.isException: Boolean
     get() = state is Loadable.Exception
-
