@@ -10,8 +10,10 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsScreen
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkNavEntry
+import io.github.oliinyk.maksym.rijksmuseum.artwork.registerArtworkNavEntry
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksNavEntry
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksScreen
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.registerArtworksNavEntry
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import kotlinx.serialization.modules.SerializersModule
@@ -20,8 +22,8 @@ import kotlinx.serialization.modules.polymorphic
 private val savedStateConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(ArtworksNavEntry::class, ArtworksNavEntry.serializer())
-            subclass(ArtworkNavEntry::class, ArtworkNavEntry.serializer())
+            registerArtworksNavEntry()
+            registerArtworkNavEntry()
         }
     }
 }

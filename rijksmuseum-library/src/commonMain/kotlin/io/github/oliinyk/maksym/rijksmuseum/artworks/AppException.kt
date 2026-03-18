@@ -10,6 +10,5 @@ import org.jetbrains.compose.resources.stringResource
  */
 public typealias AppException = Throwable
 
-
 public val AppException.displayMessage: String
     @Composable get() = message ?: stringResource(Res.string.exception_unknown)
