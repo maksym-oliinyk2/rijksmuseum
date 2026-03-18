@@ -54,6 +54,7 @@ kotlin {
                 api(libs.compose.runtime)
                 api(libs.compose.foundation)
                 api(libs.compose.components.ui.tooling.preview)
+                api(libs.tea.core)
                 implementation(libs.compose.components.resources)
                 implementation(libs.bundles.coil)
                 implementation(libs.compose.material)
@@ -96,7 +97,7 @@ kotlin {
             }
         }
 
-        androidUnitTest {
+        val androidHostTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.junit)
