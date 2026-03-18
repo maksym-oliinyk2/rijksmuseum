@@ -6,6 +6,8 @@ import arrow.core.Either
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
+import io.github.oliinyk.maksym.rijksmuseum.artworks.isIdle
+import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.toIdle
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
@@ -16,6 +18,7 @@ import io.github.xlopec.tea.core.ExperimentalTeaApi
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import io.github.xlopec.tea.core.Update
+import io.github.xlopec.tea.core.command
 import io.github.xlopec.tea.core.effect
 import io.github.xlopec.tea.core.noCommand
 import io.github.xlopec.tea.core.toStatesComponent
@@ -25,20 +28,6 @@ internal class ArtworksViewModel(
     private val searchUseCase: SearchUseCase,
     initialState: ViewState = ViewState(),
 ) : ViewModel() {
-
-    /*private val _intents = MutableSharedFlow<Intent>()
-    private val _effects = MutableSharedFlow<LoadEffect>()
-
-    val state = flow {
-        var state = initialState
-
-        _intents.collect { intent ->
-            val (nextState, effect) = reduce(intent, state)
-            state = nextState
-            _effects.emit(effect)
-            emit(nextState)
-        }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, initialState)*/
 
     @OptIn(ExperimentalTeaApi::class)
     val component = Component(
@@ -58,14 +47,30 @@ internal class ArtworksViewModel(
 internal fun update(message: Message, state: ViewState): Update<ViewState, LoadCommand> {
     return when (message) {
         is Message.OnDataLoaded -> state.onLoaded(message.result)
-        Message.OnLoadNext -> TODO()
-        Message.OnRefresh -> TODO()
+        Message.OnLoadNext -> state.onLoadNext()
+        Message.OnRefresh -> state.onRefresh()
     }
+}
+
+private fun ViewState.onLoadNext(): Update<ViewState, LoadCommand> {
+    if (artworks.hasMore && artworks.isIdle) {
+        return copy(artworks = artworks.copy(state = Paginateable.LoadingNext))
+            .command(LoadCommand(Paging(artworks.data.size)))
+    }
+    return noCommand()
+}
+
+private fun ViewState.onRefresh(): Update<ViewState, LoadCommand> {
+    if (artworks.isRefreshable) {
+        return copy(artworks = artworks.copy(state = Paginateable.Refreshing))
+            .command(LoadCommand(Paging.FirstPage))
+    }
+    return noCommand()
 }
 
 private fun ViewState.onLoaded(
     result: Either<AppException, Page<Artwork>>
-): Update<ViewState, Nothing> {
+): Update<ViewState, LoadCommand> {
     val updated = result.fold(
         { artworks.toException(it) },
         { artworks.toIdle(it) }
