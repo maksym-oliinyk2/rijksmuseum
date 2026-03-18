@@ -1,4 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.search.list
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -22,14 +23,15 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
@@ -38,7 +40,9 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -49,14 +53,16 @@ internal fun ArtworksScreen(
 ) {
     val messages = remember { MutableSharedFlow<Message>() }
     val component = remember { viewModel.component(messages) }
-    val state by component.collectAsState(null)
+    val state by component.collectAsStateWithLifecycle(null)
     val currentState = state
 
     if (currentState != null) {
+        val scope = rememberCoroutineScope { Dispatchers.Main.immediate }
+
         ArtworksContent(
             modifier = modifier,
             state = currentState,
-            onMessage = { messages.tryEmit(it) },
+            onMessage = { scope.launch { messages.emit(it) } },
             onNavigateToDetails = onNavigateToDetails
         )
     }
@@ -80,40 +86,39 @@ private fun ArtworksContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             if (state.artworks.data.isNotEmpty()) {
-                artworkItems(state.artworks, onMessage, onNavigateToDetails)
+                artworkItems(state.artworks, onNavigateToDetails)
             }
 
-            loadableContent(
-                state.artworks,
-                onMessage
+            paginateableContent(
+                paginateable = state.artworks,
+                onMessage = onMessage
             )
+
+            item {
+                LaunchedEffect(Unit) {
+                    onMessage(Message.OnLoadNext)
+                }
+            }
         }
     }
 }
 
 private fun LazyListScope.artworkItems(
     paginateable: Paginateable<Artwork>,
-    onMessage: (Message) -> Unit,
     onNavigateToDetails: (Artwork) -> Unit,
 ) {
-    itemsIndexed(
+    items(
         items = paginateable.data,
-        key = { _, item -> item.url.toExternalValue() },
-    ) { index, artwork ->
+        key = { item -> item.url.toExternalValue() },
+    ) { artwork ->
         ArtworkItem(
             artwork = artwork,
             onClick = { onNavigateToDetails(artwork) }
         )
-
-        LaunchedEffect(index == paginateable.data.lastIndex) {
-            if (index == paginateable.data.lastIndex) {
-                onMessage(Message.OnLoadNext)
-            }
-        }
     }
 }
 
-private fun LazyListScope.loadableContent(
+private fun LazyListScope.paginateableContent(
     paginateable: Paginateable<Artwork>,
     onMessage: (Message) -> Unit,
 ) = item(
