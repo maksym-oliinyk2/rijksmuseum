@@ -29,6 +29,4 @@ internal class ArtworksViewModel(
         scope = viewModelScope,
         shareOptions = ShareOptions(SharingStarted.Lazily, 1u)
     ).toStatesComponent()
-
 }
-

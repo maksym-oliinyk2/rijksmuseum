@@ -108,7 +108,6 @@ private fun ArtworksContent(
                 .pullRefresh(refreshState, state.artworks.isRefreshable),
             contentAlignment = Alignment.TopCenter
         ) {
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = contentPaddingValues(),
@@ -132,7 +131,9 @@ private fun ArtworksContent(
             }
 
             PullRefreshIndicator(
-                modifier = Modifier.padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()),
+                modifier = Modifier.padding(
+                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                ),
                 refreshing = state.artworks.isRefreshing,
                 state = refreshState,
             )
@@ -165,9 +166,17 @@ private fun LazyListScope.paginateableContent(
     when (val state = paginateable.state) {
         is Paginateable.Exception ->
             ArtworksError(
-                modifier = if (paginateable.data.isEmpty()) Modifier.fillParentMaxSize() else Modifier.fillParentMaxWidth(),
+                modifier = if (paginateable.data.isEmpty()) {
+                    Modifier.fillParentMaxSize()
+                } else {
+                    Modifier.fillParentMaxWidth()
+                },
                 message = state.exception.displayMessage,
-                onRetry = { onMessage(if (paginateable.data.isEmpty()) Message.OnReload else Message.OnLoadNext) }
+                onRetry = {
+                    val message = if (paginateable.data.isEmpty()) Message.OnReload else Message.OnLoadNext
+
+                    onMessage(message)
+                }
             )
 
         is Paginateable.Loading -> ArtworksProgress(modifier = Modifier.fillParentMaxSize())
