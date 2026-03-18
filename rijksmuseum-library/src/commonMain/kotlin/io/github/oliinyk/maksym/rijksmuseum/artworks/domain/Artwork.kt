@@ -1,15 +1,7 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.domain
+package io.github.oliinyk.maksym.rijksmuseum.artworks.domain
 
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import kotlin.jvm.JvmInline
-
-/**
- * Exception type used across the search domain to represent application-level errors.
- */
-public typealias AppException = Throwable
-
-public val AppException.displayMessage: String
-    get() = this.message ?: "Unknown error"
 
 /**
  * Represents the title of an artwork.

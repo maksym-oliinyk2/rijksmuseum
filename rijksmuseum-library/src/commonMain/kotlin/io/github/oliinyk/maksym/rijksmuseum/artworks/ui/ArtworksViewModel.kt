@@ -1,9 +1,9 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.list
+package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import io.github.xlopec.tea.core.Component
 import io.github.xlopec.tea.core.ExperimentalTeaApi
 import io.github.xlopec.tea.core.Initializer

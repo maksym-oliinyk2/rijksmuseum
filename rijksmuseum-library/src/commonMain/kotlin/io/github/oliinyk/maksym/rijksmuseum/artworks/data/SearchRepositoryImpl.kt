@@ -1,20 +1,19 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.list
+package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.fx.coroutines.parMap
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
+import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchRepository
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 internal class SearchRepositoryImpl(
-    private val api: Api,
+    private val api: SearchApi,
     cachedIds: List<Url> = emptyList(),
     nextUrl: Url? = SearchUrl,
 ) : SearchRepository {

@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.ui
+package io.github.oliinyk.maksym.rijksmuseum.app
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -8,25 +8,20 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import io.github.oliinyk.maksym.rijksmuseum.artworks.details.ArtworkDetailsScreen
+import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsScreen
+import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkNavEntry
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksNavEntry
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksScreen
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
-import io.github.oliinyk.maksym.rijksmuseum.search.list.ArtworksScreen
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-
-@Serializable
-internal data object RouteA : NavKey
-
-@Serializable
-internal data class RouteB(val id: String) : NavKey
 
 private val savedStateConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(RouteA::class, RouteA.serializer())
-            subclass(RouteB::class, RouteB.serializer())
+            subclass(ArtworksNavEntry::class, ArtworksNavEntry.serializer())
+            subclass(ArtworkNavEntry::class, ArtworkNavEntry.serializer())
         }
     }
 }
@@ -34,7 +29,7 @@ private val savedStateConfig = SavedStateConfiguration {
 @Composable
 public fun App() {
     RijksmuseumTheme {
-        val backStack = rememberNavBackStack(savedStateConfig, RouteA)
+        val backStack = rememberNavBackStack(savedStateConfig, ArtworksNavEntry)
 
         NavDisplay(
             backStack = backStack,
@@ -48,14 +43,14 @@ public fun App() {
                 rememberViewModelStoreNavEntryDecorator()
             ),
             entryProvider = entryProvider {
-                entry<RouteA> {
+                entry<ArtworksNavEntry> {
                     ArtworksScreen(
                         onNavigateToDetails = { artwork ->
-                            backStack.add(RouteB(artwork.url.toExternalValue()))
+                            backStack.add(ArtworkNavEntry(artwork.url.toExternalValue()))
                         }
                     )
                 }
-                entry<RouteB> { key ->
+                entry<ArtworkNavEntry> { key ->
                     ArtworkDetailsScreen(key)
                 }
             }

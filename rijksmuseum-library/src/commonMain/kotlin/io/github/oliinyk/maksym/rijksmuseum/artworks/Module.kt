@@ -1,7 +1,11 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.list
+package io.github.oliinyk.maksym.rijksmuseum.artworks
 
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchRepository
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApiImpl
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepository
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
@@ -20,7 +24,7 @@ import org.koin.plugin.module.dsl.bind
 @Suppress("FunctionName")
 internal fun SearchModule(engine: HttpClientEngineFactory<HttpClientEngineConfig>) = module {
     single { HttpClient(LogLevel.ALL, engine) }
-    singleOf(::ApiImpl).bind(Api::class)
+    singleOf(::SearchApiImpl).bind(SearchApi::class)
     single { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)
     singleOf(::SearchUseCase)
     viewModel { ArtworksViewModel(get()) }

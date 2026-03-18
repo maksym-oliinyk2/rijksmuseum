@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.list
+package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,17 +46,17 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Paginateable
-import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshable
-import io.github.oliinyk.maksym.rijksmuseum.artworks.isRefreshing
+import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_action_retry
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.displayMessage
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

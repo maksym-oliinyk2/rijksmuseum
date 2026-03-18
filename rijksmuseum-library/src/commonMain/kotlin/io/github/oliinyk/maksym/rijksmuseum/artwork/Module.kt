@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.details
+package io.github.oliinyk.maksym.rijksmuseum.artwork
 
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module

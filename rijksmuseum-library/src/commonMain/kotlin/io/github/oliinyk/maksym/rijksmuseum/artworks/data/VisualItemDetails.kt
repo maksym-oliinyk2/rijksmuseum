@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.details
+package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks
+package io.github.oliinyk.maksym.rijksmuseum.ui.model
 
 public data class Page<out T>(
     val data: List<T>,
