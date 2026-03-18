@@ -1,6 +1,11 @@
 package io.github.kotlin
 
 import android.app.Application
+import android.os.StrictMode.ThreadPolicy
+import android.os.StrictMode.VmPolicy
+import android.os.StrictMode.setThreadPolicy
+import android.os.StrictMode.setVmPolicy
+import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.di.AppModule
 import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
@@ -10,9 +15,28 @@ public class RijksmuseumApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            setupStrictAppPolicies()
+        }
         startKoin {
             androidContext(this@RijksmuseumApp)
             modules(AppModule(CIO))
         }
     }
+}
+
+private fun setupStrictAppPolicies() {
+    setThreadPolicy(
+        ThreadPolicy.Builder()
+            .detectAll()
+            .penaltyLog()
+            .build()
+    )
+
+    setVmPolicy(
+        VmPolicy.Builder()
+            .detectAll()
+            .penaltyLog()
+            .build()
+    )
 }

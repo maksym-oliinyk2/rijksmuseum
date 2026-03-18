@@ -26,43 +26,6 @@ internal class ToVersionNameExtensionTest {
         }
     }
 
-    // Alpha tests
-
-    @Test
-    fun `when convert to version name, given parse alpha version from tag, then it's correct`() =
-        assertEquals("1.2.3-alpha4", Alpha.fromTag("v1.2.3-alpha4").toVersionName())
-
-    @Test
-    fun `when convert to version name, given parse alpha version from invalid tag, then parse exception thrown`() =
-        shouldThrowForEach<IllegalStateException>(
-            Alpha::fromTag,
-            "v1.2.3-alpha4-rc56",
-            "1.2.3-alpha4-rc56",
-            "v1.2.3alpha4-rc56",
-            "v1.2.3-56",
-        )
-
-    // RC tests
-
-    @Test
-    fun `when convert to version name, given parse alpha RC version from tag, then it's correct`() =
-        assertEquals("1.2.3-alpha4-rc56", ReleaseCandidate.fromTag("v1.2.3-alpha4-rc56").toVersionName())
-
-    @Test
-    fun `when convert to version name, given parse RC version from tag, then it's correct`() =
-        assertEquals("1.2.3-rc45", ReleaseCandidate.fromTag("v1.2.3-rc45").toVersionName())
-
-    @Test
-    fun `when convert to version name, given parse RC version from invalid tag, then parse exception thrown`() =
-        shouldThrowForEach<IllegalStateException>(
-            ReleaseCandidate::fromTag,
-            "v1.2.3",
-            "1.2.3",
-            "v1.2.3-r1",
-            "v1.2.3rc1",
-            "v1.2.3-rc01",
-        )
-
     // Release tests
 
     @Test

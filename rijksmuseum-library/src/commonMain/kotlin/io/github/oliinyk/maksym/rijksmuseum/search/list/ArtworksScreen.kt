@@ -133,9 +133,7 @@ private fun ArtworksContent(
             }
 
             PullRefreshIndicator(
-                modifier = Modifier.padding(
-                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-                ),
+                modifier = Modifier.padding(WindowInsets.statusBars.asPaddingValues()),
                 refreshing = state.artworks.isRefreshing,
                 state = refreshState,
             )
@@ -288,7 +286,7 @@ private fun ArtworksError(
 
 @Composable
 private fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
-    .data(toExternalValue())
+    .data(toExternalValue().also { println("Image url: $it") })
     .crossfade(true)
     .build()
 
