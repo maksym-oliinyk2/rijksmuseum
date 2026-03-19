@@ -33,7 +33,7 @@ private val savedStateConfig = SavedStateConfiguration {
 @Composable
 public fun App() {
     RijksmuseumTheme {
-       // val backStack = rememberNavBackStack(savedStateConfig, ArtworksNavEntry)
+        // val backStack = rememberNavBackStack(savedStateConfig, ArtworksNavEntry)
         val navigator = koinInject<Navigator>()
 
         NavDisplay(

@@ -53,7 +53,6 @@ internal sealed interface ArtworksCommand {
     ) : ArtworksCommand
 }
 
-
 internal fun ArtworksViewState.update(message: Message): Update<ArtworksViewState, ArtworksCommand> {
     return when (message) {
         is Message.OnDataLoaded -> onLoaded(message.result)

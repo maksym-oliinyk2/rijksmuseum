@@ -9,11 +9,7 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 internal class Navigator(
     private val navBackStack: NavBackStack<NavKey>,
     private val artworkValueHolder: ValueHolder<Artwork>,
-): List<NavKey> by navBackStack {
-
-    init {
-        println("hjer")
-    }
+) : List<NavKey> by navBackStack {
 
     fun navigateBack() {
         navBackStack.removeLastOrNull()
