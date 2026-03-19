@@ -82,4 +82,4 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Run connected Android tests
-        run: ./gradlew allDevicesAndroidDeviceTest -Pandroid.experimental.testOptions.managedDevices.maxConcurrentDevices=1
+        run: ./gradlew allDevicesAndroidDeviceTest -Pandroid.experimental.testOptions.managedDevices.maxConcurrentDevices=1 -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect"
