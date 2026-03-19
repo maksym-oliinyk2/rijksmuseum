@@ -49,9 +49,9 @@ internal class SearchRepositoryImpl(
             // Incrementally fetch next pages until we have enough ids in the cache
             var currentUrl = nextPage
             while (cachedIds.size < limit && currentUrl != null) {
-                val response = api.search(currentUrl).bind()
-                cachedIds.addAll(response.items.map { it.id })
-                currentUrl = response.next?.id
+                val (next, ids) = api.fetchArtworkIds(currentUrl).bind()
+                cachedIds.addAll(ids)
+                currentUrl = next
             }
 
             nextPage = currentUrl

@@ -16,8 +16,13 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject as D
 // todo it shouldn't be here
 internal val SearchUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
 
+internal data class PaginatedIds(
+    val next: Url?,
+    val ids: List<Url>,
+)
+
 internal interface SearchApi {
-    suspend fun search(url: Url): Either<AppException, HumanMadeObjectResponse.ArtworksResponse>
+    suspend fun fetchArtworkIds(url: Url): Either<AppException, PaginatedIds>
 
     suspend fun fetchDetails(url: Url): Either<AppException, Artwork>
 }
@@ -25,9 +30,14 @@ internal interface SearchApi {
 internal class SearchApiImpl(
     private val client: HttpClient,
 ) : SearchApi {
-    override suspend fun search(url: Url): Either<AppException, HumanMadeObjectResponse.ArtworksResponse> =
+    override suspend fun fetchArtworkIds(url: Url): Either<AppException, PaginatedIds> =
         Either.catch {
-            client.get(url.toExternalValue()).body<HumanMadeObjectResponse.ArtworksResponse>()
+            val response = client.get(url.toExternalValue()).body<HumanMadeObjectResponse.ArtworksResponse>()
+
+            PaginatedIds(
+                next = response.next?.id,
+                ids = response.items.map { it.id },
+            )
         }
 
     override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =

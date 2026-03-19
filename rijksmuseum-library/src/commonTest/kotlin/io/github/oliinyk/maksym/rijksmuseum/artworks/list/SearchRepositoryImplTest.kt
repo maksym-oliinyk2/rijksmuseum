@@ -5,6 +5,7 @@ import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchUrl
@@ -353,10 +354,13 @@ private class FailingSearchApi(
     private val searchResponse: HumanMadeObjectResponse.ArtworksResponse,
     private val exception: AppException,
 ) : SearchApi {
-    override suspend fun search(
+    override suspend fun fetchArtworkIds(
         url: Url
-    ): Either<AppException, HumanMadeObjectResponse.ArtworksResponse> =
-        searchResponse.right()
+    ): Either<AppException, PaginatedIds> =
+        PaginatedIds(
+            next = searchResponse.next?.id,
+            ids = searchResponse.items.map { it.id }
+        ).right()
 
     override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
         Either.Left(exception)
