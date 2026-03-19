@@ -42,13 +42,13 @@ internal class SearchApiImpl(
 
             // 3. Fetch visual item details to get links to digital objects (images)
             val visualItemDetails1 = humanMadeObject1.shows.firstNotNullOfOrNull {
-                client.get(it.id).body<VisualItemDetails>()
+                client.get(it.id.toExternalValue()).body<VisualItemDetails>()
             } ?: error("No visual item details found for ${humanMadeObject1.id}")
 
             // 4. Fetch digital object details to get the actual access points (image URLs)
             val digitalObjectDetails1 =
                 visualItemDetails1.digitallyShownBy.firstNotNullOfOrNull {
-                    client.get(it.id).body<DigitalObjectDetails>()
+                    client.get(it.id.toExternalValue()).body<DigitalObjectDetails>()
                 }
                     ?: error("No digital object details found for ${visualItemDetails1.id}")
 
@@ -57,7 +57,7 @@ internal class SearchApiImpl(
             ArtworkPreview(
                 url = url,
                 title = Title(name),
-                images = urls.map { UrlFrom(it) }
+                images = urls
             )
         }
 }

@@ -6,7 +6,6 @@ import arrow.fx.coroutines.parMap
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import kotlinx.coroutines.sync.Mutex
@@ -53,8 +52,8 @@ internal class SearchRepositoryImpl(
             var currentUrl = nextPage
             while (cachedIds.size < limit && currentUrl != null) {
                 val response = api.search(currentUrl).bind()
-                cachedIds.addAll(response.items.map { UrlFrom(it.id) })
-                currentUrl = response.next?.let { UrlFrom(it.id) }
+                cachedIds.addAll(response.items.map { it.id })
+                currentUrl = response.next?.id
             }
 
             nextPage = currentUrl
