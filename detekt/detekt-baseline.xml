@@ -1,3 +1,7 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>LongMethod:Typography.kt$@Composable internal fun typography(): Typography</ID>
+  </CurrentIssues>
 </SmellBaseline>

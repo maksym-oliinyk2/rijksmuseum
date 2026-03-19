@@ -305,7 +305,7 @@ private fun ArtworksError(
 
 @Composable
 private fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
-    .data(toExternalValue().also { println("Image url: $it") })
+    .data(toExternalValue())
     .crossfade(true)
     .build()
 
