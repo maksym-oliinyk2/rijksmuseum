@@ -38,8 +38,19 @@ kotlin {
 
         withJava() // enable java compilation support
         withHostTestBuilder {}.configure {}
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            execution = "HOST"
+
+            managedDevices {
+                localDevices {
+                    create("pixel5") {
+                        device = "Pixel 5"
+                        apiLevel = 35
+                        systemImageSource = "aosp-atd"
+                    }
+                }
+            }
         }
     }
     iosX64()
@@ -115,10 +126,18 @@ kotlin {
             }
         }
 
-        val androidHostTest by getting {
+        getByName("androidHostTest") {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.junit)
+            }
+        }
+
+        getByName("androidDeviceTest") {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.compose.ui.test)
+                implementation(libs.compose.test.manifest)
             }
         }
     }
@@ -128,7 +147,8 @@ buildConfig {
     packageName.set("io.github.oliinyk.maksym.rijksmuseum")
     useKotlinOutput { internalVisibility = true }
 
-    val debugEnabled = project.findProperty("forceDebug")?.toString()?.toBoolean() == true || libraryVersion.isSnapshot
+    val debugEnabled = project.findProperty("forceDebug")?.toString()
+        ?.toBoolean() == true || libraryVersion.isSnapshot
 
     logger.log(LogLevel.LIFECYCLE, "DEBUG enabled: $debugEnabled")
     buildConfigField("kotlin.Boolean", "DEBUG", "$debugEnabled")

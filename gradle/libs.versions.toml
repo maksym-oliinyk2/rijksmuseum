@@ -12,10 +12,9 @@ compose = "1.10.2"
 koin = "4.2.0-RC2"
 androidx-lifecycle = "2.10.0-beta01"
 kotlinx-serialization = "1.10.0"
-kotlinxCoroutines = "1.10.2"
-material3 = "1.9.0"
 androidx-nav3 = "1.0.0-alpha06"
 arrow = "2.2.2"
+uiTest = "1.10.5"
 
 [libraries]
 # Convention plugins
@@ -24,8 +23,7 @@ convention-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin
 
 junit = { module = "junit:junit", version = "4.13.2" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
-kotlin-test-annotations = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common" }
-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
+compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTest" }
 android-test-orchestrator = { module = "androidx.test:orchestrator", version = "1.6.1" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -51,9 +49,8 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "
 splashscreen = { module = "androidx.core:core-splashscreen", version = "1.2.0" }
 ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose" }
 ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose" }
 androidx-nav3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "androidx-nav3" }
-#compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }

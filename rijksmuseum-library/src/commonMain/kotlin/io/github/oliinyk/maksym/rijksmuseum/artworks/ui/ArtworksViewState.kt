@@ -36,12 +36,12 @@ internal data class ArtworksViewState(
 @JvmInline
 internal value class LoadCommand(val paging: Paging)
 
-internal fun update(message: Message, state: ArtworksViewState): Update<ArtworksViewState, LoadCommand> {
+internal fun ArtworksViewState.update(message: Message): Update<ArtworksViewState, LoadCommand> {
     return when (message) {
-        is Message.OnDataLoaded -> state.onLoaded(message.result)
-        Message.OnLoadNext -> state.onLoadNext()
-        Message.OnRefresh -> state.onRefresh()
-        Message.OnReload -> state.onReload()
+        is Message.OnDataLoaded -> onLoaded(message.result)
+        Message.OnLoadNext -> onLoadNext()
+        Message.OnRefresh -> onRefresh()
+        Message.OnReload -> onReload()
     }
 }
 

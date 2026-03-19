@@ -22,6 +22,7 @@ detekt {
 }
 
 tasks.withType<Detekt>().configureEach {
+    jvmTarget = "19"
     include("**/*.kt", "**/*.kts")
     exclude("resources/", "**/build/**", "**/test/java/**")
     setSource(files(projectDir))
@@ -33,6 +34,7 @@ tasks.withType<Detekt>().configureEach {
 }
 
 val detektProjectBaseline by tasks.registering(DetektCreateBaselineTask::class) {
+    jvmTarget = "19"
     ignoreFailures.set(true)
     parallel.set(true)
     setSource(files(rootDir))

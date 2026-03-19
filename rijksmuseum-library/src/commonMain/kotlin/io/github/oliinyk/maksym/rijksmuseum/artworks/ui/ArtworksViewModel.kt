@@ -10,6 +10,7 @@ import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import io.github.xlopec.tea.core.effect
 import io.github.xlopec.tea.core.toStatesComponent
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 
 internal class ArtworksViewModel(
@@ -18,9 +19,9 @@ internal class ArtworksViewModel(
 ) : ViewModel() {
 
     @OptIn(ExperimentalTeaApi::class)
-    val component = Component(
+    private val component = Component<Message, ArtworksViewState, LoadCommand>(
         initializer = Initializer(initialState, LoadCommand(Paging.FirstPage)),
-        updater = ::update,
+        updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->
             snapshot.commands.forEach { command ->
                 ctx effect { Message.OnDataLoaded(searchUseCase.searchArtworks(command.paging)) }
@@ -29,4 +30,6 @@ internal class ArtworksViewModel(
         scope = viewModelScope,
         shareOptions = ShareOptions(SharingStarted.Lazily, 1u)
     ).toStatesComponent()
+
+    operator fun invoke(message: Flow<Message>): Flow<ArtworksViewState> = component(message)
 }

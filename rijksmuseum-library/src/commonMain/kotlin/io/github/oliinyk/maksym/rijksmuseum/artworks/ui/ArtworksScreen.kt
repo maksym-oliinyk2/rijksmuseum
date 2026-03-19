@@ -39,6 +39,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -71,17 +73,22 @@ internal fun ArtworksScreen(
     viewModel: ArtworksViewModel = koinViewModel<ArtworksViewModel>()
 ) {
     val messages = remember { MutableSharedFlow<Message>() }
-    val component = remember { viewModel.component(messages) }
+    val component = remember { viewModel(messages) }
     val state by component.collectAsStateWithLifecycle(null)
     val currentState = state
 
     if (currentState != null) {
         val scope = rememberCoroutineScope { Dispatchers.Main.immediate }
+        // todo decide on lambdas parameters limit
+        val messageHandle: (Message) -> Unit =
+            remember(scope) { { scope.launch { messages.emit(it) } } }
 
         ArtworksContent(
             modifier = modifier,
             state = currentState,
-            onMessage = { scope.launch { messages.emit(it) } },
+            onRefresh = { messageHandle(Message.OnRefresh) },
+            onReload = { messageHandle(Message.OnReload) },
+            onLoadNext = { messageHandle(Message.OnLoadNext) },
             onNavigateToDetails = onNavigateToDetails
         )
     }
@@ -89,15 +96,19 @@ internal fun ArtworksScreen(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun ArtworksContent(
+// todo decide on lambdas parameters limit & come up with onNavigateToDetails
+@Suppress("LongParameterList")
+internal fun ArtworksContent(
     state: ArtworksViewState,
-    onMessage: (Message) -> Unit,
+    onRefresh: () -> Unit,
+    onReload: () -> Unit,
+    onLoadNext: () -> Unit,
     onNavigateToDetails: (Artwork) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val refreshState = rememberPullRefreshState(
         refreshing = state.artworks.isRefreshing,
-        onRefresh = { onMessage(Message.OnRefresh) },
+        onRefresh = onRefresh,
     )
 
     Scaffold(
@@ -111,7 +122,9 @@ private fun ArtworksContent(
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .semantics { testTag = "ArtworksList" },
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
@@ -122,12 +135,14 @@ private fun ArtworksContent(
 
                 paginateableContent(
                     paginateable = state.artworks,
-                    onMessage = onMessage
+                    onRefresh = onRefresh,
+                    onReload = onReload,
+                    onLoadNext = onLoadNext,
                 )
 
                 item {
                     LaunchedEffect(Unit) {
-                        onMessage(Message.OnLoadNext)
+                        onLoadNext()
                     }
                 }
             }
@@ -158,7 +173,9 @@ private fun LazyListScope.artworkItems(
 
 private fun LazyListScope.paginateableContent(
     paginateable: Paginateable<Artwork>,
-    onMessage: (Message) -> Unit,
+    onRefresh: () -> Unit,
+    onReload: () -> Unit,
+    onLoadNext: () -> Unit,
 ) = item(
     key = paginateable.state::class.simpleName,
     contentType = paginateable.state::class
@@ -172,21 +189,17 @@ private fun LazyListScope.paginateableContent(
                     Modifier.fillParentMaxWidth()
                 },
                 message = state.exception.displayMessage,
-                onRetry = {
-                    val message = if (paginateable.data.isEmpty()) Message.OnReload else Message.OnLoadNext
-
-                    onMessage(message)
-                }
+                onRetry = if (paginateable.data.isEmpty()) onReload else onLoadNext
             )
 
-        is Paginateable.Loading -> ArtworksProgress(modifier = Modifier.fillParentMaxSize())
-        is Paginateable.LoadingNext -> ArtworksProgress(modifier = Modifier.fillParentMaxWidth())
+        is Paginateable.Loading -> ProgressIndicator(modifier = Modifier.fillParentMaxSize())
+        is Paginateable.LoadingNext -> ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
         is Paginateable.Idle, is Paginateable.Refreshing -> {
             if (paginateable.data.isEmpty()) {
                 ArtworksError(
                     modifier = Modifier.fillParentMaxSize(),
                     message = stringResource(Res.string.artworks_no_data_message),
-                    onRetry = { onMessage(Message.OnRefresh) }
+                    onRetry = onRefresh
                 )
             }
         }
@@ -200,6 +213,9 @@ private fun ArtworkItem(
     onClick: () -> Unit,
 ) {
     Card(
+        modifier = Modifier.semantics(mergeDescendants = true) {
+            testTag = artwork.title.value
+        },
         elevation = MaterialTheme.paddings.small,
         shape = RoundedCornerShape(MaterialTheme.paddings.medium),
         onClick = onClick
@@ -221,7 +237,10 @@ private fun ArtworkImage(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(topStart = MaterialTheme.paddings.medium, topEnd = MaterialTheme.paddings.medium),
+        shape = RoundedCornerShape(
+            topStart = MaterialTheme.paddings.medium,
+            topEnd = MaterialTheme.paddings.medium
+        ),
         color = colors.onSurface.copy(alpha = 0.2f)
     ) {
         if (imageUrl != null) {
@@ -250,7 +269,7 @@ private fun ArtworkContents(
 }
 
 @Composable
-private fun ArtworksProgress(
+private fun ProgressIndicator(
     modifier: Modifier,
 ) {
     Box(
@@ -286,14 +305,15 @@ private fun ArtworksError(
 
 @Composable
 private fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
-    .data(toExternalValue().also { println("Image url: $it") })
+    .data(toExternalValue())
     .crossfade(true)
     .build()
 
 @Composable
 private fun contentPaddingValues(): PaddingValues {
     return PaddingValues(
-        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + MaterialTheme.paddings.normal,
+        top = WindowInsets.statusBars.asPaddingValues()
+            .calculateTopPadding() + MaterialTheme.paddings.normal,
         start = MaterialTheme.paddings.normal,
         end = MaterialTheme.paddings.normal,
         bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
