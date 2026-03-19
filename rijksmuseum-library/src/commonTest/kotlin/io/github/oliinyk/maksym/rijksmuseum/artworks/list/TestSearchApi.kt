@@ -1,16 +1,18 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.list
+package io.github.oliinyk.maksym.rijksmuseum.artworks.list
 
 import arrow.core.Either
 import arrow.core.right
+import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchResponse
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
 
-internal class TestApi(
+internal class TestSearchApi(
     private val artworksDetails: Map<String, Artwork>,
     private val searchResponses: Map<Url, SearchResponse> = emptyMap(),
-) : Api {
+) : SearchApi {
     override suspend fun searchArtworks(url: Url): Either<AppException, SearchResponse> =
         searchResponses[url]?.right() ?: error("No search response for $url")
 

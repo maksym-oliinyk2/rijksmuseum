@@ -1,4 +1,6 @@
 <resources>
+    <string name="exception_unknown">Unknown error</string>
+
     <string name="artworks_no_data_message">No artworks found</string>
     <string name="artworks_image_description">Artwork Image</string>
     <string name="artworks_action_retry">Retry</string>

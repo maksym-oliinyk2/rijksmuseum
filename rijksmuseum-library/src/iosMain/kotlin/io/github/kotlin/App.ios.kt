@@ -1,7 +1,7 @@
 package io.github.kotlin
 
 import androidx.compose.ui.window.ComposeUIViewController
-import io.github.oliinyk.maksym.rijksmuseum.ui.App
+import io.github.oliinyk.maksym.rijksmuseum.app.App
 import platform.UIKit.UIViewController
 import kotlin.experimental.ExperimentalObjCName
 

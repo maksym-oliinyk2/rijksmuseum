@@ -1,9 +1,11 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.domain
+package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
+import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 
 /**
  * Domain-level interface defining the search operations available to the application.

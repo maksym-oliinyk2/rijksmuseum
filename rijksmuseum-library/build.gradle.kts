@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.buildconfig)
 }
 
 group = "io.github.oliinyk.maksym.rijksmuseum"
@@ -18,6 +19,15 @@ kotlin {
             "-Xexpect-actual-classes",
             "-Xconsistent-data-class-copy-visibility"
         )
+
+        if (project.findProperty("enableComposeCompilerLogs").toString().toBoolean()) {
+            freeCompilerArgs.addAll(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.composeMetricsDir.absolutePath}",
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${project.composeMetricsDir.absolutePath}",
+            )
+        }
     }
 
     android {
@@ -80,6 +90,7 @@ kotlin {
                 implementation(libs.koin.compose.viewmodel)
                 implementation(libs.arrow.core)
                 implementation(libs.arrow.coroutines)
+                implementation(libs.bundles.coil)
             }
         }
 
@@ -111,6 +122,16 @@ kotlin {
             }
         }
     }
+}
+
+buildConfig {
+    packageName.set("io.github.oliinyk.maksym.rijksmuseum")
+    useKotlinOutput { internalVisibility = true }
+
+    val debugEnabled = project.findProperty("forceDebug")?.toString()?.toBoolean() == true || libraryVersion.isSnapshot
+
+    logger.log(LogLevel.LIFECYCLE, "DEBUG enabled: $debugEnabled")
+    buildConfigField("kotlin.Boolean", "DEBUG", "$debugEnabled")
 }
 
 compose.resources {

@@ -646,7 +646,7 @@ style:
     maxChainedCalls: 5
   MaxLineLength:
     active: true
-    maxLineLength: 120
+    maxLineLength: 140
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: false
@@ -895,7 +895,7 @@ formatting:
     indentSize: 4
   MaximumLineLength:
     active: true
-    maxLineLength: 120
+    maxLineLength: 140
     ignoreBackTickedIdentifier: false
   ModifierListSpacing:
     active: true

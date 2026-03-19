@@ -58,8 +58,6 @@ data class MajorMinorPatch(
  * Denotes artifact version as per [sem ver](https://semver.org/) spec.
  * Currently it includes:
  * * Snapshot - `hash-SNAPSHOT` or just `SNAPSHOT`
- * * Alpha - `v1.2.3-alpha4`
- * * Release candidate (might be alpha RC) - `v1.2.3-rc5` or `v1.2.3-alpha4-rc5`
  * * Stable - `v1.2.3`
  */
 sealed class Version
@@ -69,42 +67,6 @@ data class Snapshot(
 ) : Version() {
     init {
         require(commit == null || commit.length >= CommitHashLength) { "Invalid hash: $commit" }
-    }
-}
-
-data class Alpha(
-    val value: String,
-    val mainVersion: MajorMinorPatch,
-    val alpha: Int,
-) : Version() {
-    companion object {
-        fun fromTag(
-            rawTag: String,
-        ) = AlphaRegexp.groupValues(rawTag)
-            .let { group -> Alpha(rawTag, group.toMajorMinorPatch(), group[4].toInt()) }
-    }
-}
-
-data class ReleaseCandidate(
-    val value: String,
-    val mainVersion: MajorMinorPatch,
-    val alpha: Int?,
-    val candidate: Int,
-) : Version() {
-    val isAlphaRc = alpha != null
-
-    companion object {
-        fun fromTag(
-            rawTag: String,
-        ) = ReleaseCandidateRegexp.groupValues(rawTag)
-            .let { group ->
-                ReleaseCandidate(
-                    rawTag,
-                    group.toMajorMinorPatch(),
-                    group[5].toIntOrNull(),
-                    group[6].toInt()
-                )
-            }
     }
 }
 
@@ -125,19 +87,8 @@ fun Version(
 ): Version =
     when {
         rawTag.isNullOrEmpty() -> Snapshot(commit)
-        rawTag.matches(AlphaRegexp) -> Alpha.fromTag(rawTag)
-        rawTag.matches(ReleaseCandidateRegexp) -> ReleaseCandidate.fromTag(rawTag)
         rawTag.matches(StableRegexp) -> Stable.fromTag(rawTag)
-        else -> error(
-            "Invalid tag: $rawTag, release tag should be absent or match any of the following regular " +
-                "expressions: ${
-                    listOf(
-                        AlphaRegexp,
-                        ReleaseCandidateRegexp,
-                        StableRegexp
-                    ).joinToString(transform = Regex::pattern)
-                }"
-        )
+        else -> error("Invalid tag: $rawTag")
     }
 
 val Version.isSnapshot: Boolean get() = this is Snapshot
@@ -154,34 +105,12 @@ private fun List<String>.toMajorMinorPatch() =
  * * 1 major, 123
  * * 2 minor, 123
  * * 3 patch, 123
- * * 4 alpha, 123
- */
-private val AlphaRegexp = Regex("^v(\\d+)\\.(\\d+)\\.(\\d+)-alpha([1-9]\\d*)$")
-
-/**
- * Groups:
- * * 1 major, 123
- * * 2 minor, 123
- * * 3 patch, 123
- * * 4 is alpha? -alpha123
- * * 5 rc number, 123
- */
-private val ReleaseCandidateRegexp =
-    Regex("^v(\\d+)\\.(\\d+)\\.(\\d)+(-alpha([1-9]\\d*))?-rc([1-9]\\d*)$")
-
-/**
- * Groups:
- * * 1 major, 123
- * * 2 minor, 123
- * * 3 patch, 123
  */
 private val StableRegexp = Regex("^v(\\d+)\\.(\\d+)\\.(\\d+)$")
 
 fun Version.toVersionName(): String =
     when (this) {
         is Snapshot -> commit?.let { sha -> "${sha.take(CommitHashLength)}-SNAPSHOT" } ?: "SNAPSHOT"
-        is Alpha -> "${mainVersion.versionName}-alpha$alpha"
-        is ReleaseCandidate -> "${mainVersion.versionName}-${alpha?.let { "alpha$it-" } ?: ""}rc$candidate"
         is Stable -> mainVersion.versionName
     }
 

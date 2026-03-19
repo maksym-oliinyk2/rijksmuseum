@@ -1,15 +1,14 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.details
+package io.github.oliinyk.maksym.rijksmuseum.artwork
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.oliinyk.maksym.rijksmuseum.ui.RouteB
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun ArtworkDetailsScreen(
-    key: RouteB,
+    key: ArtworkNavEntry,
     modifier: Modifier = Modifier,
 ) {
     // Note: We need a new ViewModel for every new RouteB instance. Usually

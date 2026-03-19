@@ -1,14 +1,20 @@
-package io.github.oliinyk.maksym.rijksmuseum.search.list
+package io.github.oliinyk.maksym.rijksmuseum.artworks.list
 
 import arrow.core.Either
 import arrow.core.right
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Page
-import io.github.oliinyk.maksym.rijksmuseum.artworks.Paging
+import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.Item
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.OrderedCollectionPage
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchResponse
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchUrl
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.AppException
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.search.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -64,7 +70,7 @@ class SearchRepositoryImplTest {
         artworksDetails[item1Id] = artwork1
         artworksDetails[item2Id] = artwork2
 
-        val api = TestApi(
+        val api = TestSearchApi(
             artworksDetails = artworksDetails,
             searchResponses = mapOf(SearchUrl to searchResponse)
         )
@@ -106,7 +112,7 @@ class SearchRepositoryImplTest {
             )
         }
 
-        val api = TestApi(
+        val api = TestSearchApi(
             artworksDetails = artworksDetails,
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
@@ -132,7 +138,7 @@ class SearchRepositoryImplTest {
             orderedItems = listOf(Item(id = item1Id))
         )
 
-        val api = TestApi(
+        val api = TestSearchApi(
             artworksDetails = emptyMap<String, Artwork>(),
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
@@ -176,7 +182,7 @@ class SearchRepositoryImplTest {
                 )
             }.mapKeys { it.key }
 
-            val api = TestApi(
+            val api = TestSearchApi(
                 artworksDetails = artworksDetails,
                 searchResponses = mapOf(
                     SearchUrl to initialSearchResponse,
@@ -207,7 +213,7 @@ class SearchRepositoryImplTest {
             next = null,
             orderedItems = listOf(Item(id = item1Id))
         )
-        val api = TestApi(
+        val api = TestSearchApi(
             artworksDetails = emptyMap<String, Artwork>(),
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
@@ -253,7 +259,7 @@ class SearchRepositoryImplTest {
             )
         }
 
-        val api = TestApi(
+        val api = TestSearchApi(
             artworksDetails = artworksDetails,
             searchResponses = mapOf(
                 SearchUrl to response1,
@@ -283,7 +289,7 @@ class SearchRepositoryImplTest {
         )
 
         val exception = AppException("Network error")
-        val repository = SearchRepositoryImpl(FailingApi(initialSearchResponse, exception))
+        val repository = SearchRepositoryImpl(FailingSearchApi(initialSearchResponse, exception))
 
         // Execute
         val paging = Paging(currentSize = 0, resultsPerPage = 1)
@@ -310,7 +316,7 @@ class SearchRepositoryImplTest {
                 images = emptyList()
             )
         )
-        val api = TestApi(
+        val api = TestSearchApi(
             artworksDetails = artworksDetails,
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
@@ -331,10 +337,10 @@ class SearchRepositoryImplTest {
     }
 }
 
-private class FailingApi(
+private class FailingSearchApi(
     private val searchResponse: SearchResponse,
     private val exception: AppException,
-) : Api {
+) : SearchApi {
     override suspend fun searchArtworks(
         url: Url
     ): Either<AppException, SearchResponse> =

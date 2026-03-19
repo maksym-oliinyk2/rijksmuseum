@@ -64,6 +64,9 @@ val Project.detektConfig: File
 val Project.detektBaseline: File
     get() = Paths.get(rootDir.path, "detekt", "detekt-baseline.xml").toFile()
 
+val Project.composeMetricsDir: File
+    get() = File(layout.buildDirectory.get().asFile, "compose_metrics")
+
 val localBranch: String?
     get() = ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD")
         .start()
