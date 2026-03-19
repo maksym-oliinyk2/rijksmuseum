@@ -2,6 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.list
 
 import arrow.core.Either
 import arrow.core.right
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.ArtworkIdItem
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.ArtworksResponse
@@ -9,7 +10,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.data.NextPage
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchUrl
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
@@ -48,12 +48,12 @@ class SearchRepositoryImplTest {
             )
         )
 
-        val artwork1 = ArtworkPreview(
+        val artwork1 = Artwork(
             url = item1Id,
             title = Title("The Night Watch"),
             images = listOf(UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B"))
         )
-        val artwork2 = ArtworkPreview(
+        val artwork2 = Artwork(
             url = item2Id,
             title = Title("The Milkmaid"),
             images = listOf(UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B"))
@@ -61,7 +61,7 @@ class SearchRepositoryImplTest {
 
         // Fill the details for all items to avoid errors during parMap
         val artworksDetails = searchResponse.items.associate { item ->
-            item.id to ArtworkPreview(
+            item.id to Artwork(
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 images = listOf(UrlFrom("https://image.url/${item.id}"))
@@ -106,7 +106,7 @@ class SearchRepositoryImplTest {
         )
 
         val artworksDetails = initialSearchResponse.items.associate { item ->
-            item.id to ArtworkPreview(
+            item.id to Artwork(
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 images = listOf(UrlFrom("https://image.url/${item.id}"))
@@ -140,7 +140,7 @@ class SearchRepositoryImplTest {
         )
 
         val api = TestSearchApi(
-            artworksDetails = emptyMap<Url, ArtworkPreview>(),
+            artworksDetails = emptyMap<Url, Artwork>(),
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
         val repository = SearchRepositoryImpl(
@@ -176,7 +176,7 @@ class SearchRepositoryImplTest {
             )
 
             val artworksDetails = listOf(item1Id, item2Id, item3Id).associateWith { id ->
-                ArtworkPreview(
+                Artwork(
                     url = id,
                     title = Title("Title for $id"),
                     images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}"))
@@ -215,7 +215,7 @@ class SearchRepositoryImplTest {
             items = listOf(ArtworkIdItem(id = item1Id))
         )
         val api = TestSearchApi(
-            artworksDetails = emptyMap<Url, ArtworkPreview>(),
+            artworksDetails = emptyMap<Url, Artwork>(),
             searchResponses = mapOf(SearchUrl to initialSearchResponse)
         )
         val repository = SearchRepositoryImpl(
@@ -253,7 +253,7 @@ class SearchRepositoryImplTest {
         )
 
         val artworksDetails = listOf(item1Id, item2Id, item3Id).associateWith { id ->
-            ArtworkPreview(
+            Artwork(
                 url = id,
                 title = Title("Title for $id"),
                 images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}"))
@@ -311,7 +311,7 @@ class SearchRepositoryImplTest {
             items = listOf(ArtworkIdItem(id = item1Id))
         )
         val artworksDetails = mapOf(
-            item1Id to ArtworkPreview(
+            item1Id to Artwork(
                 url = item1Id,
                 title = Title("Title"),
                 images = emptyList()
@@ -347,6 +347,6 @@ private class FailingSearchApi(
     ): Either<AppException, ArtworksResponse> =
         searchResponse.right()
 
-    override suspend fun fetchDetails(url: Url): Either<AppException, ArtworkPreview> =
+    override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
         Either.Left(exception)
 }

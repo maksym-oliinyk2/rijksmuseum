@@ -3,8 +3,8 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.fx.coroutines.parMap
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
@@ -21,15 +21,13 @@ internal class SearchRepositoryImpl(
     private var nextPage: Url? = nextUrl
     private val mutex = Mutex()
 
-    override suspend fun fetchArtworkDetails(url: Url): Either<AppException, ArtworkPreview> = TODO()
-
-    override suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<ArtworkPreview>> =
+    override suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>> =
         either {
             val ids = fetchArtworkIds(paging).bind()
 
             if (ids.isEmpty() && paging.currentSize > 0) {
                 @Suppress("UNCHECKED_CAST")
-                Page.End as Page<ArtworkPreview>
+                Page.End as Page<Artwork>
             } else {
                 val artworks = ids.parMap { id ->
                     api.fetchDetails(id).bind()

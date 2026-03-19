@@ -1,8 +1,8 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
 import arrow.core.Either
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
@@ -25,12 +25,12 @@ internal sealed interface Message {
 
     @JvmInline
     value class OnDataLoaded(
-        val result: Either<AppException, Page<ArtworkPreview>>
+        val result: Either<AppException, Page<Artwork>>
     ) : Message
 }
 
 internal data class ArtworksViewState(
-    val artworks: Paginateable<ArtworkPreview> = Paginateable.loadingList(),
+    val artworks: Paginateable<Artwork> = Paginateable.loadingList(),
 )
 
 @JvmInline
@@ -69,7 +69,7 @@ private fun ArtworksViewState.onRefresh(): Update<ArtworksViewState, LoadCommand
 }
 
 private fun ArtworksViewState.onLoaded(
-    result: Either<AppException, Page<ArtworkPreview>>
+    result: Either<AppException, Page<Artwork>>
 ): Update<ArtworksViewState, LoadCommand> {
     val updated = result.fold(
         { artworks.toException(it) },

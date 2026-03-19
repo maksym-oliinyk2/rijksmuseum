@@ -48,8 +48,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
@@ -68,7 +68,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ArtworksScreen(
-    onNavigateToDetails: (ArtworkPreview) -> Unit,
+    onNavigateToDetails: (Artwork) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArtworksViewModel = koinViewModel<ArtworksViewModel>()
 ) {
@@ -103,7 +103,7 @@ internal fun ArtworksContent(
     onRefresh: () -> Unit,
     onReload: () -> Unit,
     onLoadNext: () -> Unit,
-    onNavigateToDetails: (ArtworkPreview) -> Unit,
+    onNavigateToDetails: (Artwork) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val refreshState = rememberPullRefreshState(
@@ -157,8 +157,8 @@ internal fun ArtworksContent(
 }
 
 private fun LazyListScope.artworkItems(
-    paginateable: Paginateable<ArtworkPreview>,
-    onNavigateToDetails: (ArtworkPreview) -> Unit,
+    paginateable: Paginateable<Artwork>,
+    onNavigateToDetails: (Artwork) -> Unit,
 ) {
     items(
         items = paginateable.data,
@@ -172,7 +172,7 @@ private fun LazyListScope.artworkItems(
 }
 
 private fun LazyListScope.paginateableContent(
-    paginateable: Paginateable<ArtworkPreview>,
+    paginateable: Paginateable<Artwork>,
     onRefresh: () -> Unit,
     onReload: () -> Unit,
     onLoadNext: () -> Unit,
@@ -209,7 +209,7 @@ private fun LazyListScope.paginateableContent(
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 private fun ArtworkItem(
-    artwork: ArtworkPreview,
+    artwork: Artwork,
     onClick: () -> Unit,
 ) {
     Card(
@@ -256,7 +256,7 @@ private fun ArtworkImage(
 
 @Composable
 private fun ArtworkContents(
-    artwork: ArtworkPreview,
+    artwork: Artwork,
 ) {
     Column(
         modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium)

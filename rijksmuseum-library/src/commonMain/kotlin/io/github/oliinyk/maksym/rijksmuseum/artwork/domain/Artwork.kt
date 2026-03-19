@@ -9,7 +9,7 @@ public data class Artwork(
     val url: Url,
     val title: Title,
     val images: List<Url>,
-    val descriptions: List<LinguisticObject>,
+    val descriptions: List<LinguisticObject> = emptyList(),
 )
 
 public data class LinguisticObject(

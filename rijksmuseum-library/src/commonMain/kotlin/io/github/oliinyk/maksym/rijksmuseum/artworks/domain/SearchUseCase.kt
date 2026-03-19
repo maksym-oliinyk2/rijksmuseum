@@ -1,9 +1,9 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.domain
 
 import arrow.core.Either
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepository
-import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 
@@ -17,14 +17,7 @@ public class SearchUseCase(
     /**
      * Executes an artwork search with the specified [paging] configuration.
      */
-    public suspend fun searchArtworks(paging: Paging): Either<AppException, Page<ArtworkPreview>> {
+    public suspend fun searchArtworks(paging: Paging): Either<AppException, Page<Artwork>> {
         return searchRepository.fetchArtworks(paging)
-    }
-
-    /**
-     * Fetches detailed information for a specific artwork by its [url].
-     */
-    public suspend fun fetchArtworkDetails(url: Url): Either<AppException, ArtworkPreview> {
-        return searchRepository.fetchArtworkDetails(url)
     }
 }
