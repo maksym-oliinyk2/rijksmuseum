@@ -1,5 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks
 
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApiImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepository
@@ -18,6 +19,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
 
@@ -27,7 +29,7 @@ internal fun SearchModule(engine: HttpClientEngineFactory<HttpClientEngineConfig
     singleOf(::SearchApiImpl).bind(SearchApi::class)
     single { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)
     singleOf(::SearchUseCase)
-    viewModel { ArtworksViewModel(get()) }
+    viewModel { ArtworksViewModel(get(), get(named<Artwork>()), get()) }
 }
 
 private fun HttpClient(

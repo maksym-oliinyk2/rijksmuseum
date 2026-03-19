@@ -68,7 +68,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ArtworksScreen(
-    onNavigateToDetails: (Artwork) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArtworksViewModel = koinViewModel<ArtworksViewModel>()
 ) {
@@ -89,7 +88,7 @@ internal fun ArtworksScreen(
             onRefresh = { messageHandle(Message.OnRefresh) },
             onReload = { messageHandle(Message.OnReload) },
             onLoadNext = { messageHandle(Message.OnLoadNext) },
-            onNavigateToDetails = onNavigateToDetails
+            onNavigateToDetails = { messageHandle(Message.OnNavigateToDetails(it)) }
         )
     }
 }

@@ -3,6 +3,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artwork
 import arrow.core.Either
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
+import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toException
@@ -25,10 +26,14 @@ internal sealed interface Message {
 }
 
 internal data class ArtworkDetailsViewState(
+    val artworkId: Url,
     val artwork: Loadable<Artwork?> = Loadable.loadingSingle(),
 )
 
-internal data object LoadCommand
+@JvmInline
+internal value class LoadCommand(
+    val artworkId: Url,
+)
 
 internal fun ArtworkDetailsViewState.update(message: Message): Update<ArtworkDetailsViewState, LoadCommand> {
     return when (message) {
@@ -40,13 +45,13 @@ internal fun ArtworkDetailsViewState.update(message: Message): Update<ArtworkDet
 
 private fun ArtworkDetailsViewState.onReload(): Update<ArtworkDetailsViewState, LoadCommand> {
     return copy(artwork = artwork.toLoading())
-        .command(LoadCommand)
+        .command(LoadCommand(artworkId))
 }
 
 private fun ArtworkDetailsViewState.onRefresh(): Update<ArtworkDetailsViewState, LoadCommand> {
     return if (artwork.isRefreshable) {
         copy(artwork = artwork.toRefreshing())
-            .command(LoadCommand)
+            .command(LoadCommand(artworkId))
     } else {
         noCommand()
     }

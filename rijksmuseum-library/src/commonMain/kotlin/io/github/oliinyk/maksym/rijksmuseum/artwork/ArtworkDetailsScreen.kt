@@ -47,20 +47,24 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun ArtworkDetailsScreen(
-    key: ArtworkNavEntry,
+    key: ArtworkDetailsDestination,
     modifier: Modifier = Modifier,
     viewModel: ArtworkDetailsViewModel = koinViewModel { parametersOf(key) },
 ) {
     val messageHandle = remember { MutableSharedFlow<Message>() }
-    val state by viewModel(messageHandle).collectAsStateWithLifecycle(ArtworkDetailsViewState())
-    val scope = rememberCoroutineScope()
+    val state by viewModel(messageHandle).collectAsStateWithLifecycle(null)
+    val currentState = state
 
-    ArtworkDetailsContent(
-        modifier = modifier,
-        state = state,
-        onRefresh = { scope.launch { messageHandle.emit(Message.OnRefresh) } },
-        onReload = { scope.launch { messageHandle.emit(Message.OnReload) } },
-    )
+    if (currentState != null) {
+        val scope = rememberCoroutineScope()
+
+        ArtworkDetailsContent(
+            modifier = modifier,
+            state = currentState,
+            onRefresh = { scope.launch { messageHandle.emit(Message.OnRefresh) } },
+            onReload = { scope.launch { messageHandle.emit(Message.OnReload) } },
+        )
+    }
 }
 
 @Composable
