@@ -185,8 +185,8 @@ private fun LazyListScope.paginateableContent(
                 onRetry = if (paginateable.data.isEmpty()) onReload else onLoadNext
             )
 
-        is Paginateable.Loading -> ArtworksProgress(modifier = Modifier.fillParentMaxSize())
-        is Paginateable.LoadingNext -> ArtworksProgress(modifier = Modifier.fillParentMaxWidth())
+        is Paginateable.Loading -> ProgressIndicator(modifier = Modifier.fillParentMaxSize())
+        is Paginateable.LoadingNext -> ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
         is Paginateable.Idle, is Paginateable.Refreshing -> {
             if (paginateable.data.isEmpty()) {
                 ArtworksError(
@@ -259,7 +259,7 @@ private fun ArtworkContents(
 }
 
 @Composable
-private fun ArtworksProgress(
+private fun ProgressIndicator(
     modifier: Modifier,
 ) {
     Box(
