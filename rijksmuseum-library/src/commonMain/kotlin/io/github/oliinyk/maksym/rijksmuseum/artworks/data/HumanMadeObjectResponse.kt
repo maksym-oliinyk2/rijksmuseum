@@ -17,48 +17,99 @@ internal data class HumanMadeObjectResponse(
     val referredToBy: List<LinguisticObject> = emptyList(),
     @SerialName("dimension")
     val dimension: List<Dimension> = emptyList(),
-)
+) {
+    @Serializable
+    data class ArtworksResponse(
+        @SerialName("next")
+        val next: NextPage? = null,
+        @SerialName("orderedItems")
+        val items: List<ArtworkIdItem> = emptyList()
+    )
 
-@Serializable
-internal data class LinguisticObject(
-    @SerialName("type")
-    val type: String,
-    @SerialName("content")
-    val content: String? = null,
-    @SerialName("classified_as")
-    val classifiedAs: List<Classification> = emptyList(),
-)
+    @Serializable
+    data class NextPage(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url
+    )
 
-@Serializable
-internal data class Classification(
-    @SerialName("id")
-    @Serializable(with = UrlSerializer::class)
-    val id: Url,
-    @SerialName("type")
-    val type: String,
-)
+    @Serializable
+    data class ArtworkIdItem(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url
+    )
 
-@Serializable
-internal data class Identification(
-    @SerialName("type")
-    val type: String, // filter for Name
-    @SerialName("content")
-    val content: String? = null,
-    @SerialName("classified_as")
-    val classifiedAs: List<Classification> = emptyList(),
-)
+    @Serializable
+    data class VisualItemDetails(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url,
+        @SerialName("digitally_shown_by")
+        val digitallyShownBy: List<DigitalObject> = emptyList()
+    )
 
-@Serializable
-internal data class Dimension(
-    @SerialName("type")
-    val type: String,
-    @SerialName("identified_by")
-    val identifiedBy: List<Identification> = emptyList(),
-)
+    @Serializable
+    data class DigitalObject(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url,
+    )
 
-@Serializable
-internal data class VisualItemBrief(
-    @SerialName("id")
-    @Serializable(with = UrlSerializer::class)
-    val id: Url,
-)
+    @Serializable
+    data class DigitalObjectDetails(
+        @SerialName("access_point")
+        val accessPoint: List<AccessPoint> = emptyList()
+    )
+
+    @Serializable
+    data class AccessPoint(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url,
+    )
+
+    @Serializable
+    data class LinguisticObject(
+        @SerialName("type")
+        val type: String,
+        @SerialName("content")
+        val content: String? = null,
+        @SerialName("classified_as")
+        val classifiedAs: List<Classification> = emptyList(),
+    )
+
+    @Serializable
+    data class Classification(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url,
+        @SerialName("type")
+        val type: String,
+    )
+
+    @Serializable
+    data class Identification(
+        @SerialName("type")
+        val type: String, // filter for Name
+        @SerialName("content")
+        val content: String? = null,
+        @SerialName("classified_as")
+        val classifiedAs: List<Classification> = emptyList(),
+    )
+
+    @Serializable
+    data class Dimension(
+        @SerialName("type")
+        val type: String,
+        @SerialName("identified_by")
+        val identifiedBy: List<Identification> = emptyList(),
+    )
+
+    @Serializable
+    data class VisualItemBrief(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url,
+    )
+}

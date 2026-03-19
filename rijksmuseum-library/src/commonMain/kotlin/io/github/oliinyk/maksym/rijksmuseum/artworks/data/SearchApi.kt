@@ -17,7 +17,7 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject as D
 internal val SearchUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
 
 internal interface SearchApi {
-    suspend fun search(url: Url): Either<AppException, ArtworksResponse>
+    suspend fun search(url: Url): Either<AppException, HumanMadeObjectResponse.ArtworksResponse>
 
     suspend fun fetchDetails(url: Url): Either<AppException, Artwork>
 }
@@ -25,9 +25,9 @@ internal interface SearchApi {
 internal class SearchApiImpl(
     private val client: HttpClient,
 ) : SearchApi {
-    override suspend fun search(url: Url): Either<AppException, ArtworksResponse> =
+    override suspend fun search(url: Url): Either<AppException, HumanMadeObjectResponse.ArtworksResponse> =
         Either.catch {
-            client.get(url.toExternalValue()).body<ArtworksResponse>()
+            client.get(url.toExternalValue()).body<HumanMadeObjectResponse.ArtworksResponse>()
         }
 
     override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
@@ -44,14 +44,17 @@ internal class SearchApiImpl(
 
             // 3. Fetch visual item details to get links to digital objects (images)
             val visualItemDetails1 = humanMadeObject1.shows.firstNotNullOfOrNull {
-                client.get(it.id.toExternalValue()).body<VisualItemDetails>()
+                client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.VisualItemDetails>()
             } ?: error("No visual item details found for ${humanMadeObject1.id}")
 
             // 4. Fetch digital object details to get the actual access points (image URLs)
             val digitalObjectDetails1 =
                 visualItemDetails1.digitallyShownBy.firstNotNullOfOrNull {
-                    client.get(it.id.toExternalValue()).body<DigitalObjectDetails>()
+                    client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObject>()
                 }
+                    ?.let {
+                        client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObjectDetails>()
+                    }
                     ?: error("No digital object details found for ${visualItemDetails1.id}")
 
             val urls = digitalObjectDetails1.accessPoint.map { it.id }
