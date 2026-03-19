@@ -79,13 +79,16 @@ internal fun ArtworksScreen(
 
     if (currentState != null) {
         val scope = rememberCoroutineScope { Dispatchers.Main.immediate }
+        // todo decide on lambdas parameters limit
+        val messageHandle: (Message) -> Unit =
+            remember(scope) { { scope.launch { messages.emit(it) } } }
 
         ArtworksContent(
             modifier = modifier,
             state = currentState,
-            onRefresh = { scope.launch { messages.emit(Message.OnRefresh) } },
-            onReload = { scope.launch { messages.emit(Message.OnReload) } },
-            onLoadNext = { scope.launch { messages.emit(Message.OnLoadNext) } },
+            onRefresh = { messageHandle(Message.OnRefresh) },
+            onReload = { messageHandle(Message.OnReload) },
+            onLoadNext = { messageHandle(Message.OnLoadNext) },
             onNavigateToDetails = onNavigateToDetails
         )
     }
@@ -93,6 +96,7 @@ internal fun ArtworksScreen(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
+// todo decide on lambdas parameters limit & come up with onNavigateToDetails
 @Suppress("LongParameterList")
 internal fun ArtworksContent(
     state: ArtworksViewState,
@@ -233,7 +237,10 @@ private fun ArtworkImage(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(topStart = MaterialTheme.paddings.medium, topEnd = MaterialTheme.paddings.medium),
+        shape = RoundedCornerShape(
+            topStart = MaterialTheme.paddings.medium,
+            topEnd = MaterialTheme.paddings.medium
+        ),
         color = colors.onSurface.copy(alpha = 0.2f)
     ) {
         if (imageUrl != null) {
@@ -305,7 +312,8 @@ private fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatf
 @Composable
 private fun contentPaddingValues(): PaddingValues {
     return PaddingValues(
-        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + MaterialTheme.paddings.normal,
+        top = WindowInsets.statusBars.asPaddingValues()
+            .calculateTopPadding() + MaterialTheme.paddings.normal,
         start = MaterialTheme.paddings.normal,
         end = MaterialTheme.paddings.normal,
         bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
