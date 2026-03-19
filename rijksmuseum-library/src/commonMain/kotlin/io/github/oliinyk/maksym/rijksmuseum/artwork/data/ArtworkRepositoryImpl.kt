@@ -10,11 +10,5 @@ internal class ArtworkRepositoryImpl(
     private val api: SearchApi
 ) : ArtworkRepository {
     override suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> =
-        api.fetchDetails(url).map { preview ->
-            Artwork(
-                url = preview.url,
-                title = preview.title,
-                images = preview.images
-            )
-        }
+        api.fetchDetails(url)
 }

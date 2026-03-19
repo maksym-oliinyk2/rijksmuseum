@@ -19,11 +19,6 @@ internal data class HumanMadeObjectResponse(
     val dimension: List<Dimension> = emptyList(),
 )
 
-internal fun HumanMadeObjectResponse.categorizedReferredToBy(): List<Pair<GettyAatType, LinguisticObject>> =
-    referredToBy.flatMap { obj ->
-        obj.classifiedAs.mapNotNull { GettyAatType.fromId(it.id) }.map { it to obj }
-    }
-
 @Serializable
 internal data class LinguisticObject(
     @SerialName("type")

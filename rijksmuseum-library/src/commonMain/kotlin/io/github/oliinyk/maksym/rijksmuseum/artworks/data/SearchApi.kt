@@ -2,6 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
@@ -10,6 +11,7 @@ import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject as DomainLinguisticObject
 
 // todo it shouldn't be here
 internal val SearchUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
@@ -54,10 +56,23 @@ internal class SearchApiImpl(
 
             val urls = digitalObjectDetails1.accessPoint.map { it.id }
 
+            val descriptions = humanMadeObject1.toLinguisticObjects()
+
             Artwork(
                 url = url,
                 title = Title(name),
-                images = urls
+                images = urls,
+                descriptions = descriptions
             )
         }
 }
+
+private fun HumanMadeObjectResponse.toLinguisticObjects(): List<DomainLinguisticObject> =
+    referredToBy.mapNotNull { obj ->
+        obj.content?.let { content ->
+            obj.classifiedAs.firstNotNullOfOrNull { classification ->
+                GettyAatType.fromId(classification.id)
+                    ?.let { type -> DomainLinguisticObject(type, Description(content)) }
+            }
+        }
+    }

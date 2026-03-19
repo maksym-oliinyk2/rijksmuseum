@@ -51,12 +51,14 @@ class SearchRepositoryImplTest {
         val artwork1 = Artwork(
             url = item1Id,
             title = Title("The Night Watch"),
-            images = listOf(UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B"))
+            images = listOf(UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B")),
+            descriptions = emptyList()
         )
         val artwork2 = Artwork(
             url = item2Id,
             title = Title("The Milkmaid"),
-            images = listOf(UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B"))
+            images = listOf(UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B")),
+            descriptions = emptyList()
         )
 
         // Fill the details for all items to avoid errors during parMap
@@ -64,7 +66,8 @@ class SearchRepositoryImplTest {
             item.id to Artwork(
                 url = item.id,
                 title = Title("Title for ${item.id}"),
-                images = listOf(UrlFrom("https://image.url/${item.id}"))
+                images = listOf(UrlFrom("https://image.url/${item.id}")),
+                descriptions = emptyList()
             )
         }.toMutableMap()
 
@@ -109,7 +112,8 @@ class SearchRepositoryImplTest {
             item.id to Artwork(
                 url = item.id,
                 title = Title("Title for ${item.id}"),
-                images = listOf(UrlFrom("https://image.url/${item.id}"))
+                images = listOf(UrlFrom("https://image.url/${item.id}")),
+                descriptions = emptyList()
             )
         }
 
@@ -179,7 +183,8 @@ class SearchRepositoryImplTest {
                 Artwork(
                     url = id,
                     title = Title("Title for $id"),
-                    images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}"))
+                    images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}")),
+                    descriptions = emptyList()
                 )
             }
 
@@ -256,7 +261,8 @@ class SearchRepositoryImplTest {
             Artwork(
                 url = id,
                 title = Title("Title for $id"),
-                images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}"))
+                images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}")),
+                descriptions = emptyList()
             )
         }
 
@@ -314,7 +320,8 @@ class SearchRepositoryImplTest {
             item1Id to Artwork(
                 url = item1Id,
                 title = Title("Title"),
-                images = emptyList()
+                images = emptyList(),
+                descriptions = emptyList()
             )
         )
         val api = TestSearchApi(

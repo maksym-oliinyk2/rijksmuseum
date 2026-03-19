@@ -17,7 +17,8 @@ class ArtworksViewStateTest {
     private val testArtwork = Artwork(
         url = UrlFrom("https://example.com/1"),
         title = Title("Artwork 1"),
-        images = listOf(UrlFrom("https://example.com/1.jpg"))
+        images = listOf(UrlFrom("https://example.com/1.jpg")),
+        descriptions = emptyList()
     )
 
     @Test
@@ -101,7 +102,8 @@ class ArtworksViewStateTest {
         val artwork2 = Artwork(
             url = UrlFrom("https://example.com/2"),
             title = Title("Artwork 2"),
-            images = listOf(UrlFrom("https://example.com/2.jpg"))
+            images = listOf(UrlFrom("https://example.com/2.jpg")),
+            descriptions = emptyList()
         )
         val initialState = ArtworksViewState(
             artworks = Paginateable(
