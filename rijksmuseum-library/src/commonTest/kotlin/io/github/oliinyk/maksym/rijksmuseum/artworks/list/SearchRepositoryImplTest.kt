@@ -3,11 +3,11 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.list
 import arrow.core.Either
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.Item
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.OrderedCollectionPage
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.ArtworkIdItem
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.ArtworksResponse
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.NextPage
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchResponse
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchUrl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
@@ -30,20 +30,20 @@ class SearchRepositoryImplTest {
         val item1Id = "https://data.rijksmuseum.nl/api/en/collection/en-SK-A-3262"
         val item2Id = "https://data.rijksmuseum.nl/api/en/collection/en-SK-A-4878"
 
-        val searchResponse = SearchResponse(
-            next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
-            orderedItems = listOf(
-                Item(id = item1Id),
-                Item(id = item2Id),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-3"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-4"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-5"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-6"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-7"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-8"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-9"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-10"),
-                Item(id = "https://data.rijksmuseum.nl/api/en/collection/item-11")
+        val searchResponse = ArtworksResponse(
+            next = NextPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
+            items = listOf(
+                ArtworkIdItem(id = item1Id),
+                ArtworkIdItem(id = item2Id),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-3"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-4"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-5"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-6"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-7"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-8"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-9"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-10"),
+                ArtworkIdItem(id = "https://data.rijksmuseum.nl/api/en/collection/item-11")
             )
         )
 
@@ -59,7 +59,7 @@ class SearchRepositoryImplTest {
         )
 
         // Fill the details for all items to avoid errors during parMap
-        val artworksDetails = searchResponse.orderedItems.associate { item ->
+        val artworksDetails = searchResponse.items.associate { item ->
             item.id to ArtworkPreview(
                 url = UrlFrom(item.id),
                 title = Title("Title for ${item.id}"),
@@ -95,16 +95,16 @@ class SearchRepositoryImplTest {
         val item2Id = "https://data.rijksmuseum.nl/api/en/collection/item-2"
         val item3Id = "https://data.rijksmuseum.nl/api/en/collection/item-3"
 
-        val initialSearchResponse = SearchResponse(
+        val initialSearchResponse = ArtworksResponse(
             next = null,
-            orderedItems = listOf(
-                Item(id = item1Id),
-                Item(id = item2Id),
-                Item(id = item3Id)
+            items = listOf(
+                ArtworkIdItem(id = item1Id),
+                ArtworkIdItem(id = item2Id),
+                ArtworkIdItem(id = item3Id)
             )
         )
 
-        val artworksDetails = initialSearchResponse.orderedItems.associate { item ->
+        val artworksDetails = initialSearchResponse.items.associate { item ->
             item.id to ArtworkPreview(
                 url = UrlFrom(item.id),
                 title = Title("Title for ${item.id}"),
@@ -133,9 +133,9 @@ class SearchRepositoryImplTest {
         // Setup
         val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
 
-        val initialSearchResponse = SearchResponse(
+        val initialSearchResponse = ArtworksResponse(
             next = null,
-            orderedItems = listOf(Item(id = item1Id))
+            items = listOf(ArtworkIdItem(id = item1Id))
         )
 
         val api = TestSearchApi(
@@ -164,14 +164,14 @@ class SearchRepositoryImplTest {
             val item2Id = "https://data.rijksmuseum.nl/api/en/collection/item-2"
             val item3Id = "https://data.rijksmuseum.nl/api/en/collection/item-3"
 
-            val initialSearchResponse = SearchResponse(
-                next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
-                orderedItems = listOf(Item(id = item1Id))
+            val initialSearchResponse = ArtworksResponse(
+                next = NextPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
+                items = listOf(ArtworkIdItem(id = item1Id))
             )
 
-            val nextSearchResponse = SearchResponse(
+            val nextSearchResponse = ArtworksResponse(
                 next = null,
-                orderedItems = listOf(Item(id = item2Id), Item(id = item3Id))
+                items = listOf(ArtworkIdItem(id = item2Id), ArtworkIdItem(id = item3Id))
             )
 
             val artworksDetails = listOf(item1Id, item2Id, item3Id).associateWith { id ->
@@ -209,9 +209,9 @@ class SearchRepositoryImplTest {
     fun `test fetchArtworks when request is beyond cache and no more pages`() = runTest {
         // Setup
         val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
-        val initialSearchResponse = SearchResponse(
+        val initialSearchResponse = ArtworksResponse(
             next = null,
-            orderedItems = listOf(Item(id = item1Id))
+            items = listOf(ArtworkIdItem(id = item1Id))
         )
         val api = TestSearchApi(
             artworksDetails = emptyMap<String, ArtworkPreview>(),
@@ -238,17 +238,17 @@ class SearchRepositoryImplTest {
         val item2Id = "https://data.rijksmuseum.nl/api/en/collection/item-2"
         val item3Id = "https://data.rijksmuseum.nl/api/en/collection/item-3"
 
-        val response1 = SearchResponse(
-            next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
-            orderedItems = listOf(Item(id = item1Id))
+        val response1 = ArtworksResponse(
+            next = NextPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=2"),
+            items = listOf(ArtworkIdItem(id = item1Id))
         )
-        val response2 = SearchResponse(
-            next = OrderedCollectionPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=3"),
-            orderedItems = listOf(Item(id = item2Id))
+        val response2 = ArtworksResponse(
+            next = NextPage(id = "https://data.rijksmuseum.nl/api/en/collection?page=3"),
+            items = listOf(ArtworkIdItem(id = item2Id))
         )
-        val response3 = SearchResponse(
+        val response3 = ArtworksResponse(
             next = null,
-            orderedItems = listOf(Item(id = item3Id))
+            items = listOf(ArtworkIdItem(id = item3Id))
         )
 
         val artworksDetails = listOf(item1Id, item2Id, item3Id).associateWith { id ->
@@ -283,9 +283,9 @@ class SearchRepositoryImplTest {
     fun `test fetchArtworks when fetching details fails`() = runTest {
         // Setup
         val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
-        val initialSearchResponse = SearchResponse(
+        val initialSearchResponse = ArtworksResponse(
             next = null,
-            orderedItems = listOf(Item(id = item1Id))
+            items = listOf(ArtworkIdItem(id = item1Id))
         )
 
         val exception = AppException("Network error")
@@ -305,9 +305,9 @@ class SearchRepositoryImplTest {
     fun `test hasMore when exactly at the end of items and no next page`() = runTest {
         // Setup
         val item1Id = "https://data.rijksmuseum.nl/api/en/collection/item-1"
-        val initialSearchResponse = SearchResponse(
+        val initialSearchResponse = ArtworksResponse(
             next = null,
-            orderedItems = listOf(Item(id = item1Id))
+            items = listOf(ArtworkIdItem(id = item1Id))
         )
         val artworksDetails = mapOf(
             item1Id to ArtworkPreview(
@@ -338,12 +338,12 @@ class SearchRepositoryImplTest {
 }
 
 private class FailingSearchApi(
-    private val searchResponse: SearchResponse,
+    private val searchResponse: ArtworksResponse,
     private val exception: AppException,
 ) : SearchApi {
-    override suspend fun searchArtworks(
+    override suspend fun search(
         url: Url
-    ): Either<AppException, SearchResponse> =
+    ): Either<AppException, ArtworksResponse> =
         searchResponse.right()
 
     override suspend fun fetchDetails(url: Url): Either<AppException, ArtworkPreview> =

@@ -3,17 +3,17 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class SearchResponse(
-    val next: OrderedCollectionPage? = null,
-    val orderedItems: List<Item>
+internal data class ArtworksResponse(
+    val next: NextPage? = null,
+    val items: List<ArtworkIdItem>
 )
 
 @Serializable
-public data class OrderedCollectionPage(
+internal data class NextPage(
     val id: String
 )
 
 @Serializable
-public data class Item(
+internal data class ArtworkIdItem(
     val id: String
 )
