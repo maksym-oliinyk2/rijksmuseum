@@ -96,7 +96,6 @@ internal fun ArtworksScreen(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-// todo decide on lambdas parameters limit & come up with onNavigateToDetails
 @Suppress("LongParameterList")
 internal fun ArtworksContent(
     state: ArtworksViewState,
@@ -269,7 +268,7 @@ private fun ArtworkContents(
 }
 
 @Composable
-private fun ProgressIndicator(
+internal fun ProgressIndicator(
     modifier: Modifier,
 ) {
     Box(
@@ -281,7 +280,7 @@ private fun ProgressIndicator(
 }
 
 @Composable
-private fun ArtworksError(
+internal fun ArtworksError(
     modifier: Modifier,
     message: String,
     onRetry: () -> Unit,
@@ -304,7 +303,7 @@ private fun ArtworksError(
 }
 
 @Composable
-private fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
+internal fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
     .data(toExternalValue())
     .crossfade(true)
     .build()
