@@ -1,6 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.artwork
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.GetArtworkUseCase
 import io.github.xlopec.tea.core.Component
@@ -11,12 +10,13 @@ import io.github.xlopec.tea.core.effect
 import io.github.xlopec.tea.core.toStatesComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import org.koin.viewmodel.scope.ScopeViewModel
 
 internal class ArtworkDetailsViewModel(
-    // todo refine injected dependencies
-    private val key: ArtworkDetailsDestination,
-    private val getArtworkUseCase: GetArtworkUseCase,
-) : ViewModel() {
+    key: ArtworkDetailsDestination
+) : ScopeViewModel() {
+
+    private val getArtworkUseCase: GetArtworkUseCase by scope.inject()
 
     @OptIn(ExperimentalTeaApi::class)
     private val component = Component<Message, ArtworkDetailsViewState, LoadCommand>(

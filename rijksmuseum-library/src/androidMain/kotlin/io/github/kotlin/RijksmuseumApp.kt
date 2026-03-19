@@ -9,7 +9,9 @@ import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.app.AppModule
 import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 public class RijksmuseumApp : Application() {
 
@@ -19,6 +21,9 @@ public class RijksmuseumApp : Application() {
             setupStrictAppPolicies()
         }
         startKoin {
+            if (BuildConfig.DEBUG) {
+                androidLogger(Level.DEBUG)
+            }
             androidContext(this@RijksmuseumApp)
             modules(AppModule(CIO))
         }

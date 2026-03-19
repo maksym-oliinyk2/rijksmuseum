@@ -42,14 +42,11 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun ArtworkDetailsScreen(
-    key: ArtworkDetailsDestination,
+    viewModel: ArtworkDetailsViewModel,
     modifier: Modifier = Modifier,
-    viewModel: ArtworkDetailsViewModel = koinViewModel { parametersOf(key) },
 ) {
     val messageHandle = remember { MutableSharedFlow<Message>() }
     val state by viewModel(messageHandle).collectAsStateWithLifecycle(null)

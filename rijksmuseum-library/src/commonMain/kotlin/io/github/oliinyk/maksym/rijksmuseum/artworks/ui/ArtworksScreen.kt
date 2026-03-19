@@ -64,12 +64,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ArtworksScreen(
     modifier: Modifier = Modifier,
-    viewModel: ArtworksViewModel = koinViewModel<ArtworksViewModel>()
+    viewModel: ArtworksViewModel,
 ) {
     val messages = remember { MutableSharedFlow<Message>() }
     val component = remember(viewModel) { viewModel(messages) }

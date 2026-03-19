@@ -6,12 +6,14 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class ArtworkRepositoryImpl(
     private val api: SearchApi,
     private val cache: ValueHolder<Artwork>,
 ) : ArtworkRepository {
     override suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> {
-        return cache.getAndForget()?.right() ?: api.fetchDetails(url)
+        return withContext(Dispatchers.Main) { cache.getAndForget() }?.right() ?: api.fetchDetails(url)
     }
 }
