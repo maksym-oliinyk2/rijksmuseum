@@ -38,8 +38,9 @@ kotlin {
 
         withJava() // enable java compilation support
         withHostTestBuilder {}.configure {}
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            execution = "HOST"
         }
     }
     iosX64()
@@ -115,10 +116,18 @@ kotlin {
             }
         }
 
-        val androidHostTest by getting {
+        getByName("androidHostTest") {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.junit)
+            }
+        }
+
+        getByName("androidDeviceTest") {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.compose.ui.test)
+                implementation(libs.compose.test.manifest)
             }
         }
     }

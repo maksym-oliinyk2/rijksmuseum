@@ -32,5 +32,4 @@ internal class ArtworksViewModel(
     ).toStatesComponent()
 
     operator fun invoke(message: Flow<Message>): Flow<ArtworksViewState> = component(message)
-
 }

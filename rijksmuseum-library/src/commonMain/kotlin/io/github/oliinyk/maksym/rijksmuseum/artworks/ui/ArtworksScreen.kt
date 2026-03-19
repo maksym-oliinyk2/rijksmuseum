@@ -93,6 +93,7 @@ internal fun ArtworksScreen(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
+@Suppress("LongParameterList")
 internal fun ArtworksContent(
     state: ArtworksViewState,
     onRefresh: () -> Unit,
@@ -117,7 +118,9 @@ internal fun ArtworksContent(
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .semantics { testTag = "ArtworksList" },
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),

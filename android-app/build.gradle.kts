@@ -37,8 +37,4 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.compose.activity)
     implementation(libs.splashscreen)
-
-    androidTestImplementation(libs.ui.test.junit4)
-    androidTestUtil(libs.android.test.orchestrator)
-    debugImplementation(libs.compose.test.manifest)
 }
