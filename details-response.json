@@ -1,12 +1,12 @@
 {
   "@context": "https://linked.art/ns/v1/linked-art.json",
-  "id": "https://id.rijksmuseum.nl/200100088",
+  "id": "https://id.rijksmuseum.nl/2001",
   "type": "HumanMadeObject",
   "produced_by": {
     "type": "Production",
     "technique": [
       {
-        "id": "https://id.rijksmuseum.nl/2202379",
+        "id": "https://id.rijksmuseum.nl/2202942",
         "type": "Type",
         "identified_by": [
           {
@@ -15,7 +15,7 @@
               {
                 "type": "AttributeAssignment",
                 "assigned": [
-                  "https://id.rijksmuseum.nl/200100088"
+                  "https://id.rijksmuseum.nl/2001"
                 ],
                 "assigned_property": "influenced_by"
               }
@@ -32,15 +32,91 @@
         "notation": [
           {
             "@language": "nl",
-            "@value": "slaan"
+            "@value": "etsen"
           },
           {
             "@language": "en",
-            "@value": "striking (metalworking)"
+            "@value": "etching"
           }
         ],
         "equivalent": [
-          "http://vocab.getty.edu/aat/300206846"
+          "http://vocab.getty.edu/aat/300053241"
+        ]
+      },
+      {
+        "id": "https://id.rijksmuseum.nl/220934",
+        "type": "Type",
+        "identified_by": [
+          {
+            "type": "Identifier",
+            "assigned_by": [
+              {
+                "type": "AttributeAssignment",
+                "assigned": [
+                  "https://id.rijksmuseum.nl/2001"
+                ],
+                "assigned_property": "influenced_by"
+              }
+            ],
+            "content": "2",
+            "classified_as": [
+              {
+                "id": "http://vocab.getty.edu/aat/300456575",
+                "type": "Type"
+              }
+            ]
+          }
+        ],
+        "notation": [
+          {
+            "@language": "nl",
+            "@value": "aquatint"
+          },
+          {
+            "@language": "en",
+            "@value": "aquatint"
+          }
+        ],
+        "equivalent": [
+          "http://vocab.getty.edu/aat/300053242"
+        ]
+      },
+      {
+        "id": "https://id.rijksmuseum.nl/220922",
+        "type": "Type",
+        "identified_by": [
+          {
+            "type": "Identifier",
+            "assigned_by": [
+              {
+                "type": "AttributeAssignment",
+                "assigned": [
+                  "https://id.rijksmuseum.nl/2001"
+                ],
+                "assigned_property": "influenced_by"
+              }
+            ],
+            "content": "3",
+            "classified_as": [
+              {
+                "id": "http://vocab.getty.edu/aat/300456575",
+                "type": "Type"
+              }
+            ]
+          }
+        ],
+        "notation": [
+          {
+            "@language": "nl",
+            "@value": "droge naald"
+          },
+          {
+            "@language": "en",
+            "@value": "drypoint"
+          }
+        ],
+        "equivalent": [
+          "http://vocab.getty.edu/aat/300053228"
         ]
       }
     ],
@@ -49,7 +125,7 @@
       "identified_by": [
         {
           "type": "Name",
-          "content": "1800",
+          "content": "1973",
           "language": [
             {
               "id": "http://vocab.getty.edu/aat/300388277",
@@ -59,7 +135,7 @@
         },
         {
           "type": "Name",
-          "content": "1800",
+          "content": "1973",
           "language": [
             {
               "id": "http://vocab.getty.edu/aat/300388256",
@@ -68,32 +144,38 @@
           ]
         }
       ],
-      "begin_of_the_begin": "1800-01-01T00:00:00Z",
-      "end_of_the_end": "1800-12-31T23:59:59Z"
+      "begin_of_the_begin": "1973-01-01T00:00:00Z",
+      "end_of_the_end": "1973-12-31T23:59:59Z"
     },
     "referred_to_by": [
       {
         "type": "LinguisticObject",
-        "content": "Bataafse Republiek",
+        "content": "Nicolaas Wijnberg (eigenhandig gesigneerd)",
         "classified_as": [
-          "http://vocab.getty.edu/aat/300435416"
+          {
+            "id": "http://vocab.getty.edu/aat/300435416",
+            "type": "Type"
+          }
         ],
         "language": [
           {
-            "id": "http://vocab.getty.edu/aat/300388277",
+            "id": "http://vocab.getty.edu/aat/300388256",
             "type": "Language"
           }
         ]
       },
       {
         "type": "LinguisticObject",
-        "content": "Bataafse Republiek",
+        "content": "Nicolaas Wijnberg (signed by artist)",
         "classified_as": [
-          "http://vocab.getty.edu/aat/300435416"
+          {
+            "id": "http://vocab.getty.edu/aat/300435416",
+            "type": "Type"
+          }
         ],
         "language": [
           {
-            "id": "http://vocab.getty.edu/aat/300388256",
+            "id": "http://vocab.getty.edu/aat/300388277",
             "type": "Language"
           }
         ]
@@ -102,17 +184,26 @@
     "part": [
       {
         "type": "Production",
-        "carried_out_by": [
+        "assigned_by": [
           {
-            "id": "https://id.rijksmuseum.nl/21060396",
-            "type": "Group",
-            "notation": {
-              "@language": "nl",
-              "@value": "Bataafse Republiek"
-            },
-            "equivalent": [
-              "http://www.wikidata.org/entity/Q188553",
-              "http://viaf.org/viaf/147757314"
+            "type": "AttributeAssignment",
+            "assigned": [
+              {
+                "id": "https://id.rijksmuseum.nl/21029638",
+                "type": "Person"
+              }
+            ],
+            "assigned_property": "carried_out_by",
+            "motivated_by": [
+              {
+                "type": "LinguisticObject",
+                "carried_by": [
+                  "https://id.rijksmuseum.nl/2001"
+                ],
+                "classified_as": [
+                  "http://vocab.getty.edu/aat/300028705"
+                ]
+              }
             ]
           }
         ],
@@ -136,18 +227,27 @@
         ],
         "technique": [
           {
-            "id": "https://id.rijksmuseum.nl/2209210",
+            "id": "https://id.rijksmuseum.nl/2202348",
             "type": "Type",
-            "notation": {
-              "@language": "nl",
-              "@value": "muntheer"
-            }
+            "notation": [
+              {
+                "@language": "nl",
+                "@value": "prentmaker"
+              },
+              {
+                "@language": "en",
+                "@value": "printmaker"
+              }
+            ],
+            "equivalent": [
+              "http://vocab.getty.edu/aat/300025164"
+            ]
           }
         ],
         "referred_to_by": [
           {
             "type": "LinguisticObject",
-            "content": "Bataafse Republiek",
+            "content": "Nicolaas Wijnberg (eigenhandig gesigneerd)",
             "classified_as": [
               "http://vocab.getty.edu/aat/300435417"
             ],
@@ -160,7 +260,7 @@
           },
           {
             "type": "LinguisticObject",
-            "content": "Bataafse Republiek",
+            "content": "Nicolaas Wijnberg (signed by artist)",
             "classified_as": [
               "http://vocab.getty.edu/aat/300435417"
             ],
@@ -173,22 +273,12 @@
           },
           {
             "type": "LinguisticObject",
-            "content": "muntheer: Bataafse Republiek, Utrecht",
+            "content": "prentmaker: Nicolaas Wijnberg (eigenhandig gesigneerd)",
             "classified_as": [
-              "http://vocab.getty.edu/aat/300435416"
-            ],
-            "language": [
               {
-                "id": "http://vocab.getty.edu/aat/300388277",
-                "type": "Language"
+                "id": "http://vocab.getty.edu/aat/300435416",
+                "type": "Type"
               }
-            ]
-          },
-          {
-            "type": "LinguisticObject",
-            "content": "muntheer: Bataafse Republiek, Utrecht (stad)",
-            "classified_as": [
-              "http://vocab.getty.edu/aat/300435416"
             ],
             "language": [
               {
@@ -196,25 +286,21 @@
                 "type": "Language"
               }
             ]
-          }
-        ],
-        "took_place_at": [
+          },
           {
-            "id": "https://id.rijksmuseum.nl/2302",
-            "type": "Place",
-            "notation": [
+            "type": "LinguisticObject",
+            "content": "printmaker: Nicolaas Wijnberg (signed by artist)",
+            "classified_as": [
               {
-                "@language": "en",
-                "@value": "Utrecht"
-              },
-              {
-                "@language": "nl",
-                "@value": "Utrecht (stad)"
+                "id": "http://vocab.getty.edu/aat/300435416",
+                "type": "Type"
               }
             ],
-            "equivalent": [
-              "http://vocab.getty.edu/tgn/7006926",
-              "http://www.wikidata.org/entity/Q803"
+            "language": [
+              {
+                "id": "http://vocab.getty.edu/aat/300388277",
+                "type": "Language"
+              }
             ]
           }
         ]
@@ -223,7 +309,7 @@
   },
   "subject_of": [
     {
-      "id": "https://data.rijksmuseum.nl/200100088",
+      "id": "https://data.rijksmuseum.nl/2001",
       "type": "LinguisticObject",
       "subject_to": [
         {
@@ -263,7 +349,7 @@
           ],
           "access_point": [
             {
-              "id": "https://www.rijksmuseum.nl/nl/collectie/object/KOG-MP-1-2179A--936749a00fab2d05fe16561db5090851",
+              "id": "https://www.rijksmuseum.nl/nl/collectie/object/RP-P-2010-222-3315--ba97e0d4396e589a312631ff4fbfd5fb",
               "type": "DigitalObject"
             }
           ]
@@ -279,7 +365,7 @@
           "type": "LinguisticObject",
           "part_of": [
             {
-              "id": "https://id.rijksmuseum.nl/30161766",
+              "id": "https://id.rijksmuseum.nl/301102015",
               "type": "LinguisticObject"
             }
           ],
@@ -289,10 +375,20 @@
               "part": [
                 {
                   "type": "Identifier",
-                  "content": "36",
+                  "content": "74f",
                   "classified_as": [
                     {
                       "id": "http://vocab.getty.edu/aat/300404620",
+                      "type": "Type"
+                    }
+                  ]
+                },
+                {
+                  "type": "Identifier",
+                  "content": "p. 268",
+                  "classified_as": [
+                    {
+                      "id": "http://vocab.getty.edu/aat/300445022",
                       "type": "Type"
                     }
                   ]
@@ -314,35 +410,28 @@
           "id": "http://vocab.getty.edu/aat/300311954",
           "type": "Type"
         }
+      ],
+      "referred_to_by": [
+        {
+          "type": "LinguisticObject",
+          "content": "Latere uitgave.",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300435416",
+              "type": "Type"
+            }
+          ]
+        }
       ]
     }
   ],
   "identified_by": [
     {
       "type": "Name",
-      "content": "Bataafse Republiek, dukaat op naam van Utrecht, 1800",
-      "identified_by": [
-        {
-          "type": "Identifier",
-          "content": "2",
-          "classified_as": [
-            {
-              "id": "http://vocab.getty.edu/aat/300456575",
-              "type": "Type"
-            }
-          ]
-        }
+      "carried_by": [
+        "https://id.rijksmuseum.nl/2001"
       ],
-      "language": [
-        {
-          "id": "http://vocab.getty.edu/aat/300388256",
-          "type": "Language"
-        }
-      ]
-    },
-    {
-      "type": "Name",
-      "content": "Dukaat van de Bataafse Republiek op naam van Utrecht, 1800",
+      "content": "Before, Behind, Between, Above, Below",
       "identified_by": [
         {
           "type": "Identifier",
@@ -357,6 +446,10 @@
       ],
       "classified_as": [
         {
+          "id": "http://vocab.getty.edu/aat/300417200",
+          "type": "Type"
+        },
+        {
           "id": "http://vocab.getty.edu/aat/300404670",
           "type": "Type",
           "classified_as": [
@@ -368,8 +461,18 @@
           ]
         },
         {
-          "id": "http://vocab.getty.edu/aat/300417200",
-          "type": "Type"
+          "id": "https://id.rijksmuseum.nl/22015530",
+          "type": "Type",
+          "notation": [
+            {
+              "@language": "en",
+              "@value": "original title on object"
+            },
+            {
+              "@language": "nl",
+              "@value": "originele titel op object"
+            }
+          ]
         }
       ],
       "language": [
@@ -381,19 +484,19 @@
     },
     {
       "type": "Identifier",
-      "content": "KOG-MP-1-2179A",
+      "content": "RP-P-2010-222-3315",
       "classified_as": [
         {
           "id": "https://id.rijksmuseum.nl/22015218",
           "type": "Type",
           "notation": [
             {
-              "@language": "nl",
-              "@value": "objectnummer"
-            },
-            {
               "@language": "en",
               "@value": "object number"
+            },
+            {
+              "@language": "nl",
+              "@value": "objectnummer"
             }
           ]
         },
@@ -402,35 +505,49 @@
           "type": "Type"
         }
       ]
+    },
+    {
+      "type": "Name",
+      "content": "John Donne, Elegie XIX: To his Mistris going to Bed",
+      "identified_by": [
+        {
+          "type": "Identifier",
+          "content": "2",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300456575",
+              "type": "Type"
+            }
+          ]
+        }
+      ],
+      "classified_as": [
+        {
+          "id": "https://id.rijksmuseum.nl/22015532",
+          "type": "Type",
+          "notation": [
+            {
+              "@language": "en",
+              "@value": "original series title"
+            },
+            {
+              "@language": "nl",
+              "@value": "originele serietitel"
+            }
+          ]
+        }
+      ],
+      "language": [
+        {
+          "id": "http://vocab.getty.edu/aat/300388256",
+          "type": "Language"
+        }
+      ]
     }
   ],
   "classified_as": [
     {
-      "id": "https://id.rijksmuseum.nl/2202775",
-      "type": "Type",
-      "classified_as": [
-        {
-          "id": "http://vocab.getty.edu/aat/300435443",
-          "type": "Type",
-          "_label": "Type of Work"
-        }
-      ],
-      "notation": [
-        {
-          "@language": "nl",
-          "@value": "dukaat"
-        },
-        {
-          "@language": "en",
-          "@value": "ducat"
-        }
-      ],
-      "equivalent": [
-        "http://vocab.getty.edu/aat/300193382"
-      ]
-    },
-    {
-      "id": "https://id.rijksmuseum.nl/2201030",
+      "id": "https://id.rijksmuseum.nl/22040",
       "type": "Type",
       "classified_as": [
         {
@@ -442,78 +559,101 @@
       "notation": [
         {
           "@language": "en",
-          "@value": "coin"
+          "@value": "print"
         },
         {
           "@language": "nl",
-          "@value": "munt"
+          "@value": "prent"
         }
       ],
       "equivalent": [
-        "http://vocab.getty.edu/aat/300037222",
-        "http://www.wikidata.org/entity/Q41207"
+        "http://vocab.getty.edu/aat/300041273"
       ]
     }
   ],
   "dimension": [
     {
       "type": "Dimension",
+      "identified_by": [
+        {
+          "type": "Name",
+          "content": "plaatrand",
+          "language": [
+            {
+              "id": "http://vocab.getty.edu/aat/300388256",
+              "type": "Language"
+            }
+          ]
+        }
+      ],
       "classified_as": [
         {
-          "id": "https://id.rijksmuseum.nl/2205120",
+          "id": "https://id.rijksmuseum.nl/22012",
           "type": "Type",
           "notation": [
             {
               "@language": "nl",
-              "@value": "diameter"
+              "@value": "breedte"
             },
             {
               "@language": "en",
-              "@value": "diameter"
+              "@value": "width"
             }
           ],
           "equivalent": [
-            "http://vocab.getty.edu/aat/300055624"
+            "http://vocab.getty.edu/aat/300055647"
           ]
         }
       ],
-      "value": "2.2",
+      "value": "415",
       "unit": {
-        "id": "http://vocab.getty.edu/aat/300379098",
+        "id": "http://vocab.getty.edu/aat/300379097",
         "type": "MeasurementUnit"
       }
     },
     {
       "type": "Dimension",
+      "identified_by": [
+        {
+          "type": "Name",
+          "content": "plaatrand",
+          "language": [
+            {
+              "id": "http://vocab.getty.edu/aat/300388256",
+              "type": "Language"
+            }
+          ]
+        }
+      ],
       "classified_as": [
         {
-          "id": "https://id.rijksmuseum.nl/220217",
+          "id": "https://id.rijksmuseum.nl/22011",
           "type": "Type",
           "notation": [
             {
               "@language": "en",
-              "@value": "weight"
+              "@value": "height"
             },
             {
               "@language": "nl",
-              "@value": "gewicht (eigenschap)"
+              "@value": "hoogte"
             }
           ],
           "equivalent": [
-            "http://vocab.getty.edu/aat/300056240"
+            "http://vocab.getty.edu/aat/300055644"
           ]
         }
       ],
-      "value": "3.52",
+      "value": "296",
       "unit": {
-        "id": "http://vocab.getty.edu/aat/300379225",
+        "id": "http://vocab.getty.edu/aat/300379097",
         "type": "MeasurementUnit"
       }
     }
   ],
   "made_of": [
     {
-      "id": "https://id.rijksmuseum.nl/220237",
+      "id": "https://id.rijksmuseum.nl/22020",
       "type": "Material",
       "identified_by": [
         {
@@ -522,7 +662,7 @@
             {
               "type": "AttributeAssignment",
               "assigned": [
-                "https://id.rijksmuseum.nl/200100088"
+                "https://id.rijksmuseum.nl/2001"
               ],
               "assigned_property": "influenced_by"
             }
@@ -538,100 +678,30 @@
       ],
       "notation": [
         {
-          "@language": "nl",
-          "@value": "goud"
+          "@language": "en",
+          "@value": "paper"
         },
         {
-          "@language": "en",
-          "@value": "gold (metal)"
+          "@language": "nl",
+          "@value": "papier"
         }
       ],
       "equivalent": [
-        "http://www.wikidata.org/entity/Q897",
-        "http://vocab.getty.edu/aat/300011021"
+        "http://www.wikidata.org/entity/Q11472",
+        "http://vocab.getty.edu/aat/300014109"
       ]
     }
   ],
   "shows": [
     {
-      "id": "https://id.rijksmuseum.nl/202100088",
+      "id": "https://id.rijksmuseum.nl/2021",
       "type": "VisualItem"
     }
   ],
   "referred_to_by": [
     {
       "type": "LinguisticObject",
-      "content": "diameter 2,2 cm x gewicht (eigenschap) 3,52 g",
-      "identified_by": [
-        {
-          "type": "Identifier",
-          "content": "1",
-          "classified_as": [
-            {
-              "id": "http://vocab.getty.edu/aat/300456575",
-              "type": "Type"
-            }
-          ]
-        }
-      ],
-      "classified_as": [
-        {
-          "id": "http://vocab.getty.edu/aat/300435430",
-          "type": "Type",
-          "classified_as": [
-            {
-              "id": "http://vocab.getty.edu/aat/300418049",
-              "type": "Type",
-              "_label": "brief text"
-            }
-          ]
-        }
-      ],
-      "language": [
-        {
-          "id": "http://vocab.getty.edu/aat/300388256",
-          "type": "Language"
-        }
-      ]
-    },
-    {
-      "type": "LinguisticObject",
-      "content": "diameter 2.2 cm x weight 3.52 g",
-      "identified_by": [
-        {
-          "type": "Identifier",
-          "content": "1",
-          "classified_as": [
-            {
-              "id": "http://vocab.getty.edu/aat/300456575",
-              "type": "Type"
-            }
-          ]
-        }
-      ],
-      "classified_as": [
-        {
-          "id": "http://vocab.getty.edu/aat/300435430",
-          "type": "Type",
-          "classified_as": [
-            {
-              "id": "http://vocab.getty.edu/aat/300418049",
-              "type": "Type",
-              "_label": "brief text"
-            }
-          ]
-        }
-      ],
-      "language": [
-        {
-          "id": "http://vocab.getty.edu/aat/300388277",
-          "type": "Language"
-        }
-      ]
-    },
-    {
-      "type": "LinguisticObject",
-      "content": "Gouden munt. Voorzijde: tussen jaartal staande ridder met zwaard en pijlenbundel. Omschrift eindigend in TRA [=Utrecht]. Keerzijde: in een versierd vierkant vijf-regelig opschrift. Kabelrand.",
+      "content": "Links naast de vrouw staat een paal waaraan een opgespannen doek met blote billen erop hangt. De vrouw leunt op een blok met de titel.",
       "classified_as": [
         {
           "id": "http://vocab.getty.edu/aat/300435452",
@@ -669,7 +739,7 @@
           "identified_by": [
             {
               "type": "Name",
-              "content": "2013-02-08",
+              "content": "2017-12-18",
               "language": [
                 {
                   "id": "http://vocab.getty.edu/aat/300388256",
@@ -679,7 +749,7 @@
             },
             {
               "type": "Name",
-              "content": "2013-02-08",
+              "content": "2017-12-18",
               "language": [
                 {
                   "id": "http://vocab.getty.edu/aat/300388277",
@@ -688,14 +758,14 @@
               ]
             }
           ],
-          "begin_of_the_begin": "2013-02-08T00:00:00Z",
-          "end_of_the_end": "2013-02-08T23:59:59Z"
+          "begin_of_the_begin": "2017-12-18T00:00:00Z",
+          "end_of_the_end": "2017-12-18T23:59:59Z"
         }
       }
     },
     {
       "type": "LinguisticObject",
-      "content": "On loan from the Koninklijk Oudheidkundig Genootschap",
+      "content": "Piet Clement Collection",
       "classified_as": [
         {
           "id": "http://vocab.getty.edu/aat/300026687",
@@ -718,7 +788,123 @@
     },
     {
       "type": "LinguisticObject",
-      "content": "Bruikleen van het Koninklijk Oudheidkundig Genootschap",
+      "content": "datum",
+      "classified_as": [
+        {
+          "id": "http://vocab.getty.edu/aat/300435414",
+          "type": "Type",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300418049",
+              "type": "Type",
+              "_label": "brief text"
+            }
+          ]
+        }
+      ],
+      "language": [
+        {
+          "id": "http://vocab.getty.edu/aat/300388256",
+          "type": "Language"
+        }
+      ]
+    },
+    {
+      "type": "LinguisticObject",
+      "content": "date",
+      "classified_as": [
+        {
+          "id": "http://vocab.getty.edu/aat/300435414",
+          "type": "Type",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300418049",
+              "type": "Type",
+              "_label": "brief text"
+            }
+          ]
+        }
+      ],
+      "language": [
+        {
+          "id": "http://vocab.getty.edu/aat/300388277",
+          "type": "Language"
+        }
+      ]
+    },
+    {
+      "type": "LinguisticObject",
+      "content": "height 296 mm x width 415 mm",
+      "identified_by": [
+        {
+          "type": "Identifier",
+          "content": "1",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300456575",
+              "type": "Type"
+            }
+          ]
+        }
+      ],
+      "classified_as": [
+        {
+          "id": "http://vocab.getty.edu/aat/300435430",
+          "type": "Type",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300418049",
+              "type": "Type",
+              "_label": "brief text"
+            }
+          ]
+        }
+      ],
+      "language": [
+        {
+          "id": "http://vocab.getty.edu/aat/300388277",
+          "type": "Language"
+        }
+      ]
+    },
+    {
+      "type": "LinguisticObject",
+      "content": "plaatrand: hoogte 296 mm x breedte 415 mm",
+      "identified_by": [
+        {
+          "type": "Identifier",
+          "content": "1",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300456575",
+              "type": "Type"
+            }
+          ]
+        }
+      ],
+      "classified_as": [
+        {
+          "id": "http://vocab.getty.edu/aat/300435430",
+          "type": "Type",
+          "classified_as": [
+            {
+              "id": "http://vocab.getty.edu/aat/300418049",
+              "type": "Type",
+              "_label": "brief text"
+            }
+          ]
+        }
+      ],
+      "language": [
+        {
+          "id": "http://vocab.getty.edu/aat/300388256",
+          "type": "Language"
+        }
+      ]
+    },
+    {
+      "type": "LinguisticObject",
+      "content": "Collectie Piet Clement",
       "classified_as": [
         {
           "id": "http://vocab.getty.edu/aat/300026687",
@@ -742,7 +928,7 @@
   ],
   "equivalent": [
     {
-      "id": "http://hdl.handle.net/10934/RM0001.COLLECT.818750",
+      "id": "http://hdl.handle.net/10934/RM0001.COLLECT.692577",
       "type": "HumanMadeObject"
     }
   ],
@@ -752,19 +938,11 @@
       "type": "Set"
     },
     {
-      "id": "https://id.rijksmuseum.nl/261106",
-      "type": "Set"
-    },
-    {
-      "id": "https://id.rijksmuseum.nl/2601",
-      "type": "Set"
-    },
-    {
-      "id": "https://id.rijksmuseum.nl/260239",
-      "type": "Set"
-    },
-    {
       "id": "https://id.rijksmuseum.nl/260238",
+      "type": "Set"
+    },
+    {
+      "id": "https://id.rijksmuseum.nl/26151",
       "type": "Set"
     }
   ]

@@ -11,7 +11,7 @@ public value class Title internal constructor(
     public val value: String
 ) {
     init {
-        require(value.isNotEmpty()) { "Title cannot be empty" }
+        require(value.isNotBlank()) { "Title cannot be blank" }
     }
 }
 
