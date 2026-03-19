@@ -49,7 +49,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
@@ -68,12 +68,12 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ArtworksScreen(
-    onNavigateToDetails: (Artwork) -> Unit,
+    onNavigateToDetails: (ArtworkPreview) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArtworksViewModel = koinViewModel<ArtworksViewModel>()
 ) {
     val messages = remember { MutableSharedFlow<Message>() }
-    val component = remember { viewModel(messages) }
+    val component = remember(viewModel) { viewModel(messages) }
     val state by component.collectAsStateWithLifecycle(null)
     val currentState = state
 
@@ -103,7 +103,7 @@ internal fun ArtworksContent(
     onRefresh: () -> Unit,
     onReload: () -> Unit,
     onLoadNext: () -> Unit,
-    onNavigateToDetails: (Artwork) -> Unit,
+    onNavigateToDetails: (ArtworkPreview) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val refreshState = rememberPullRefreshState(
@@ -157,8 +157,8 @@ internal fun ArtworksContent(
 }
 
 private fun LazyListScope.artworkItems(
-    paginateable: Paginateable<Artwork>,
-    onNavigateToDetails: (Artwork) -> Unit,
+    paginateable: Paginateable<ArtworkPreview>,
+    onNavigateToDetails: (ArtworkPreview) -> Unit,
 ) {
     items(
         items = paginateable.data,
@@ -172,7 +172,7 @@ private fun LazyListScope.artworkItems(
 }
 
 private fun LazyListScope.paginateableContent(
-    paginateable: Paginateable<Artwork>,
+    paginateable: Paginateable<ArtworkPreview>,
     onRefresh: () -> Unit,
     onReload: () -> Unit,
     onLoadNext: () -> Unit,
@@ -209,7 +209,7 @@ private fun LazyListScope.paginateableContent(
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 private fun ArtworkItem(
-    artwork: Artwork,
+    artwork: ArtworkPreview,
     onClick: () -> Unit,
 ) {
     Card(
@@ -256,7 +256,7 @@ private fun ArtworkImage(
 
 @Composable
 private fun ArtworkContents(
-    artwork: Artwork,
+    artwork: ArtworkPreview,
 ) {
     Column(
         modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium)

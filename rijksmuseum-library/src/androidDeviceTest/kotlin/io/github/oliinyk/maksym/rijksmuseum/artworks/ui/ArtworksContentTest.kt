@@ -6,7 +6,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
@@ -25,7 +25,7 @@ class ArtworksContentTest {
     @Test
     fun testArtworksContentDisplaysAllArtworks() = runComposeUiTest {
         val artworks = List(TestItemsCount) { i ->
-            Artwork(
+            ArtworkPreview(
                 url = UrlFrom("https://example.com/$i"),
                 title = Title("Artwork $i"),
                 images = listOf(UrlFrom("https://example.com/$i.jpg"))

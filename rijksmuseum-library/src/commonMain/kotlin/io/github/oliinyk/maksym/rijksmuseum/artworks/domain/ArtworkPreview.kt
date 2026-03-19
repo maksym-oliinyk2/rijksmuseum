@@ -18,7 +18,7 @@ public value class Title internal constructor(
 /**
  * Represents an artwork with its source URL, title, and a list of image URLs.
  */
-public data class Artwork internal constructor(
+public data class ArtworkPreview internal constructor(
     val url: Url,
     val title: Title,
     val images: List<Url>

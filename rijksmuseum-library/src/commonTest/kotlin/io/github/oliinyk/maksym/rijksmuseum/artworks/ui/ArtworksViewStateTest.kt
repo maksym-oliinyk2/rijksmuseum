@@ -2,7 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
 import arrow.core.left
 import arrow.core.right
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 class ArtworksViewStateTest {
 
-    private val testArtwork = Artwork(
+    private val testArtwork = ArtworkPreview(
         url = UrlFrom("https://example.com/1"),
         title = Title("Artwork 1"),
         images = listOf(UrlFrom("https://example.com/1.jpg"))
@@ -27,7 +27,7 @@ class ArtworksViewStateTest {
         )
         val (updatedState, commands) = initialState.update(Message.OnReload)
 
-        assertEquals(Paginateable.loadingList<Artwork>(), updatedState.artworks)
+        assertEquals(Paginateable.loadingList<ArtworkPreview>(), updatedState.artworks)
         assertEquals(setOf(LoadCommand(Paging.FirstPage)), commands)
     }
 
@@ -98,7 +98,7 @@ class ArtworksViewStateTest {
 
     @Test
     fun `test update with Message OnDataLoaded success appends data when loading next`() {
-        val artwork2 = Artwork(
+        val artwork2 = ArtworkPreview(
             url = UrlFrom("https://example.com/2"),
             title = Title("Artwork 2"),
             images = listOf(UrlFrom("https://example.com/2.jpg"))

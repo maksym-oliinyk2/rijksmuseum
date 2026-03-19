@@ -2,7 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.ArtworkPreview
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
@@ -17,7 +17,7 @@ internal val SearchUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection"
 internal interface SearchApi {
     suspend fun searchArtworks(url: Url): Either<AppException, SearchResponse>
 
-    suspend fun fetchDetails(url: Url): Either<AppException, Artwork>
+    suspend fun fetchDetails(url: Url): Either<AppException, ArtworkPreview>
 }
 
 internal class SearchApiImpl(
@@ -28,7 +28,7 @@ internal class SearchApiImpl(
             client.get(url.toExternalValue()).body<SearchResponse>()
         }
 
-    override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
+    override suspend fun fetchDetails(url: Url): Either<AppException, ArtworkPreview> =
         Either.catch {
             // todo come back to this later and refactor
             // 1. Fetch the main artwork object
@@ -54,7 +54,7 @@ internal class SearchApiImpl(
 
             val urls = digitalObjectDetails1.accessPoint.map { it.id }
 
-            Artwork(
+            ArtworkPreview(
                 url = url,
                 title = Title(name),
                 images = urls.map { UrlFrom(it) }

@@ -17,14 +17,14 @@ public class SearchUseCase(
     /**
      * Executes an artwork search with the specified [paging] configuration.
      */
-    public suspend fun searchArtworks(paging: Paging): Either<AppException, Page<Artwork>> {
+    public suspend fun searchArtworks(paging: Paging): Either<AppException, Page<ArtworkPreview>> {
         return searchRepository.fetchArtworks(paging)
     }
 
     /**
      * Fetches detailed information for a specific artwork by its [url].
      */
-    public suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> {
+    public suspend fun fetchArtworkDetails(url: Url): Either<AppException, ArtworkPreview> {
         return searchRepository.fetchArtworkDetails(url)
     }
 }
