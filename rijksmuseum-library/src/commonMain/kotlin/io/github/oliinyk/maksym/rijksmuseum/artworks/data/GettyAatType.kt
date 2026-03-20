@@ -43,7 +43,37 @@ public enum class GettyAatType(
     /**
      * Original series title ("originele serietitel")
      */
-    OriginalSeriesTitle(UrlFrom("https://id.rijksmuseum.nl/22015532"));
+    OriginalSeriesTitle(UrlFrom("https://id.rijksmuseum.nl/22015532")),
+
+    /**
+     * Collection or provenance information ("Collectie")
+     */
+    Collection(UrlFrom("http://vocab.getty.edu/aat/300026687")),
+
+    /**
+     * Brief text classification
+     */
+    BriefText(UrlFrom("http://vocab.getty.edu/aat/300418049")),
+
+    /**
+     * Type of Work classification
+     */
+    WorkType(UrlFrom("http://vocab.getty.edu/aat/300435443")),
+
+    /**
+     * Object number classification
+     */
+    ObjectNumber(UrlFrom("http://vocab.getty.edu/aat/300312355")),
+
+    /**
+     * Production classification
+     */
+    Production(UrlFrom("http://vocab.getty.edu/aat/300404450")),
+
+    /**
+     * Mentioned in documentation or reference
+     */
+    Mentioned(UrlFrom("http://vocab.getty.edu/aat/300028705"));
 
     internal companion object {
         fun fromId(id: Url): GettyAatType? = entries.firstOrNull { it.id == id }
