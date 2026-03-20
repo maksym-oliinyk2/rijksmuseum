@@ -79,11 +79,16 @@ internal class SearchApiImpl(
 }
 
 private fun HumanMadeObjectResponse.toLinguisticObjects(): List<DomainLinguisticObject> =
-    referredToBy.mapNotNull { obj ->
-        obj.content?.let { content ->
-            obj.classifiedAs.firstNotNullOfOrNull { classification ->
-                GettyAatType.fromId(classification.id)
-                    ?.let { type -> DomainLinguisticObject(type, Description(content)) }
+    referredToBy
+        .asSequence()
+        .filter { it.language.any { lang -> lang.isEnglish } }
+        .flatMap { obj ->
+            if (obj.content == null) {
+                listOf()
+            } else {
+                obj.classifiedAs.mapNotNull { classification ->
+                    GettyAatType.fromId(classification.id)
+                        ?.let { type -> DomainLinguisticObject(type, Description(obj.content)) }
+                }
             }
-        }
-    }
+        }.toList()

@@ -48,13 +48,13 @@ class SearchRepositoryImplTest {
             url = item1Id,
             title = Title("The Night Watch"),
             images = listOf(UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B")),
-            descriptions = emptyList()
+            descriptions = emptyList(),
         )
         val artwork2 = Artwork(
             url = item2Id,
             title = Title("The Milkmaid"),
             images = listOf(UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B")),
-            descriptions = emptyList()
+            descriptions = emptyList(),
         )
 
         // Fill the details for all items to avoid errors during parMap
@@ -63,7 +63,7 @@ class SearchRepositoryImplTest {
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 images = listOf(UrlFrom("https://image.url/${item.id}")),
-                descriptions = emptyList()
+                descriptions = emptyList(),
             )
         }.toMutableMap()
 
@@ -109,7 +109,7 @@ class SearchRepositoryImplTest {
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 images = listOf(UrlFrom("https://image.url/${item.id}")),
-                descriptions = emptyList()
+                descriptions = emptyList(),
             )
         }
 

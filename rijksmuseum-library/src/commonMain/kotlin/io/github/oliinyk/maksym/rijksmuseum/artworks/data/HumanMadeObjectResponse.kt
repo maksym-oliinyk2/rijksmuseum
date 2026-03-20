@@ -1,6 +1,7 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
+import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -70,6 +71,24 @@ internal data class HumanMadeObjectResponse(
     )
 
     @Serializable
+    data class Language(
+        @SerialName("id")
+        @Serializable(with = UrlSerializer::class)
+        val id: Url,
+        @SerialName("type")
+        val type: String,
+    ) {
+
+        internal val isEnglish: Boolean
+            get() = id == EnglishId
+
+        private companion object {
+            // well known id for English language
+            val EnglishId = UrlFrom("http://vocab.getty.edu/aat/300388277")
+        }
+    }
+
+    @Serializable
     data class LinguisticObject(
         @SerialName("type")
         val type: String,
@@ -77,6 +96,8 @@ internal data class HumanMadeObjectResponse(
         val content: String? = null,
         @SerialName("classified_as")
         val classifiedAs: List<Classification> = emptyList(),
+        @SerialName("language")
+        val language: List<Language> = emptyList(),
     )
 
     @Serializable

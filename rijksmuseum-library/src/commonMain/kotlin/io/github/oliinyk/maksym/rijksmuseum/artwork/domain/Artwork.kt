@@ -14,7 +14,7 @@ public data class Artwork(
 
 public data class LinguisticObject(
     val type: GettyAatType,
-    val description: Description
+    val description: Description,
 )
 
 @JvmInline
