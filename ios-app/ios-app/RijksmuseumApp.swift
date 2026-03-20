@@ -11,10 +11,6 @@ import RijksmuseumLib
 @main
 struct ios_appApp: App {
     
-    init() {
-        RijksmuseumAppKt.startKoinApp()
-    }
-    
     var body: some Scene {
         WindowGroup {
             ComposeViewController()
@@ -26,7 +22,7 @@ struct ios_appApp: App {
 struct ComposeViewController: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIViewController {
-        App_iosKt.appController()
+        App_appleKt.appController()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {

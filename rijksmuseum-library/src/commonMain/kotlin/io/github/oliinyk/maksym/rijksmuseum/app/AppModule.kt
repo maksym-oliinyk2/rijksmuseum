@@ -1,11 +1,11 @@
 package io.github.oliinyk.maksym.rijksmuseum.app
 
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
 import io.github.oliinyk.maksym.rijksmuseum.artwork.detailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.searchModule
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksDestination
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
@@ -17,16 +17,18 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 @Suppress("FunctionName")
 internal fun AppModule(
+    backStack: NavBackStack<NavKey>,
     engine: HttpClientEngineFactory<HttpClientEngineConfig>,
-) = module {
+): Module = module {
     includes(searchModule, detailsModule)
     single { HttpClient(LogLevel.ALL, engine) }
-    single { Navigator(NavBackStack(ArtworksDestination), get(named<Artwork>())) }
+    single { Navigator(backStack, get(named<Artwork>())) }
     single(named<Artwork>()) { ValueHolder<Artwork>() }
 }
 

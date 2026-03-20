@@ -84,7 +84,6 @@ kotlin {
                 implementation(libs.compose.material.icons.extended)
                 implementation(libs.stdlib)
                 implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.ktor.client.negotiation)
                 implementation(libs.ktor.serialization.json)
@@ -101,7 +100,6 @@ kotlin {
                 implementation(libs.koin.compose.viewmodel)
                 implementation(libs.arrow.core)
                 implementation(libs.arrow.coroutines)
-                implementation(libs.bundles.coil)
             }
         }
 
