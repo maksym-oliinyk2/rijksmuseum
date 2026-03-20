@@ -49,7 +49,8 @@ internal fun App(
     // see CompositionKoinApplicationLoader
     KoinApplication(
         // todo check if rememberUpdatedState is needed here
-        logLevel = logLevel, configuration = configurationProvider(
+        logLevel = logLevel,
+        configuration = configurationProvider(
             rememberNavBackStack(SavedStateConfig, ArtworksDestination)
         )
     ) {
