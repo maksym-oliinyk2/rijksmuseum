@@ -8,8 +8,6 @@ import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_collection
 import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_description
 import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_dimensions
 import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_documentation
-import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_dutch
-import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_english
 import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_inscription
 import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_mentioned
 import io.github.oliinyk.maksym.rijksmuseum.res.getty_aat_type_notes
@@ -62,16 +60,6 @@ public enum class GettyAatType(
      * Original series title ("originele serietitel")
      */
     OriginalSeriesTitle(UrlFrom("https://id.rijksmuseum.nl/22015532"), Res.string.getty_aat_type_original_series_title),
-
-    /**
-     * English language
-     */
-    English(UrlFrom("http://vocab.getty.edu/aat/300388277"), Res.string.getty_aat_type_english),
-
-    /**
-     * Dutch language
-     */
-    Dutch(UrlFrom("http://vocab.getty.edu/aat/300388256"), Res.string.getty_aat_type_dutch),
 
     /**
      * Collection or provenance information ("Collectie")

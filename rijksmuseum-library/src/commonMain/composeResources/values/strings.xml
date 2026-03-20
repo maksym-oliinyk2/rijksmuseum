@@ -1,23 +1,21 @@
 <resources>
-    <string name="exception_unknown">Unknown error</string>
+    <string name="exception_unknown">Onbekende fout</string>
 
-    <string name="artworks_no_data_message">No artworks found</string>
-    <string name="artworks_image_description">Artwork Image</string>
-    <string name="artworks_action_retry">Retry</string>
+    <string name="artworks_no_data_message">Geen kunstwerken gevonden</string>
+    <string name="artworks_image_description">Afbeelding van het kunstwerk</string>
+    <string name="artworks_action_retry">Opnieuw proberen</string>
 
-    <string name="getty_aat_type_inscription">Inscription</string>
-    <string name="getty_aat_type_notes">Notes</string>
-    <string name="getty_aat_type_description">Description</string>
-    <string name="getty_aat_type_documentation">Documentation</string>
-    <string name="getty_aat_type_dimensions">Dimensions</string>
-    <string name="getty_aat_type_original_title">Original Title</string>
-    <string name="getty_aat_type_original_series_title">Original Series Title</string>
-    <string name="getty_aat_type_english">English</string>
-    <string name="getty_aat_type_dutch">Dutch</string>
-    <string name="getty_aat_type_collection">Collection</string>
-    <string name="getty_aat_type_brief_text">Brief Text</string>
-    <string name="getty_aat_type_work_type">Work Type</string>
-    <string name="getty_aat_type_object_number">Object Number</string>
-    <string name="getty_aat_type_production">Production</string>
-    <string name="getty_aat_type_mentioned">Mentioned</string>
+    <string name="getty_aat_type_inscription">Inscriptie</string>
+    <string name="getty_aat_type_notes">Notities</string>
+    <string name="getty_aat_type_description">Beschrijving</string>
+    <string name="getty_aat_type_documentation">Documentatie</string>
+    <string name="getty_aat_type_dimensions">Afmetingen</string>
+    <string name="getty_aat_type_original_title">Originele titel</string>
+    <string name="getty_aat_type_original_series_title">Originele serietitel</string>
+    <string name="getty_aat_type_collection">Collectie</string>
+    <string name="getty_aat_type_brief_text">Korte tekst</string>
+    <string name="getty_aat_type_work_type">Type werk</string>
+    <string name="getty_aat_type_object_number">Objectnummer</string>
+    <string name="getty_aat_type_production">Productie</string>
+    <string name="getty_aat_type_mentioned">Vermeld</string>
 </resources>

@@ -2,7 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
 import arrow.core.raise.either
-import arrow.fx.coroutines.parMapNotNull
+import arrow.fx.coroutines.parMap
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
@@ -29,9 +29,8 @@ internal class SearchRepositoryImpl(
                 @Suppress("UNCHECKED_CAST")
                 Page.End as Page<Artwork>
             } else {
-                val artworks = ids.parMapNotNull { id ->
-                    // todo skip item on error
-                    api.fetchDetails(id).getOrNull()
+                val artworks = ids.parMap { id ->
+                    api.fetchDetails(id).bind()
                 }
 
                 Page(
