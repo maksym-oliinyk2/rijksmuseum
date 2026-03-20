@@ -11,7 +11,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchUrl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import kotlinx.coroutines.test.runTest
@@ -187,14 +186,26 @@ class SearchRepositoryImplTest {
                 )
             )
 
-            val artworksDetails = listOf(item1Id, item2Id, item3Id).associateWith { id ->
-                Artwork(
-                    url = id,
-                    title = Title("Title for $id"),
-                    images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}")),
+            val artworksDetails = mapOf(
+                item1Id to Artwork(
+                    url = item1Id,
+                    title = Title("Title for $item1Id"),
+                    images = listOf(UrlFrom("https://image.url/item-1")),
+                    descriptions = listOf()
+                ),
+                item2Id to Artwork(
+                    url = item2Id,
+                    title = Title("Title for $item2Id"),
+                    images = listOf(UrlFrom("https://image.url/item-2")),
+                    descriptions = listOf()
+                ),
+                item3Id to Artwork(
+                    url = item3Id,
+                    title = Title("Title for $item3Id"),
+                    images = listOf(UrlFrom("https://image.url/item-3")),
                     descriptions = listOf()
                 )
-            }
+            )
 
             val api = TestSearchApi(
                 artworksDetails = artworksDetails.mapValues { it.value.right() },
@@ -261,46 +272,41 @@ class SearchRepositoryImplTest {
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
         val item3Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-3")
 
-        val response1 = HumanMadeObjectResponse.ArtworksResponse(
-            next = HumanMadeObjectResponse.NextPage(
-                id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2")
+        val artworksDetails = mapOf(
+            item1Id to Artwork(
+                url = item1Id,
+                title = Title("Title for $item1Id"),
+                images = listOf(UrlFrom("https://image.url/item-1")),
+                descriptions = listOf()
             ),
-            items = listOf(HumanMadeObjectResponse.ArtworkIdItem(id = item1Id))
-        )
-        val response2 = HumanMadeObjectResponse.ArtworksResponse(
-            next = HumanMadeObjectResponse.NextPage(
-                id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=3")
+            item2Id to Artwork(
+                url = item2Id,
+                title = Title("Title for $item2Id"),
+                images = listOf(UrlFrom("https://image.url/item-2")),
+                descriptions = listOf()
             ),
-            items = listOf(HumanMadeObjectResponse.ArtworkIdItem(id = item2Id))
-        )
-        val response3 = HumanMadeObjectResponse.ArtworksResponse(
-            next = null,
-            items = listOf(HumanMadeObjectResponse.ArtworkIdItem(id = item3Id))
-        )
-
-        val artworksDetails = listOf(item1Id, item2Id, item3Id).associateWith { id ->
-            Artwork(
-                url = id,
-                title = Title("Title for $id"),
-                images = listOf(UrlFrom("https://image.url/${id.toExternalValue().substringAfterLast("/")}")),
+            item3Id to Artwork(
+                url = item3Id,
+                title = Title("Title for $item3Id"),
+                images = listOf(UrlFrom("https://image.url/item-3")),
                 descriptions = listOf()
             )
-        }
+        )
 
         val api = TestSearchApi(
             artworksDetails = artworksDetails.mapValues { it.value.right() },
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(
-                    next = response1.next?.id,
-                    ids = response1.items.map { it.id }
+                    next = UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2"),
+                    ids = listOf(item1Id)
                 ).right(),
                 UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2") to PaginatedIds(
-                    next = response2.next?.id,
-                    ids = response2.items.map { it.id }
+                    next = UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=3"),
+                    ids = listOf(item2Id)
                 ).right(),
                 UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=3") to PaginatedIds(
-                    next = response3.next?.id,
-                    ids = response3.items.map { it.id }
+                    next = null,
+                    ids = listOf(item3Id)
                 ).right()
             )
         )
