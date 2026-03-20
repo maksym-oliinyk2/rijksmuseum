@@ -6,7 +6,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchUrl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
@@ -18,9 +17,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertSame
-import kotlin.test.assertTrue
 
 class SearchRepositoryImplTest {
 
@@ -71,8 +68,13 @@ class SearchRepositoryImplTest {
         artworksDetails[item2Id] = artwork2
 
         val api = TestSearchApi(
-            artworksDetails = artworksDetails,
-            searchResponses = mapOf(SearchUrl to searchResponse)
+            artworksDetails = artworksDetails.mapValues { it.value.right() },
+            searchResponses = mapOf(
+                SearchUrl to PaginatedIds(
+                    next = searchResponse.next?.id,
+                    ids = searchResponse.items.map { it.id }
+                ).right()
+            )
         )
         val repository = SearchRepositoryImpl(api)
 
@@ -81,11 +83,7 @@ class SearchRepositoryImplTest {
         val page = repository.fetchArtworks(paging).getOrNull()
 
         // Verify
-        assertNotNull(page)
-        assertEquals(2, page.data.size)
-        assertEquals(artwork1, page.data[0])
-        assertEquals(artwork2, page.data[1])
-        assertTrue(page.hasMore)
+        assertEquals(Page(hasMore = true, data = listOf(artwork1, artwork2)), page)
     }
 
     @Test
@@ -114,8 +112,13 @@ class SearchRepositoryImplTest {
         }
 
         val api = TestSearchApi(
-            artworksDetails = artworksDetails,
-            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+            artworksDetails = artworksDetails.mapValues { it.value.right() },
+            searchResponses = mapOf(
+                SearchUrl to PaginatedIds(
+                    next = initialSearchResponse.next?.id,
+                    ids = initialSearchResponse.items.map { it.id }
+                ).right()
+            )
         )
         val repository = SearchRepositoryImpl(api)
 
@@ -124,9 +127,7 @@ class SearchRepositoryImplTest {
         val page = repository.fetchArtworks(paging).getOrNull()
 
         // Verify
-        assertNotNull(page)
-        assertEquals(artworksDetails.values.take(paging.resultsPerPage), page.data)
-        assertTrue(page.hasMore) // 3 items total, 0+2 < 3
+        assertEquals(Page(hasMore = true, data = artworksDetails.values.take(paging.resultsPerPage).toList()), page)
     }
 
     @Test
@@ -140,8 +141,13 @@ class SearchRepositoryImplTest {
         )
 
         val api = TestSearchApi(
-            artworksDetails = emptyMap<Url, Artwork>(),
-            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+            artworksDetails = emptyMap(),
+            searchResponses = mapOf(
+                SearchUrl to PaginatedIds(
+                    next = initialSearchResponse.next?.id,
+                    ids = initialSearchResponse.items.map { it.id }
+                ).right()
+            )
         )
         val repository = SearchRepositoryImpl(
             api = api,
@@ -190,10 +196,16 @@ class SearchRepositoryImplTest {
             }
 
             val api = TestSearchApi(
-                artworksDetails = artworksDetails,
+                artworksDetails = artworksDetails.mapValues { it.value.right() },
                 searchResponses = mapOf(
-                    SearchUrl to initialSearchResponse,
-                    UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2") to nextSearchResponse
+                    SearchUrl to PaginatedIds(
+                        next = initialSearchResponse.next?.id,
+                        ids = initialSearchResponse.items.map { it.id }
+                    ).right(),
+                    UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2") to PaginatedIds(
+                        next = nextSearchResponse.next?.id,
+                        ids = nextSearchResponse.items.map { it.id }
+                    ).right()
                 )
             )
             val repository = SearchRepositoryImpl(api)
@@ -207,9 +219,7 @@ class SearchRepositoryImplTest {
             val page = repository.fetchArtworks(paging).getOrNull()
 
             // Verify
-            assertNotNull(page)
-            assertEquals(artworksDetails.values.take(paging.resultsPerPage), page.data)
-            assertTrue(page.hasMore) // nextSearchResponse has 2 items, we took 1. 2 - 1 > 0.
+            assertEquals(Page(hasMore = true, data = artworksDetails.values.take(paging.resultsPerPage).toList()), page)
         }
 
     @Test
@@ -221,8 +231,13 @@ class SearchRepositoryImplTest {
             items = listOf(HumanMadeObjectResponse.ArtworkIdItem(id = item1Id))
         )
         val api = TestSearchApi(
-            artworksDetails = emptyMap<Url, Artwork>(),
-            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+            artworksDetails = emptyMap(),
+            searchResponses = mapOf(
+                SearchUrl to PaginatedIds(
+                    next = initialSearchResponse.next?.id,
+                    ids = initialSearchResponse.items.map { it.id }
+                ).right()
+            )
         )
         val repository = SearchRepositoryImpl(
             api = api,
@@ -272,11 +287,20 @@ class SearchRepositoryImplTest {
         }
 
         val api = TestSearchApi(
-            artworksDetails = artworksDetails,
+            artworksDetails = artworksDetails.mapValues { it.value.right() },
             searchResponses = mapOf(
-                SearchUrl to response1,
-                UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2") to response2,
-                UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=3") to response3
+                SearchUrl to PaginatedIds(
+                    next = response1.next?.id,
+                    ids = response1.items.map { it.id }
+                ).right(),
+                UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2") to PaginatedIds(
+                    next = response2.next?.id,
+                    ids = response2.items.map { it.id }
+                ).right(),
+                UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=3") to PaginatedIds(
+                    next = response3.next?.id,
+                    ids = response3.items.map { it.id }
+                ).right()
             )
         )
         val repository = SearchRepositoryImpl(api)
@@ -286,9 +310,7 @@ class SearchRepositoryImplTest {
         val page = repository.fetchArtworks(paging).getOrNull()
 
         // Verify
-        assertNotNull(page)
-        assertEquals(3, page.data.size)
-        assertEquals(artworksDetails.values.toList(), page.data)
+        assertEquals(Page(hasMore = false, data = artworksDetails.values.toList()), page)
     }
 
     @Test
@@ -301,7 +323,16 @@ class SearchRepositoryImplTest {
         )
 
         val exception = AppException("Network error")
-        val repository = SearchRepositoryImpl(FailingSearchApi(initialSearchResponse, exception))
+        val api = TestSearchApi(
+            artworksDetails = mapOf(item1Id to Either.Left(exception)),
+            searchResponses = mapOf(
+                SearchUrl to PaginatedIds(
+                    next = initialSearchResponse.next?.id,
+                    ids = initialSearchResponse.items.map { it.id }
+                ).right()
+            )
+        )
+        val repository = SearchRepositoryImpl(api)
 
         // Execute
         val paging = Paging(currentSize = 0, resultsPerPage = 1)
@@ -309,8 +340,67 @@ class SearchRepositoryImplTest {
 
         // Verify
         val page = result.getOrNull()
-        assertNotNull(page)
-        assertTrue(page.data.isEmpty(), "Expected empty list of artworks as detail fetch failed and was skipped")
+        assertEquals(Page(hasMore = false, data = emptyList()), page)
+    }
+
+    @Test
+    fun `test fetchArtworks when some details fail and some succeed it skips failed items`() = runTest {
+        // Setup
+        val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
+        val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
+        val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
+            next = null,
+            items = listOf(
+                HumanMadeObjectResponse.ArtworkIdItem(id = item1Id),
+                HumanMadeObjectResponse.ArtworkIdItem(id = item2Id)
+            )
+        )
+
+        val artwork2 = Artwork(
+            url = item2Id,
+            title = Title("The Milkmaid"),
+            images = listOf(UrlFrom("https://image.url/item-2")),
+            descriptions = emptyList(),
+        )
+
+        val api = TestSearchApi(
+            artworksDetails = mapOf(
+                item1Id to Either.Left(AppException("Network error")),
+                item2Id to artwork2.right()
+            ),
+            searchResponses = mapOf(
+                SearchUrl to PaginatedIds(
+                    next = initialSearchResponse.next?.id,
+                    ids = initialSearchResponse.items.map { it.id }
+                ).right()
+            )
+        )
+        val repository = SearchRepositoryImpl(api)
+
+        // Execute
+        val paging = Paging(currentSize = 0, resultsPerPage = 2)
+        val page = repository.fetchArtworks(paging).getOrNull()
+
+        // Verify
+        assertEquals(Page(hasMore = false, data = listOf(artwork2)), page)
+    }
+
+    @Test
+    fun `test fetchArtworks when fetching ids fails`() = runTest {
+        // Setup
+        val exception = AppException("Network error")
+        val api = TestSearchApi(
+            artworksDetails = emptyMap(),
+            searchResponses = mapOf(SearchUrl to Either.Left(exception))
+        )
+        val repository = SearchRepositoryImpl(api)
+
+        // Execute
+        val paging = Paging(currentSize = 0, resultsPerPage = 1)
+        val result = repository.fetchArtworks(paging)
+
+        // Verify
+        assertEquals(Either.Left(exception), result)
     }
 
     @Test
@@ -330,8 +420,13 @@ class SearchRepositoryImplTest {
             )
         )
         val api = TestSearchApi(
-            artworksDetails = artworksDetails,
-            searchResponses = mapOf(SearchUrl to initialSearchResponse)
+            artworksDetails = artworksDetails.mapValues { it.value.right() },
+            searchResponses = mapOf(
+                SearchUrl to PaginatedIds(
+                    next = initialSearchResponse.next?.id,
+                    ids = initialSearchResponse.items.map { it.id }
+                ).right()
+            )
         )
         val repository = SearchRepositoryImpl(
             api = api,
@@ -348,22 +443,6 @@ class SearchRepositoryImplTest {
         // Verify
         assertEquals(false, hasMore)
     }
-}
-
-private class FailingSearchApi(
-    private val searchResponse: HumanMadeObjectResponse.ArtworksResponse,
-    private val exception: AppException,
-) : SearchApi {
-    override suspend fun fetchArtworkIds(
-        url: Url
-    ): Either<AppException, PaginatedIds> =
-        PaginatedIds(
-            next = searchResponse.next?.id,
-            ids = searchResponse.items.map { it.id }
-        ).right()
-
-    override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
-        Either.Left(exception)
 }
 
 private fun createSearchResponse(
