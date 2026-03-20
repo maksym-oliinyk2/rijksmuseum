@@ -65,9 +65,9 @@ internal class SearchApiImpl(
                     ?.let {
                         client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObjectDetails>()
                     }
-                    ?: error("No digital object details found for ${visualItemDetails1.id}")
 
-            val urls = digitalObjectDetails1.accessPoint.map { it.id }
+
+            val urls = digitalObjectDetails1?.accessPoint?.map { it.id } ?: listOf()
 
             val descriptions = humanMadeObject1.toLinguisticObjects()
 
