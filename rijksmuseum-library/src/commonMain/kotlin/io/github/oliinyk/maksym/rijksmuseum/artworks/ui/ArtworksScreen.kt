@@ -61,6 +61,8 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
+private val CardImageHeight = 200.dp
+
 // todo document - more than 4 action handler lambdas -> use message handler
 @Composable
 internal fun ArtworksScreen(
@@ -239,8 +241,6 @@ private fun ArtworkCard(
         }
     }
 }
-
-private val CardImageHeight = 200.dp
 
 @Composable
 @Preview(showSystemUi = false)

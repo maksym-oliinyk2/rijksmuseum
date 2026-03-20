@@ -48,6 +48,8 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 
+private val TopBarImageHeight = 300.dp
+
 @Composable
 internal fun ArtworkDetailsScreen(
     viewModel: ArtworkDetailsViewModel,
@@ -139,8 +141,6 @@ private fun ArtworkLoadableContent(
     }
 }
 
-private val TopBarImageHeight = 300.dp
-
 @Composable
 private fun ArtworkDetails(
     artwork: Artwork,
@@ -177,7 +177,6 @@ private fun ArtworkDetails(
 
         items(
             items = artwork.descriptions,
-            key = { it.type.name + it.description.value.hashCode() }
         ) { linguisticObject ->
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.small)) {
                 Text(
