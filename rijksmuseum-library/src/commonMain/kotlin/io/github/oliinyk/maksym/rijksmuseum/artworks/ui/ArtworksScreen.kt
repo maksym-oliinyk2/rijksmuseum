@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -202,7 +202,7 @@ private fun ArtworkCard(
             testTag = artwork.title.value
         },
         elevation = MaterialTheme.paddings.small,
-        shape = RoundedCornerShape(MaterialTheme.paddings.medium),
+        shape = MaterialTheme.shapes.medium,
         onClick = onClick
     ) {
         Column(
@@ -213,10 +213,9 @@ private fun ArtworkCard(
                 modifier = Modifier
                     .height(CardImageHeight)
                     .fillMaxWidth(),
-                shape = RoundedCornerShape(
-                    // todo corners
-                    topStart = MaterialTheme.paddings.medium,
-                    topEnd = MaterialTheme.paddings.medium
+                shape = MaterialTheme.shapes.medium.copy(
+                    bottomStart = CornerSize(0.dp),
+                    bottomEnd = CornerSize(0.dp)
                 ),
                 color = colors.onSurface.copy(alpha = 0.2f)
             ) {
