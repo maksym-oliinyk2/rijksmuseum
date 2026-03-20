@@ -47,6 +47,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.jetbrains.compose.resources.stringResource
 
 private val TopBarImageHeight = 300.dp
 
@@ -180,7 +181,7 @@ private fun ArtworkDetails(
         ) { linguisticObject ->
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.small)) {
                 Text(
-                    text = linguisticObject.type.name,
+                    text = stringResource(linguisticObject.type.displayName),
                     style = MaterialTheme.typography.subtitle1
                 )
                 Text(
