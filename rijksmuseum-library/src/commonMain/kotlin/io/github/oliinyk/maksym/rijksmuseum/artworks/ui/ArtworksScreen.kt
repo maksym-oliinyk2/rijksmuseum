@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -41,6 +40,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -50,7 +50,9 @@ import coil3.request.crossfade
 import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
+import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
+import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_action_retry
@@ -59,11 +61,12 @@ import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
+import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
-//todo document - more than 4 action handler lambdas -> use message handler
+// todo document - more than 4 action handler lambdas -> use message handler
 @Composable
 internal fun ArtworksScreen(
     modifier: Modifier = Modifier,
@@ -292,6 +295,8 @@ internal fun ArtworksError(
     }
 }
 
+// todo extract this to common ui components
+
 @Composable
 internal fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
     .data(toExternalValue())
@@ -299,12 +304,41 @@ internal fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlat
     .build()
 
 @Composable
-private fun contentPaddingValues(): PaddingValues {
+internal fun contentPaddingValues(): PaddingValues {
     return PaddingValues(
         top = WindowInsets.statusBars.asPaddingValues()
             .calculateTopPadding() + MaterialTheme.paddings.normal,
         start = MaterialTheme.paddings.normal,
         end = MaterialTheme.paddings.normal,
-        bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        bottom = MaterialTheme.paddings.normal,
     )
+}
+
+@Composable
+@Preview(showSystemUi = false)
+@Suppress("UnusedPrivateMember")
+private fun ArtworksContentPreview() {
+    RijksmuseumTheme {
+        ArtworksContent(
+            state = ArtworksViewState(
+                artworks = Paginateable.idleList(
+                    data = listOf(
+                        Artwork(
+                            url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
+                            title = Title("The Night Watch"),
+                            images = listOf(UrlFrom("https://lh3.googleusercontent.com/nightwatch")),
+                            descriptions = emptyList()
+                        ),
+                        Artwork(
+                            url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-2344"),
+                            title = Title("The Milkmaid"),
+                            images = listOf(UrlFrom("https://lh3.googleusercontent.com/milkmaid")),
+                            descriptions = emptyList()
+                        )
+                    )
+                )
+            ),
+            onMessage = {}
+        )
+    }
 }
