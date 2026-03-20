@@ -19,34 +19,34 @@ class ArtworksViewStateTest {
         url = UrlFrom("https://example.com/1"),
         title = Title("Artwork 1"),
         images = listOf(UrlFrom("https://example.com/1.jpg")),
-        descriptions = emptyList()
+        descriptions = listOf()
     )
 
     @Test
-    fun `test update with Message OnReload`() {
+    fun `update with Message OnReload`() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork))
         )
         val (updatedState, commands) = initialState.update(Message.OnReload)
 
-        assertEquals(Paginateable.loadingList<Artwork>(), updatedState.artworks)
+        assertEquals(Paginateable.loadingList(), updatedState.artworks)
         assertEquals(setOf(LoadCommand(Paging.FirstPage)), commands)
     }
 
     @Test
-    fun `test update with Message OnRefresh when refreshable`() {
+    fun `update with Message OnRefresh when refreshable`() {
         // Refreshable if isIdle and data.isEmpty()
         val initialState = ArtworksViewState(
-            artworks = Paginateable.idleList(emptyList())
+            artworks = Paginateable.idleList(listOf())
         )
         val (updatedState, commands) = initialState.update(Message.OnRefresh)
 
-        assertEquals(Paginateable(data = emptyList(), state = Paginateable.Refreshing), updatedState.artworks)
+        assertEquals(Paginateable(data = listOf(), state = Paginateable.Refreshing), updatedState.artworks)
         assertEquals(setOf(LoadCommand(Paging.FirstPage)), commands)
     }
 
     @Test
-    fun `test update with Message OnRefresh when not refreshable`() {
+    fun `update with Message OnRefresh when not refreshable`() {
         // Not refreshable if has data
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork))
@@ -58,7 +58,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `test update with Message OnLoadNext when loadable`() {
+    fun `update with Message OnLoadNext when loadable`() {
         // Loadable if artworks.hasMore and artworks.isIdle
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork)).copy(hasMore = true)
@@ -73,7 +73,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun testUpdateWithMessageOnLoadNextWhenNotLoadable() {
+    fun updateWithMessageOnLoadNextWhenNotLoadable() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork)).copy(hasMore = false)
         )
@@ -84,7 +84,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `test update with Message OnDataLoaded success`() {
+    fun `update with Message OnDataLoaded success`() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.loadingList()
         )
@@ -99,12 +99,12 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `test update with Message OnDataLoaded success appends data when loading next`() {
+    fun `update with Message OnDataLoaded success appends data when loading next`() {
         val artwork2 = Artwork(
             url = UrlFrom("https://example.com/2"),
             title = Title("Artwork 2"),
             images = listOf(UrlFrom("https://example.com/2.jpg")),
-            descriptions = emptyList()
+            descriptions = listOf()
         )
         val initialState = ArtworksViewState(
             artworks = Paginateable(
@@ -124,14 +124,14 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `test update with Message OnDataLoaded failure`() {
+    fun `update with Message OnDataLoaded failure`() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.loadingList()
         )
         val exception = RuntimeException("Test Exception")
         val (updatedState, commands) = initialState.update(Message.OnDataLoaded(exception.left()))
 
-        assertEquals(Paginateable(data = emptyList(), state = Paginateable.Exception(exception)), updatedState.artworks)
+        assertEquals(Paginateable(data = listOf(), state = Paginateable.Exception(exception)), updatedState.artworks)
         assertTrue(commands.isEmpty())
     }
 }

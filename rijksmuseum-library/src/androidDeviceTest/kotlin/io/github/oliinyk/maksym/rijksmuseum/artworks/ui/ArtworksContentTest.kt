@@ -23,13 +23,13 @@ class ArtworksContentTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun testArtworksContentDisplaysAllArtworks() = runComposeUiTest {
+    fun artworksContentDisplaysAllArtworks() = runComposeUiTest {
         val artworks = List(TestItemsCount) { i ->
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
                 title = Title("Artwork $i"),
                 images = listOf(UrlFrom("https://example.com/$i.jpg")),
-                descriptions = emptyList()
+                descriptions = listOf()
             )
         }
 
