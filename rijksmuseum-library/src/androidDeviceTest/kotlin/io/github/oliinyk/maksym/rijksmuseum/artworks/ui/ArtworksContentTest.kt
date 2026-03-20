@@ -28,7 +28,8 @@ class ArtworksContentTest {
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
                 title = Title("Artwork $i"),
-                images = listOf(UrlFrom("https://example.com/$i.jpg"))
+                images = listOf(UrlFrom("https://example.com/$i.jpg")),
+                descriptions = emptyList()
             )
         }
 
@@ -39,10 +40,7 @@ class ArtworksContentTest {
         setContent {
             ArtworksContent(
                 state = state,
-                onRefresh = {},
-                onReload = {},
-                onLoadNext = {},
-                onNavigateToDetails = {}
+                onMessage = {}
             )
         }
 

@@ -49,7 +49,9 @@ internal fun <M> rememberMessageHandler(
     val scope = rememberCoroutineScope { Dispatchers.Main.immediate }
 
     return remember(scope, input) {
-        { scope.launch { input(it) } }
+        {
+            scope.launch { input(it) }
+        }
     }
 }
 

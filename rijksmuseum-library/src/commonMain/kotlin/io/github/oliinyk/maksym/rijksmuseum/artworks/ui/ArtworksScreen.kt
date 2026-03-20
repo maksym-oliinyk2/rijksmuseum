@@ -63,6 +63,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
+//todo document - more than 4 action handler lambdas -> use message handler
 @Composable
 internal fun ArtworksScreen(
     modifier: Modifier = Modifier,
@@ -79,10 +80,7 @@ internal fun ArtworksScreen(
         ArtworksContent(
             modifier = modifier,
             state = currentState,
-            onRefresh = { messageHandle(Message.OnRefresh) },
-            onReload = { messageHandle(Message.OnReload) },
-            onLoadNext = { messageHandle(Message.OnLoadNext) },
-            onNavigateToDetails = { messageHandle(Message.OnNavigateToDetails(it)) }
+            onMessage = messageHandle
         )
     }
 }
@@ -91,15 +89,12 @@ internal fun ArtworksScreen(
 @OptIn(ExperimentalMaterialApi::class)
 internal fun ArtworksContent(
     state: ArtworksViewState,
-    onRefresh: () -> Unit,
-    onReload: () -> Unit,
-    onLoadNext: () -> Unit,
-    onNavigateToDetails: (Artwork) -> Unit,
+    onMessage: (Message) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val refreshState = rememberPullRefreshState(
         refreshing = state.artworks.isRefreshing,
-        onRefresh = onRefresh,
+        onRefresh = { onMessage(Message.OnRefresh) },
     )
 
     Scaffold(
@@ -121,19 +116,22 @@ internal fun ArtworksContent(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
             ) {
                 if (state.artworks.data.isNotEmpty()) {
-                    artworkItems(state.artworks, onNavigateToDetails)
+                    artworkItems(state.artworks) {
+                        onMessage(Message.OnNavigateToDetails(it))
+                    }
                 }
 
                 paginateableContent(
                     paginateable = state.artworks,
-                    onRefresh = onRefresh,
-                    onReload = onReload,
-                    onLoadNext = onLoadNext,
+                    onRefresh = { onMessage(Message.OnRefresh) },
+                    onReload = { onMessage(Message.OnReload) },
+                    onLoadNext = { onMessage(Message.OnLoadNext) }
                 )
 
                 item {
+                    // todo play with preloading strategy
                     LaunchedEffect(Unit) {
-                        onLoadNext()
+                        onMessage(Message.OnLoadNext)
                     }
                 }
             }
