@@ -1,5 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.artwork.domain
 
+import arrow.core.NonEmptyList
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
@@ -14,7 +15,7 @@ public data class Artwork(
 
 public data class LinguisticObject(
     val type: GettyAatType,
-    val description: Description,
+    val descriptions: NonEmptyList<Description>,
 )
 
 @JvmInline

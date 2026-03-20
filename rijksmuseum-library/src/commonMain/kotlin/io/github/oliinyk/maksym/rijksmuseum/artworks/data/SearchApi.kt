@@ -1,6 +1,7 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
+import arrow.core.toNonEmptyListOrNull
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
@@ -32,7 +33,8 @@ internal class SearchApiImpl(
 ) : SearchApi {
     override suspend fun fetchArtworkIds(url: Url): Either<AppException, PaginatedIds> =
         Either.catch {
-            val response = client.get(url.toExternalValue()).body<HumanMadeObjectResponse.ArtworksResponse>()
+            val response =
+                client.get(url.toExternalValue()).body<HumanMadeObjectResponse.ArtworksResponse>()
 
             PaginatedIds(
                 next = response.next?.id,
@@ -54,15 +56,18 @@ internal class SearchApiImpl(
 
             // 3. Fetch visual item details to get links to digital objects (images)
             val visualItemDetails1 = humanMadeObject1.shows.firstNotNullOfOrNull {
-                client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.VisualItemDetails>()
+                client.get(it.id.toExternalValue())
+                    .body<HumanMadeObjectResponse.VisualItemDetails>()
             } ?: error("No visual item details found for ${humanMadeObject1.id}")
 
             // 4. Fetch digital object details to get the actual access points (image URLs)
             val digitalObjectDetails1 =
                 visualItemDetails1.digitallyShownBy.firstNotNullOfOrNull {
-                    client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObject>()
+                    client.get(it.id.toExternalValue())
+                        .body<HumanMadeObjectResponse.DigitalObject>()
                 }?.let {
-                    client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObjectDetails>()
+                    client.get(it.id.toExternalValue())
+                        .body<HumanMadeObjectResponse.DigitalObjectDetails>()
                 }
 
             val urls = digitalObjectDetails1?.accessPoint?.map { it.id } ?: listOf()
@@ -83,12 +88,17 @@ private fun HumanMadeObjectResponse.toLinguisticObjects(): List<DomainLinguistic
         .asSequence()
         .filter { it.language.any { lang -> lang.isEnglish } }
         .flatMap { obj ->
-            if (obj.content == null) {
-                listOf()
+            val content = obj.content
+            if (content == null) {
+                emptyList()
             } else {
                 obj.classifiedAs.mapNotNull { classification ->
                     GettyAatType.fromId(classification.id)
-                        ?.let { type -> DomainLinguisticObject(type, Description(obj.content)) }
+                        ?.let { type -> type to Description(content) }
                 }
             }
-        }.toList()
+        }
+        .groupBy({ it.first }, { it.second })
+        .mapNotNull { (type, descriptions) ->
+            descriptions.toNonEmptyListOrNull()?.let { DomainLinguisticObject(type, it) }
+        }

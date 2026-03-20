@@ -26,7 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import arrow.core.NonEmptyList
 import coil3.compose.AsyncImage
 import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
@@ -184,10 +186,12 @@ private fun ArtworkDetails(
                     text = stringResource(linguisticObject.type.displayName),
                     style = MaterialTheme.typography.subtitle1
                 )
-                Text(
-                    text = linguisticObject.description.value,
-                    style = MaterialTheme.typography.body1
-                )
+                linguisticObject.descriptions.fastForEach { description ->
+                    Text(
+                        text = description.value,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
             }
         }
 
@@ -223,9 +227,11 @@ private fun ArtworkDetailsContentPreview() {
                         descriptions = listOf(
                             LinguisticObject(
                                 type = GettyAatType.Description,
-                                description = Description(
-                                    "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
-                                        "known as the ‘Night Watch’"
+                                descriptions = NonEmptyList.of(
+                                    Description(
+                                        "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
+                                            "known as the ‘Night Watch’"
+                                    )
                                 )
                             )
                         )
