@@ -24,13 +24,13 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksError
@@ -41,25 +41,24 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun ArtworkDetailsScreen(
     viewModel: ArtworkDetailsViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val messageHandle = remember { MutableSharedFlow<Message>() }
-    val state by viewModel(messageHandle).collectAsStateWithLifecycle(null)
+    val messages = remember { MutableSharedFlow<Message>() }
+    val state by viewModel(messages).collectAsStateWithLifecycle(null)
     val currentState = state
 
     if (currentState != null) {
-        val scope = rememberCoroutineScope()
+        val messageHandle = rememberMessageHandler(messages::emit)
 
         ArtworkDetailsContent(
             modifier = modifier,
             state = currentState,
-            onRefresh = { scope.launch { messageHandle.emit(Message.OnRefresh) } },
-            onReload = { scope.launch { messageHandle.emit(Message.OnReload) } },
+            onRefresh = { messageHandle(Message.OnRefresh) },
+            onReload = { messageHandle(Message.OnReload) },
         )
     }
 }

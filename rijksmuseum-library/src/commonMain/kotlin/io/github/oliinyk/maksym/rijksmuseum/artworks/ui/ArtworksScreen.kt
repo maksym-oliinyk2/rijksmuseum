@@ -35,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -48,6 +47,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
@@ -60,9 +60,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -76,10 +74,7 @@ internal fun ArtworksScreen(
     val currentState = state
 
     if (currentState != null) {
-        val scope = rememberCoroutineScope { Dispatchers.Main.immediate }
-        // todo decide on lambdas parameters limit
-        val messageHandle: (Message) -> Unit =
-            remember(scope) { { scope.launch { messages.emit(it) } } }
+        val messageHandle = rememberMessageHandler(messages::emit)
 
         ArtworksContent(
             modifier = modifier,
@@ -94,7 +89,6 @@ internal fun ArtworksScreen(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-@Suppress("LongParameterList")
 internal fun ArtworksContent(
     state: ArtworksViewState,
     onRefresh: () -> Unit,
