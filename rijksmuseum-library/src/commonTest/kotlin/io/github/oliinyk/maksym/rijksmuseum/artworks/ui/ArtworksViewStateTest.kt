@@ -2,8 +2,9 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
 import arrow.core.left
 import arrow.core.right
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksCommand.LoadCommand
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
@@ -17,7 +18,8 @@ class ArtworksViewStateTest {
     private val testArtwork = Artwork(
         url = UrlFrom("https://example.com/1"),
         title = Title("Artwork 1"),
-        images = listOf(UrlFrom("https://example.com/1.jpg"))
+        images = listOf(UrlFrom("https://example.com/1.jpg")),
+        descriptions = emptyList()
     )
 
     @Test
@@ -101,7 +103,8 @@ class ArtworksViewStateTest {
         val artwork2 = Artwork(
             url = UrlFrom("https://example.com/2"),
             title = Title("Artwork 2"),
-            images = listOf(UrlFrom("https://example.com/2.jpg"))
+            images = listOf(UrlFrom("https://example.com/2.jpg")),
+            descriptions = emptyList()
         )
         val initialState = ArtworksViewState(
             artworks = Paginateable(

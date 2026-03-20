@@ -66,3 +66,17 @@ public val Loadable<*>.isIdle: Boolean
 
 public val Loadable<*>.isException: Boolean
     get() = state is Loadable.Exception
+
+internal fun <T> Loadable<T>.toIdle(
+    data: T,
+): Loadable<T> = copy(data = data, state = Loadable.Idle)
+
+internal fun <T> Loadable<T>.toException(
+    cause: AppException,
+): Loadable<T> = copy(state = Loadable.Exception(cause))
+
+internal fun <T> Loadable<T>.toLoading(): Loadable<T> =
+    copy(state = Loadable.Loading)
+
+internal fun <T> Loadable<T>.toRefreshing(): Loadable<T> =
+    copy(state = Loadable.Refreshing)

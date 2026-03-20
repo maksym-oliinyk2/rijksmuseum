@@ -6,7 +6,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
@@ -28,7 +28,8 @@ class ArtworksContentTest {
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
                 title = Title("Artwork $i"),
-                images = listOf(UrlFrom("https://example.com/$i.jpg"))
+                images = listOf(UrlFrom("https://example.com/$i.jpg")),
+                descriptions = emptyList()
             )
         }
 
@@ -39,10 +40,7 @@ class ArtworksContentTest {
         setContent {
             ArtworksContent(
                 state = state,
-                onRefresh = {},
-                onReload = {},
-                onLoadNext = {},
-                onNavigateToDetails = {}
+                onMessage = {}
             )
         }
 

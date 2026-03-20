@@ -6,10 +6,6 @@ import android.os.StrictMode.VmPolicy
 import android.os.StrictMode.setThreadPolicy
 import android.os.StrictMode.setVmPolicy
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
-import io.github.oliinyk.maksym.rijksmuseum.app.AppModule
-import io.ktor.client.engine.cio.CIO
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 
 public class RijksmuseumApp : Application() {
 
@@ -17,10 +13,6 @@ public class RijksmuseumApp : Application() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
             setupStrictAppPolicies()
-        }
-        startKoin {
-            androidContext(this@RijksmuseumApp)
-            modules(AppModule(CIO))
         }
     }
 }

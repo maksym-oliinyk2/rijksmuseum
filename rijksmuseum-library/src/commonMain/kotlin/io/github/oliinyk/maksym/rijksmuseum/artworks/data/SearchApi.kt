@@ -1,8 +1,9 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
@@ -10,12 +11,18 @@ import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject as DomainLinguisticObject
 
 // todo it shouldn't be here
 internal val SearchUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
 
+internal data class PaginatedIds(
+    val next: Url?,
+    val ids: List<Url>,
+)
+
 internal interface SearchApi {
-    suspend fun searchArtworks(url: Url): Either<AppException, SearchResponse>
+    suspend fun fetchArtworkIds(url: Url): Either<AppException, PaginatedIds>
 
     suspend fun fetchDetails(url: Url): Either<AppException, Artwork>
 }
@@ -23,9 +30,14 @@ internal interface SearchApi {
 internal class SearchApiImpl(
     private val client: HttpClient,
 ) : SearchApi {
-    override suspend fun searchArtworks(url: Url): Either<AppException, SearchResponse> =
+    override suspend fun fetchArtworkIds(url: Url): Either<AppException, PaginatedIds> =
         Either.catch {
-            client.get(url.toExternalValue()).body<SearchResponse>()
+            val response = client.get(url.toExternalValue()).body<HumanMadeObjectResponse.ArtworksResponse>()
+
+            PaginatedIds(
+                next = response.next?.id,
+                ids = response.items.map { it.id },
+            )
         }
 
     override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
@@ -42,22 +54,41 @@ internal class SearchApiImpl(
 
             // 3. Fetch visual item details to get links to digital objects (images)
             val visualItemDetails1 = humanMadeObject1.shows.firstNotNullOfOrNull {
-                client.get(it.id).body<VisualItemDetails>()
+                client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.VisualItemDetails>()
             } ?: error("No visual item details found for ${humanMadeObject1.id}")
 
             // 4. Fetch digital object details to get the actual access points (image URLs)
             val digitalObjectDetails1 =
                 visualItemDetails1.digitallyShownBy.firstNotNullOfOrNull {
-                    client.get(it.id).body<DigitalObjectDetails>()
+                    client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObject>()
+                }?.let {
+                    client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObjectDetails>()
                 }
-                    ?: error("No digital object details found for ${visualItemDetails1.id}")
 
-            val urls = digitalObjectDetails1.accessPoint.map { it.id }
+            val urls = digitalObjectDetails1?.accessPoint?.map { it.id } ?: listOf()
+
+            val descriptions = humanMadeObject1.toLinguisticObjects()
 
             Artwork(
                 url = url,
                 title = Title(name),
-                images = urls.map { UrlFrom(it) }
+                images = urls,
+                descriptions = descriptions
             )
         }
 }
+
+private fun HumanMadeObjectResponse.toLinguisticObjects(): List<DomainLinguisticObject> =
+    referredToBy
+        .asSequence()
+        .filter { it.language.any { lang -> lang.isEnglish } }
+        .flatMap { obj ->
+            if (obj.content == null) {
+                listOf()
+            } else {
+                obj.classifiedAs.mapNotNull { classification ->
+                    GettyAatType.fromId(classification.id)
+                        ?.let { type -> DomainLinguisticObject(type, Description(obj.content)) }
+                }
+            }
+        }.toList()

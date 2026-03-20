@@ -2,11 +2,10 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
 import arrow.core.raise.either
-import arrow.fx.coroutines.parMap
+import arrow.fx.coroutines.parMapNotNull
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import kotlinx.coroutines.sync.Mutex
@@ -22,8 +21,6 @@ internal class SearchRepositoryImpl(
     private var nextPage: Url? = nextUrl
     private val mutex = Mutex()
 
-    override suspend fun fetchArtworkDetails(url: Url): Either<AppException, Artwork> = TODO()
-
     override suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>> =
         either {
             val ids = fetchArtworkIds(paging).bind()
@@ -32,8 +29,9 @@ internal class SearchRepositoryImpl(
                 @Suppress("UNCHECKED_CAST")
                 Page.End as Page<Artwork>
             } else {
-                val artworks = ids.parMap { id ->
-                    api.fetchDetails(id).bind()
+                val artworks = ids.parMapNotNull { id ->
+                    // todo skip item on error
+                    api.fetchDetails(id).getOrNull()
                 }
 
                 Page(
@@ -52,9 +50,9 @@ internal class SearchRepositoryImpl(
             // Incrementally fetch next pages until we have enough ids in the cache
             var currentUrl = nextPage
             while (cachedIds.size < limit && currentUrl != null) {
-                val response = api.searchArtworks(currentUrl).bind()
-                cachedIds.addAll(response.orderedItems.map { UrlFrom(it.id) })
-                currentUrl = response.next?.let { UrlFrom(it.id) }
+                val (next, ids) = api.fetchArtworkIds(currentUrl).bind()
+                cachedIds.addAll(ids)
+                currentUrl = next
             }
 
             nextPage = currentUrl

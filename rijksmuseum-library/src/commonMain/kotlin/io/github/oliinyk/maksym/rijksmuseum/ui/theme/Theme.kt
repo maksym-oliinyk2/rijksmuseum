@@ -17,6 +17,7 @@ public fun RijksmuseumTheme(
         MaterialTheme(
             colors = if (darkTheme) DarkColorScheme else LightColorScheme,
             typography = typography(),
+            shapes = Shapes,
             content = content
         )
     }
