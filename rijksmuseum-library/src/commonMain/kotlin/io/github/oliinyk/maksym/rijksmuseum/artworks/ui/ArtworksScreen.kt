@@ -3,8 +3,6 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,9 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
@@ -39,25 +35,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
-import io.github.oliinyk.maksym.rijksmuseum.res.artworks_action_retry
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.contentPaddingValues
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.toImageRequest
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
@@ -111,9 +106,7 @@ internal fun ArtworksContent(
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .semantics { testTag = "ArtworksList" },
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
@@ -156,7 +149,7 @@ private fun LazyListScope.artworkItems(
         items = paginateable.data,
         key = { item -> item.url.toExternalValue() },
     ) { artwork ->
-        ArtworkItem(
+        ArtworkCard(
             artwork = artwork,
             onClick = { onNavigateToDetails(artwork) }
         )
@@ -174,7 +167,7 @@ private fun LazyListScope.paginateableContent(
 ) {
     when (val state = paginateable.state) {
         is Paginateable.Exception ->
-            ArtworksError(
+            DisplayMessage(
                 modifier = if (paginateable.data.isEmpty()) {
                     Modifier.fillParentMaxSize()
                 } else {
@@ -188,7 +181,7 @@ private fun LazyListScope.paginateableContent(
         is Paginateable.LoadingNext -> ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
         is Paginateable.Idle, is Paginateable.Refreshing -> {
             if (paginateable.data.isEmpty()) {
-                ArtworksError(
+                DisplayMessage(
                     modifier = Modifier.fillParentMaxSize(),
                     message = stringResource(Res.string.artworks_no_data_message),
                     onRetry = onRefresh
@@ -200,7 +193,7 @@ private fun LazyListScope.paginateableContent(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun ArtworkItem(
+private fun ArtworkCard(
     artwork: Artwork,
     onClick: () -> Unit,
 ) {
@@ -212,107 +205,43 @@ private fun ArtworkItem(
         shape = RoundedCornerShape(MaterialTheme.paddings.medium),
         onClick = onClick
     ) {
-        Column {
-            ArtworkImage(imageUrl = artwork.images.firstOrNull())
-            Spacer(modifier = Modifier.height(MaterialTheme.paddings.medium))
-            ArtworkContents(artwork = artwork)
-            Spacer(modifier = Modifier.height(MaterialTheme.paddings.medium))
-        }
-    }
-}
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.medium)
+        ) {
+            val imageUrl = artwork.images.firstOrNull()
+            Surface(
+                modifier = Modifier
+                    .height(CardImageHeight)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(
+                    // todo corners
+                    topStart = MaterialTheme.paddings.medium,
+                    topEnd = MaterialTheme.paddings.medium
+                ),
+                color = colors.onSurface.copy(alpha = 0.2f)
+            ) {
+                if (imageUrl != null) {
+                    AsyncImage(
+                        model = imageUrl.toImageRequest(),
+                        contentDescription = stringResource(Res.string.artworks_image_description),
+                        modifier = Modifier.fillMaxWidth(),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+            }
 
-@Composable
-private fun ArtworkImage(
-    imageUrl: Url?,
-) {
-    Surface(
-        modifier = Modifier
-            .height(200.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(
-            topStart = MaterialTheme.paddings.medium,
-            topEnd = MaterialTheme.paddings.medium
-        ),
-        color = colors.onSurface.copy(alpha = 0.2f)
-    ) {
-        if (imageUrl != null) {
-            AsyncImage(
-                model = imageUrl.toImageRequest(),
-                contentDescription = stringResource(Res.string.artworks_image_description),
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.Crop,
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium),
+                text = artwork.title.value,
+                style = typography.h6,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
 }
 
-@Composable
-private fun ArtworkContents(
-    artwork: Artwork,
-) {
-    Column(
-        modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium)
-    ) {
-        Text(
-            text = artwork.title.value,
-            style = typography.h6
-        )
-    }
-}
-
-@Composable
-internal fun ProgressIndicator(
-    modifier: Modifier,
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-internal fun ArtworksError(
-    modifier: Modifier,
-    message: String,
-    onRetry: () -> Unit,
-) {
-    Column(
-        modifier = modifier.padding(MaterialTheme.paddings.normal),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = message,
-            textAlign = TextAlign.Center,
-            style = typography.body1
-        )
-        Spacer(modifier = Modifier.height(MaterialTheme.paddings.normal))
-        Button(onClick = onRetry) {
-            Text(stringResource(Res.string.artworks_action_retry))
-        }
-    }
-}
-
-// todo extract this to common ui components
-
-@Composable
-internal fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
-    .data(toExternalValue())
-    .crossfade(true)
-    .build()
-
-@Composable
-internal fun contentPaddingValues(): PaddingValues {
-    return PaddingValues(
-        top = WindowInsets.statusBars.asPaddingValues()
-            .calculateTopPadding() + MaterialTheme.paddings.normal,
-        start = MaterialTheme.paddings.normal,
-        end = MaterialTheme.paddings.normal,
-        bottom = MaterialTheme.paddings.normal,
-    )
-}
+private val CardImageHeight = 200.dp
 
 @Composable
 @Preview(showSystemUi = false)

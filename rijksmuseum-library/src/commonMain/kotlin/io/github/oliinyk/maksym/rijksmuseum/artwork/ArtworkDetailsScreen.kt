@@ -35,11 +35,12 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksError
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ProgressIndicator
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.contentPaddingValues
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.toImageRequest
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.contentPaddingValues
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.toImageRequest
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
@@ -53,7 +54,7 @@ internal fun ArtworkDetailsScreen(
     modifier: Modifier = Modifier,
 ) {
     val messages = remember { MutableSharedFlow<Message>() }
-    val state by viewModel(messages).collectAsStateWithLifecycle(null)
+    val state by viewModel.invoke(messages).collectAsStateWithLifecycle(null)
     val currentState = state
 
     if (currentState != null) {
@@ -112,7 +113,7 @@ private fun ArtworkLoadableContent(
     onReload: () -> Unit,
 ) {
     when (val s = state.state) {
-        is Loadable.Exception -> ArtworksError(
+        is Loadable.Exception -> DisplayMessage(
             modifier = Modifier.fillMaxSize(),
             message = s.exception.displayMessage,
             onRetry = onReload
@@ -126,7 +127,7 @@ private fun ArtworkLoadableContent(
                 ArtworkDetails(artwork)
             } else {
                 // Handle empty data if necessary, though for details it's likely an error if idle and null
-                ArtworksError(
+                DisplayMessage(
                     modifier = Modifier.fillMaxSize(),
                     message = "No data available",
                     onRetry = onRefresh
@@ -154,8 +155,8 @@ private fun ArtworkDetails(
     ) {
         val topImage = artwork.images.firstOrNull()
 
-        if (topImage != null)
-            item {
+        if (topImage != null) {
+            item(key = "topImage") {
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -165,15 +166,19 @@ private fun ArtworkDetails(
                     contentScale = ContentScale.Fit
                 )
             }
+        }
 
-        item {
+        item(key = "title") {
             Text(
                 text = artwork.title.value,
                 style = MaterialTheme.typography.h4
             )
         }
 
-        items(artwork.descriptions) { linguisticObject ->
+        items(
+            items = artwork.descriptions,
+            key = { it.type.name + it.description.value.hashCode() }
+        ) { linguisticObject ->
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.small)) {
                 Text(
                     text = linguisticObject.type.name,
@@ -187,7 +192,10 @@ private fun ArtworkDetails(
         }
 
         if (carousel.isNotEmpty()) {
-            items(carousel) {
+            items(
+                items = carousel,
+                key = { it.toExternalValue() }
+            ) {
                 AsyncImage(
                     modifier = Modifier.fillMaxWidth(),
                     model = it.toImageRequest(),
@@ -217,7 +225,7 @@ private fun ArtworkDetailsContentPreview() {
                                 type = GettyAatType.Description,
                                 description = Description(
                                     "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
-                                            "known as the ‘Night Watch’"
+                                        "known as the ‘Night Watch’"
                                 )
                             )
                         )

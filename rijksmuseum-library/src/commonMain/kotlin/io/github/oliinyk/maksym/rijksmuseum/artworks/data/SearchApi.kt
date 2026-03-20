@@ -61,11 +61,9 @@ internal class SearchApiImpl(
             val digitalObjectDetails1 =
                 visualItemDetails1.digitallyShownBy.firstNotNullOfOrNull {
                     client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObject>()
+                }?.let {
+                    client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObjectDetails>()
                 }
-                    ?.let {
-                        client.get(it.id.toExternalValue()).body<HumanMadeObjectResponse.DigitalObjectDetails>()
-                    }
-
 
             val urls = digitalObjectDetails1?.accessPoint?.map { it.id } ?: listOf()
 
