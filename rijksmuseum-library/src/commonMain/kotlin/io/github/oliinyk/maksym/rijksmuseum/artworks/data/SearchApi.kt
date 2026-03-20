@@ -87,15 +87,11 @@ private fun HumanMadeObjectResponse.toLinguisticObjects(): List<DomainLinguistic
     referredToBy
         .asSequence()
         .filter { it.language.any { lang -> lang.isEnglish } }
-        .flatMap { obj ->
-            val content = obj.content
-            if (content == null) {
-                emptyList()
-            } else {
-                obj.classifiedAs.mapNotNull { classification ->
-                    GettyAatType.fromId(classification.id)
-                        ?.let { type -> type to Description(content) }
-                }
+        .mapNotNull { obj ->
+            obj.content?.let { content ->
+                val type = obj.classifiedAs.firstNotNullOfOrNull { GettyAatType.fromId(it.id) }
+
+                type?.let { type -> type to Description(content) }
             }
         }
         .groupBy({ it.first }, { it.second })
