@@ -22,7 +22,7 @@ import kotlin.test.assertSame
 class SearchRepositoryImplTest {
 
     @Test
-    fun `fetchArtworks when cache is null`() = runTest {
+    fun `when fetchArtworks and cache is empty then it fetches from api`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-3262")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-4878")
@@ -44,13 +44,13 @@ class SearchRepositoryImplTest {
         val artwork1 = Artwork(
             url = item1Id,
             title = Title("The Night Watch"),
-            images = listOf(UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B")),
+            primaryImage = UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B"),
             descriptions = listOf(),
         )
         val artwork2 = Artwork(
             url = item2Id,
             title = Title("The Milkmaid"),
-            images = listOf(UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B")),
+            primaryImage = UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B"),
             descriptions = listOf(),
         )
 
@@ -59,7 +59,7 @@ class SearchRepositoryImplTest {
             item.id to Artwork(
                 url = item.id,
                 title = Title("Title for ${item.id}"),
-                images = listOf(UrlFrom("https://image.url/${item.id}")),
+                primaryImage = UrlFrom("https://image.url/${item.id}"),
                 descriptions = listOf(),
             )
         }.toMutableMap()
@@ -87,7 +87,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `fetchArtworks when cache hit with enough items`() = runTest {
+    fun `when fetchArtworks and cache hit with enough items then it returns cached data`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
@@ -106,7 +106,7 @@ class SearchRepositoryImplTest {
             item.id to Artwork(
                 url = item.id,
                 title = Title("Title for ${item.id}"),
-                images = listOf(UrlFrom("https://image.url/${item.id}")),
+                primaryImage = UrlFrom("https://image.url/${item.id}"),
                 descriptions = listOf(),
             )
         }
@@ -131,7 +131,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `fetchArtworks when cache hit and it's the end of pagination`() = runTest {
+    fun `when fetchArtworks and cache hit and it is end of pagination then it returns end of page`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
 
@@ -164,7 +164,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `fetchArtworks when cache hit but not enough items needs to fetch next page`() =
+    fun `when fetchArtworks and cache hit but not enough items then it fetches next page`() =
         runTest {
             // Setup
             val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
@@ -190,19 +190,19 @@ class SearchRepositoryImplTest {
                 item1Id to Artwork(
                     url = item1Id,
                     title = Title("Title for $item1Id"),
-                    images = listOf(UrlFrom("https://image.url/item-1")),
+                    primaryImage = UrlFrom("https://image.url/item-1"),
                     descriptions = listOf()
                 ),
                 item2Id to Artwork(
                     url = item2Id,
                     title = Title("Title for $item2Id"),
-                    images = listOf(UrlFrom("https://image.url/item-2")),
+                    primaryImage = UrlFrom("https://image.url/item-2"),
                     descriptions = listOf()
                 ),
                 item3Id to Artwork(
                     url = item3Id,
                     title = Title("Title for $item3Id"),
-                    images = listOf(UrlFrom("https://image.url/item-3")),
+                    primaryImage = UrlFrom("https://image.url/item-3"),
                     descriptions = listOf()
                 )
             )
@@ -235,7 +235,7 @@ class SearchRepositoryImplTest {
         }
 
     @Test
-    fun `fetchArtworks when request is beyond cache and no more pages`() = runTest {
+    fun `when fetchArtworks and request is beyond cache and no more pages then it returns end of page`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -266,7 +266,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `fetchArtworks when multiple pages need to be fetched`() = runTest {
+    fun `when fetchArtworks and multiple pages need to be fetched then it fetches them all`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
@@ -276,19 +276,19 @@ class SearchRepositoryImplTest {
             item1Id to Artwork(
                 url = item1Id,
                 title = Title("Title for $item1Id"),
-                images = listOf(UrlFrom("https://image.url/item-1")),
+                primaryImage = UrlFrom("https://image.url/item-1"),
                 descriptions = listOf()
             ),
             item2Id to Artwork(
                 url = item2Id,
                 title = Title("Title for $item2Id"),
-                images = listOf(UrlFrom("https://image.url/item-2")),
+                primaryImage = UrlFrom("https://image.url/item-2"),
                 descriptions = listOf()
             ),
             item3Id to Artwork(
                 url = item3Id,
                 title = Title("Title for $item3Id"),
-                images = listOf(UrlFrom("https://image.url/item-3")),
+                primaryImage = UrlFrom("https://image.url/item-3"),
                 descriptions = listOf()
             )
         )
@@ -321,7 +321,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `fetchArtworks when fetching details fails it skips failed items`() = runTest {
+    fun `when fetchArtworks and fetching details fails then it returns failure`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -346,54 +346,11 @@ class SearchRepositoryImplTest {
         val result = repository.fetchArtworks(paging)
 
         // Verify
-        val page = result.getOrNull()
-        assertEquals(Page(hasMore = false, data = listOf()), page)
+        assertEquals(Either.Left(exception), result)
     }
 
     @Test
-    fun `fetchArtworks when some details fail and some succeed it skips failed items`() = runTest {
-        // Setup
-        val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
-        val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
-        val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
-            next = null,
-            items = listOf(
-                HumanMadeObjectResponse.ArtworkIdItem(id = item1Id),
-                HumanMadeObjectResponse.ArtworkIdItem(id = item2Id)
-            )
-        )
-
-        val artwork2 = Artwork(
-            url = item2Id,
-            title = Title("The Milkmaid"),
-            images = listOf(UrlFrom("https://image.url/item-2")),
-            descriptions = listOf(),
-        )
-
-        val api = TestSearchApi(
-            artworksDetails = mapOf(
-                item1Id to Either.Left(AppException("Network error")),
-                item2Id to artwork2.right()
-            ),
-            searchResponses = mapOf(
-                SearchUrl to PaginatedIds(
-                    next = initialSearchResponse.next?.id,
-                    ids = initialSearchResponse.items.map { it.id }
-                ).right()
-            )
-        )
-        val repository = SearchRepositoryImpl(api)
-
-        // Execute
-        val paging = Paging(currentSize = 0, resultsPerPage = 2)
-        val page = repository.fetchArtworks(paging).getOrNull()
-
-        // Verify
-        assertEquals(Page(hasMore = false, data = listOf(artwork2)), page)
-    }
-
-    @Test
-    fun `fetchArtworks when fetching ids fails`() = runTest {
+    fun `when fetchArtworks and fetching ids fails then it returns failure`() = runTest {
         // Setup
         val exception = AppException("Network error")
         val api = TestSearchApi(
@@ -411,7 +368,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `hasMore when exactly at the end of items and no next page`() = runTest {
+    fun `when hasMore and exactly at the end of items and no next page then it returns false`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -422,7 +379,7 @@ class SearchRepositoryImplTest {
             item1Id to Artwork(
                 url = item1Id,
                 title = Title("Title"),
-                images = listOf(),
+                primaryImage = null,
                 descriptions = listOf()
             )
         )

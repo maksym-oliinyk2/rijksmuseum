@@ -208,9 +208,9 @@ private fun ArtworkCard(
         onClick = onClick
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.medium)
+            modifier = Modifier.padding(bottom = MaterialTheme.paddings.medium),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.medium),
         ) {
-            val imageUrl = artwork.images.firstOrNull()
             Surface(
                 modifier = Modifier
                     .height(CardImageHeight)
@@ -221,9 +221,9 @@ private fun ArtworkCard(
                 ),
                 color = colors.onSurface.copy(alpha = 0.2f)
             ) {
-                if (imageUrl != null) {
+                if (artwork.primaryImage != null) {
                     AsyncImage(
-                        model = imageUrl.toImageRequest(),
+                        model = artwork.primaryImage.toImageRequest(),
                         contentDescription = stringResource(Res.string.artworks_image_description),
                         modifier = Modifier.fillMaxWidth(),
                         contentScale = ContentScale.Crop,
@@ -254,13 +254,13 @@ private fun ArtworksContentPreview() {
                         Artwork(
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                             title = Title("The Night Watch"),
-                            images = listOf(UrlFrom("https://lh3.googleusercontent.com/nightwatch")),
+                            primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
                             descriptions = emptyList()
                         ),
                         Artwork(
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-2344"),
                             title = Title("The Milkmaid"),
-                            images = listOf(UrlFrom("https://lh3.googleusercontent.com/milkmaid")),
+                            primaryImage = UrlFrom("https://lh3.googleusercontent.com/milkmaid"),
                             descriptions = emptyList()
                         )
                     )

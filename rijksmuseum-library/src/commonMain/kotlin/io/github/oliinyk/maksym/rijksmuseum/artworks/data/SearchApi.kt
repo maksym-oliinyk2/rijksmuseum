@@ -44,43 +44,34 @@ internal class SearchApiImpl(
 
     override suspend fun fetchDetails(url: Url): Either<AppException, Artwork> =
         Either.catch {
-            // todo come back to this later and refactor
-            // 1. Fetch the main artwork object
-            val humanMadeObject1 =
-                client.get(url.toExternalValue()).body<HumanMadeObjectResponse>()
-
-            // 2. Extract the name (title) from identification fields
-            val name = humanMadeObject1.identifiedBy.filter { it.type == "Name" }
-                .firstNotNullOfOrNull { it.content }
-                ?: error("No name found for ${humanMadeObject1.id}")
-
-            // 3. Fetch visual item details to get links to digital objects (images)
-            val visualItemDetails1 = humanMadeObject1.shows.firstNotNullOfOrNull {
-                client.get(it.id.toExternalValue())
-                    .body<HumanMadeObjectResponse.VisualItemDetails>()
-            } ?: error("No visual item details found for ${humanMadeObject1.id}")
-
-            // 4. Fetch digital object details to get the actual access points (image URLs)
-            val digitalObjectDetails1 =
-                visualItemDetails1.digitallyShownBy.firstNotNullOfOrNull {
-                    client.get(it.id.toExternalValue())
-                        .body<HumanMadeObjectResponse.DigitalObject>()
-                }?.let {
-                    client.get(it.id.toExternalValue())
-                        .body<HumanMadeObjectResponse.DigitalObjectDetails>()
-                }
-
-            val urls = digitalObjectDetails1?.accessPoint?.map { it.id } ?: listOf()
-
-            val descriptions = humanMadeObject1.toLinguisticObjects()
+            val response = client.get(url.toExternalValue()).body<HumanMadeObjectResponse>()
 
             Artwork(
                 url = url,
-                title = Title(name),
-                images = urls,
-                descriptions = descriptions
+                title = Title(response.name),
+                primaryImage = fetchPrimaryImage(response),
+                descriptions = response.toLinguisticObjects()
             )
         }
+
+    private val HumanMadeObjectResponse.name: String
+        get() = identifiedBy.firstOrNull { it.type == "Name" }?.content
+            ?: error("No name found for $id")
+
+    private suspend fun fetchPrimaryImage(response: HumanMadeObjectResponse): Url? =
+        response.shows.firstNotNullOfOrNull { visualItem ->
+            client.get(visualItem.id.toExternalValue())
+                .body<HumanMadeObjectResponse.VisualItemDetails>()
+                .digitallyShownBy
+                .firstNotNullOfOrNull { digitalObjectBrief ->
+                    client.get(digitalObjectBrief.id.toExternalValue())
+                        .body<HumanMadeObjectResponse.DigitalObject>()
+                        .let { digitalObject ->
+                            client.get(digitalObject.id.toExternalValue())
+                                .body<HumanMadeObjectResponse.DigitalObjectDetails>()
+                        }
+                }
+        }?.accessPoint?.firstOrNull()?.id
 }
 
 private fun HumanMadeObjectResponse.toLinguisticObjects(): List<DomainLinguisticObject> =

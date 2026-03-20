@@ -3,6 +3,7 @@ package io.github.oliinyk.maksym.rijksmuseum.ui.common
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ internal fun contentPaddingValues(): PaddingValues {
             .calculateTopPadding() + MaterialTheme.paddings.normal,
         start = MaterialTheme.paddings.normal,
         end = MaterialTheme.paddings.normal,
-        bottom = MaterialTheme.paddings.normal,
+        bottom = WindowInsets.navigationBars.asPaddingValues()
+            .calculateBottomPadding() + MaterialTheme.paddings.normal,
     )
 }

@@ -9,7 +9,7 @@ import kotlin.jvm.JvmInline
 public data class Artwork(
     val url: Url,
     val title: Title,
-    val images: List<Url>,
+    val primaryImage: Url?,
     val descriptions: List<LinguisticObject>,
 )
 

@@ -45,9 +45,10 @@ private fun HttpClient(
     }
 
     install(HttpTimeout) {
-        requestTimeoutMillis = 5000
-        connectTimeoutMillis = 5000
-        socketTimeoutMillis = 7000
+        // todo provide via build config
+        requestTimeoutMillis = RequestTimeoutMillis
+        connectTimeoutMillis = ConnectTimeoutMillis
+        socketTimeoutMillis = SocketTimeoutMillis
     }
 
     install(ContentNegotiation) {
@@ -65,3 +66,7 @@ private fun HttpClient(
         level = logLevel
     }
 }
+
+private const val RequestTimeoutMillis = 5000L
+private const val ConnectTimeoutMillis = 5000L
+private const val SocketTimeoutMillis = 7000L
