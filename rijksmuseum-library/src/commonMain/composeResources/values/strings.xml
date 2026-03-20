@@ -4,4 +4,20 @@
     <string name="artworks_no_data_message">No artworks found</string>
     <string name="artworks_image_description">Artwork Image</string>
     <string name="artworks_action_retry">Retry</string>
+
+    <string name="getty_aat_type_inscription">Inscription</string>
+    <string name="getty_aat_type_notes">Notes</string>
+    <string name="getty_aat_type_description">Description</string>
+    <string name="getty_aat_type_documentation">Documentation</string>
+    <string name="getty_aat_type_dimensions">Dimensions</string>
+    <string name="getty_aat_type_original_title">Original Title</string>
+    <string name="getty_aat_type_original_series_title">Original Series Title</string>
+    <string name="getty_aat_type_english">English</string>
+    <string name="getty_aat_type_dutch">Dutch</string>
+    <string name="getty_aat_type_collection">Collection</string>
+    <string name="getty_aat_type_brief_text">Brief Text</string>
+    <string name="getty_aat_type_work_type">Work Type</string>
+    <string name="getty_aat_type_object_number">Object Number</string>
+    <string name="getty_aat_type_production">Production</string>
+    <string name="getty_aat_type_mentioned">Mentioned</string>
 </resources>
