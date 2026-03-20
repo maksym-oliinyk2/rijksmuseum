@@ -292,7 +292,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `test fetchArtworks when fetching details fails`() = runTest {
+    fun `test fetchArtworks when fetching details fails it skips failed items`() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -308,9 +308,9 @@ class SearchRepositoryImplTest {
         val result = repository.fetchArtworks(paging)
 
         // Verify
-        val actualException = result.leftOrNull()
-        assertNotNull(actualException)
-        assertEquals(exception, actualException)
+        val page = result.getOrNull()
+        assertNotNull(page)
+        assertTrue(page.data.isEmpty(), "Expected empty list of artworks as detail fetch failed and was skipped")
     }
 
     @Test
