@@ -7,7 +7,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
 import kotlin.test.Test

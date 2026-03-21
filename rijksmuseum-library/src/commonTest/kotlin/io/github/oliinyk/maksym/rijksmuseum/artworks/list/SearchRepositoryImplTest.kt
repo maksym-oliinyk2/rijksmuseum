@@ -3,12 +3,12 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.list
 import arrow.core.Either
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchUrl
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
@@ -152,7 +152,7 @@ class SearchRepositoryImplTest {
         val repository = SearchRepositoryImpl(
             api = api,
             cachedIds = listOf(item1Id),
-            nextUrl = null
+            startUrl = null
         )
 
         // Execute: currentSize = 1, resultsPerPage = 1. items.size = 1.
@@ -254,7 +254,7 @@ class SearchRepositoryImplTest {
         val repository = SearchRepositoryImpl(
             api = api,
             cachedIds = listOf(item1Id),
-            nextUrl = null
+            startUrl = null
         )
 
         // Execute: Ask for items at index 5, but only 1 exists
@@ -395,7 +395,7 @@ class SearchRepositoryImplTest {
         val repository = SearchRepositoryImpl(
             api = api,
             cachedIds = listOf(item1Id),
-            nextUrl = null
+            startUrl = null
         )
 
         // Execute: currentSize = 0, resultsPerPage = 1. items.size = 1.

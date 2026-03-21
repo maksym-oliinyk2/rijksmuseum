@@ -33,9 +33,9 @@ import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator

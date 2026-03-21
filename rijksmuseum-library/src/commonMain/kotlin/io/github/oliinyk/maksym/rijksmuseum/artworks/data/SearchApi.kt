@@ -4,8 +4,10 @@ import arrow.core.Either
 import arrow.core.toNonEmptyListOrNull
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Description
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse.DigitalObject
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse.DigitalObjectDetails
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
@@ -48,14 +50,18 @@ internal class SearchApiImpl(
 
             Artwork(
                 url = url,
-                title = Title(response.name),
+                title = response.title,
                 primaryImage = fetchPrimaryImage(response),
                 descriptions = response.toLinguisticObjects()
             )
         }
 
-    private val HumanMadeObjectResponse.name: String
-        get() = identifiedBy.firstOrNull { it.type == "Name" }?.content
+    private val HumanMadeObjectResponse.title: Title
+        get() = identifiedBy
+            // todo use GettyAatType to get title
+            .firstOrNull { it.type == "Name" }
+            ?.content
+            ?.let(::Title)
             ?: error("No name found for $id")
 
     private suspend fun fetchPrimaryImage(response: HumanMadeObjectResponse): Url? =
@@ -64,14 +70,17 @@ internal class SearchApiImpl(
                 .body<HumanMadeObjectResponse.VisualItemDetails>()
                 .digitallyShownBy
                 .firstNotNullOfOrNull { digitalObjectBrief ->
-                    client.get(digitalObjectBrief.id.toExternalValue())
-                        .body<HumanMadeObjectResponse.DigitalObject>()
-                        .let { digitalObject ->
-                            client.get(digitalObject.id.toExternalValue())
-                                .body<HumanMadeObjectResponse.DigitalObjectDetails>()
-                        }
+                    digitalObjectDetails(digitalObjectBrief)
                 }
         }?.accessPoint?.firstOrNull()?.id
+
+    private suspend fun digitalObjectDetails(digitalObjectBrief: DigitalObject): DigitalObjectDetails =
+        client.get(digitalObjectBrief.id.toExternalValue())
+            .body<DigitalObject>()
+            .let { digitalObject ->
+                client.get(digitalObject.id.toExternalValue())
+                    .body<DigitalObjectDetails>()
+            }
 }
 
 private fun HumanMadeObjectResponse.toLinguisticObjects(): List<DomainLinguisticObject> =
