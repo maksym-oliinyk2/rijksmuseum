@@ -73,8 +73,8 @@ internal fun <T> Loadable<T>.toException(
     cause: AppException,
 ): Loadable<T> = copy(state = Loadable.Exception(cause))
 
-internal fun <T> Loadable<T>.toLoading(): Loadable<T> =
-    copy(state = Loadable.Loading)
+internal fun <T> Loadable<T?>.toLoading(): Loadable<T?> =
+    copy(data = null, state = Loadable.Loading)
 
 internal fun <T> Loadable<T>.toRefreshing(): Loadable<T> =
     copy(state = Loadable.Refreshing)
