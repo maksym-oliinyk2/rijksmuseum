@@ -22,6 +22,7 @@ internal class ArtworksViewModel : ScopeViewModel() {
     private val navigator: Navigator by scope.inject()
 
     private val component = Component<Message, ArtworksViewState, ArtworksCommand>(
+        // todo inject initializer, and move initialization logic to ArtworkDetailsViewState.Companion
         initializer = Initializer(ArtworksViewState(), LoadCommand(Paging.FirstPage)),
         updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->

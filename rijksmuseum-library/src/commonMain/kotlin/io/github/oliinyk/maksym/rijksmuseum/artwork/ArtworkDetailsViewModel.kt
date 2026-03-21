@@ -18,7 +18,7 @@ internal class ArtworkDetailsViewModel(
     private val getArtworkUseCase: GetArtworkUseCase by scope.inject()
 
     private val component = Component<Message, ArtworkDetailsViewState, LoadCommand>(
-        // todo inject initializer
+        // todo inject initializer, and move initialization logic to ArtworkDetailsViewState.Companion
         initializer = Initializer(ArtworkDetailsViewState(key.id), LoadCommand(key.id)),
         updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->
