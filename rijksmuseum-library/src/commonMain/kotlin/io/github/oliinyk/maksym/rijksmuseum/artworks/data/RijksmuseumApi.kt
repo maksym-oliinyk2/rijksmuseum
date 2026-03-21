@@ -50,20 +50,21 @@ internal class RijksmuseumApiImpl(
             )
         }
 
-    private suspend fun fetchPrimaryImage(response: HumanMadeObjectResponse): Url? =
-        response.shows.firstNotNullOfOrNull { visualItem ->
-            client.fetch<VisualItemDetails>(visualItem.id)
-                .digitallyShownBy
-                .firstNotNullOfOrNull { digitalObjectBrief ->
-                    digitalObjectDetails(digitalObjectBrief)
-                }
-        }?.accessPoint?.firstOrNull()?.id
+    private suspend fun fetchPrimaryImage(response: HumanMadeObjectResponse): Url? {
+        val digitalObjects = response.shows
+            .firstNotNullOfOrNull { client.fetch<VisualItemDetails>(it.id).digitallyShownBy } ?: return null
 
-    private suspend fun digitalObjectDetails(digitalObjectBrief: DigitalObject): DigitalObjectDetails =
-        client.fetch<DigitalObject>(digitalObjectBrief.id)
-            .let { digitalObject ->
-                client.fetch<DigitalObjectDetails>(digitalObject.id)
-            }
+        val digitalObjectDetails =
+            digitalObjects.firstNotNullOfOrNull { digitalObjectDetails(it) } ?: return null
+
+        return digitalObjectDetails.accessPoint.firstOrNull()?.id
+    }
+
+    private suspend fun digitalObjectDetails(digitalObjectBrief: DigitalObject): DigitalObjectDetails {
+        val digitalObject = client.fetch<DigitalObject>(digitalObjectBrief.id)
+
+        return client.fetch<DigitalObjectDetails>(digitalObject.id)
+    }
 }
 
 private suspend inline fun <reified T> HttpClient.fetch(
