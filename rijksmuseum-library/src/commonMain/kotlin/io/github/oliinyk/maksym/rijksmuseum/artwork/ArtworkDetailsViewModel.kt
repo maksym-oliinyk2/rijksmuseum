@@ -3,7 +3,6 @@ package io.github.oliinyk.maksym.rijksmuseum.artwork
 import androidx.lifecycle.viewModelScope
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.GetArtworkUseCase
 import io.github.xlopec.tea.core.Component
-import io.github.xlopec.tea.core.ExperimentalTeaApi
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import io.github.xlopec.tea.core.effect
@@ -18,7 +17,6 @@ internal class ArtworkDetailsViewModel(
 
     private val getArtworkUseCase: GetArtworkUseCase by scope.inject()
 
-    @OptIn(ExperimentalTeaApi::class)
     private val component = Component<Message, ArtworkDetailsViewState, LoadCommand>(
         // todo inject initializer
         initializer = Initializer(ArtworkDetailsViewState(key.id), LoadCommand(key.id)),

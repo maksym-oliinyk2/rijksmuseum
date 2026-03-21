@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -89,7 +88,6 @@ internal fun ArtworksScreen(
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 internal fun ArtworksContent(
     state: ArtworksViewState,
     onMessage: (Message) -> Unit,
@@ -201,7 +199,6 @@ private fun LazyListScope.paginateableContent(
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 private fun ArtworkCard(
     artwork: Artwork,
     onClick: () -> Unit,

@@ -5,7 +5,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksCommand.LoadCommand
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import io.github.xlopec.tea.core.Component
-import io.github.xlopec.tea.core.ExperimentalTeaApi
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import io.github.xlopec.tea.core.effect
@@ -22,7 +21,6 @@ internal class ArtworksViewModel : ScopeViewModel() {
     private val searchUseCase: SearchUseCase by scope.inject()
     private val navigator: Navigator by scope.inject()
 
-    @OptIn(ExperimentalTeaApi::class)
     private val component = Component<Message, ArtworksViewState, ArtworksCommand>(
         initializer = Initializer(ArtworksViewState(), LoadCommand(Paging.FirstPage)),
         updater = { message, state -> state.update(message) },

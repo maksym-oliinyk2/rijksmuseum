@@ -1,6 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.artwork.ui
 
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
@@ -30,7 +29,6 @@ class ArtworkDetailsContentTest {
         descriptions = listOf()
     )
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun when_loading_then_progress_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
@@ -50,7 +48,6 @@ class ArtworkDetailsContentTest {
         onNodeWithTag(ArtworkDetailsContentTag).assertDoesNotExist()
     }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun when_idle_with_artwork_then_details_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
@@ -69,7 +66,6 @@ class ArtworkDetailsContentTest {
         onNodeWithTag(ArtworkDetailsContentTag).assertIsDisplayed()
     }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun when_exception_then_error_displayed() = runComposeUiTest {
         val errorMessage = "Failed to load artwork"

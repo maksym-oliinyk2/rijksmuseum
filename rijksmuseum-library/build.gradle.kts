@@ -17,7 +17,13 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xexpect-actual-classes",
-            "-Xconsistent-data-class-copy-visibility"
+            "-Xconsistent-data-class-copy-visibility",
+            "-opt-in=kotlin.experimental.ExperimentalObjCName",
+            "-opt-in=io.github.xlopec.tea.core.ExperimentalTeaApi",
+            "-opt-in=org.koin.core.annotation.KoinExperimentalAPI",
+            "-opt-in=org.koin.core.annotation.KoinViewModelScopeApi",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.ui.test.ExperimentalTestApi",
         )
 
         if (project.findProperty("enableComposeCompilerLogs").toString().toBoolean()) {

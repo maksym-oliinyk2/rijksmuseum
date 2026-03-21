@@ -1,6 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.app
 
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -37,7 +36,6 @@ class AppTest {
         const val TenthIndex = 9
     }
 
-    @OptIn(ExperimentalTestApi::class, org.koin.core.annotation.KoinExperimentalAPI::class)
     @Test
     fun when_artwork_clicked_then_details_displayed() = runComposeUiTest {
         val artworks = List(ArtworksCount) { i ->

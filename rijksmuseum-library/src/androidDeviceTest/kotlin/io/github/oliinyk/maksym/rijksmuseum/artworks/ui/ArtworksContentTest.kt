@@ -1,6 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -24,7 +23,6 @@ class ArtworksContentTest {
         const val TestItemsCount = 25
     }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun artworks_content_displays_all() = runComposeUiTest {
         val artworks = List(TestItemsCount) { i ->
@@ -53,7 +51,6 @@ class ArtworksContentTest {
         }
     }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun artworks_content_displays_progress_when_loading() = runComposeUiTest {
         val state = ArtworksViewState(
@@ -70,7 +67,6 @@ class ArtworksContentTest {
         onNodeWithTag(ProgressIndicatorTag).assertExists()
     }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun artworks_content_displays_error_when_exception() = runComposeUiTest {
         val errorMessage = "Failed to load artworks"
