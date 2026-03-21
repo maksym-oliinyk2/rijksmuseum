@@ -12,6 +12,9 @@ import io.github.oliinyk.maksym.rijksmuseum.domain.toStringValue
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal data class PaginatedIds(
     val next: Url?,
@@ -27,37 +30,41 @@ internal interface RijksmuseumApi {
 
 internal class RijksmuseumApiImpl(
     private val client: HttpClient,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : RijksmuseumApi {
     override suspend fun fetchArtworkIds(page: Url): Either<AppException, PaginatedIds> =
-        Either.catch {
-            val response = client.fetch<ArtworksResponse>(page)
+        withContext(dispatcher) {
+            Either.catch {
+                val response = client.fetch<ArtworksResponse>(page)
 
-            PaginatedIds(
-                next = response.next?.id,
-                ids = response.items.map { it.id },
-            )
+                PaginatedIds(
+                    next = response.next?.id,
+                    ids = response.items.map { it.id },
+                )
+            }
         }
 
     override suspend fun fetchArtwork(url: Url): Either<AppException, Artwork> =
-        Either.catch {
-            val response = client.fetch<HumanMadeObjectResponse>(url)
+        withContext(dispatcher) {
+            Either.catch {
+                val response = client.fetch<HumanMadeObjectResponse>(url)
 
-            Artwork(
-                url = url,
-                title = response.title ?: error("No name found for $url"),
-                primaryImage = fetchPrimaryImage(response),
-                linguisticObjects = response.linguisticObjects,
-            )
+                Artwork(
+                    url = url,
+                    title = response.title ?: error("No name found for $url"),
+                    primaryImage = fetchPrimaryImage(response),
+                    linguisticObjects = response.linguisticObjects,
+                )
+            }
         }
 
     private suspend fun fetchPrimaryImage(response: HumanMadeObjectResponse): Url? {
         val digitalObjects = response.shows
-            .firstNotNullOfOrNull { client.fetch<VisualItemDetails>(it.id).digitallyShownBy } ?: return null
+            .firstNotNullOfOrNull { client.fetch<VisualItemDetails>(it.id).digitallyShownBy }
 
-        val digitalObjectDetails =
-            digitalObjects.firstNotNullOfOrNull { digitalObjectDetails(it) } ?: return null
+        val digitalObjectDetails = digitalObjects?.firstNotNullOfOrNull { digitalObjectDetails(it) }
 
-        return digitalObjectDetails.accessPoint.firstOrNull()?.id
+        return digitalObjectDetails?.accessPoint?.firstOrNull()?.id
     }
 
     private suspend fun digitalObjectDetails(digitalObjectBrief: DigitalObject): DigitalObjectDetails {
