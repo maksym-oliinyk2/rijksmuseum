@@ -5,6 +5,7 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,7 +26,7 @@ class ArtworkRepositoryImplTest {
             artworksDetails = mapOf(testUrl to testArtwork.right())
         )
         val cache = ValueHolder<Artwork>()
-        val repository = ArtworkRepositoryImpl(api, cache)
+        val repository = ArtworkRepositoryImpl(api, cache, StandardTestDispatcher(testScheduler))
 
         val result = repository.fetchArtworkDetails(testUrl)
 
@@ -38,7 +39,7 @@ class ArtworkRepositoryImplTest {
             artworksDetails = emptyMap()
         )
         val cache = ValueHolder(testArtwork)
-        val repository = ArtworkRepositoryImpl(api, cache)
+        val repository = ArtworkRepositoryImpl(api, cache, StandardTestDispatcher(testScheduler))
 
         val result = repository.fetchArtworkDetails(testUrl)
 
