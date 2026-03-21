@@ -14,7 +14,7 @@ import org.koin.dsl.module
 import org.koin.viewmodel.scope.viewModelScope
 
 @OptIn(KoinExperimentalAPI::class, KoinViewModelScopeApi::class)
-internal val detailsModule = module {
+internal val DetailsModule = module {
     viewModelOf(::ArtworkDetailsViewModel)
 
     viewModelScope {

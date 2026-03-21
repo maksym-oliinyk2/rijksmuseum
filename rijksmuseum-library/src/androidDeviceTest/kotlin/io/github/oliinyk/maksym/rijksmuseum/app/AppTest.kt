@@ -7,20 +7,23 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContentTag
+import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
-import io.github.oliinyk.maksym.rijksmuseum.artwork.detailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi.Companion.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.artworks.searchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksScrollContainerTag
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
@@ -58,15 +61,7 @@ class AppTest {
         setContent {
             App { backStack ->
                 KoinConfiguration {
-                    modules(
-                        searchModule,
-                        detailsModule,
-                        module {
-                            single { testApi }.bind(RijksmuseumApi::class)
-                            single { Navigator(backStack, get(named<Artwork>())) }
-                            single(named<Artwork>()) { ValueHolder<Artwork>() }
-                        }
-                    )
+                    modules(TestAppModule(testApi, backStack), SearchModule, DetailsModule)
                 }
             }
         }
@@ -83,4 +78,13 @@ class AppTest {
         // Artwork details screen is displayed
         onNodeWithText(expectedArtwork.title.value).assertExists()
     }
+}
+
+private fun TestAppModule(
+    testApi: TestRijksmuseumApi,
+    backStack: NavBackStack<NavKey>
+): Module = module {
+    single { testApi }.bind(RijksmuseumApi::class)
+    single { Navigator(backStack, get(named<Artwork>())) }
+    single(named<Artwork>()) { ValueHolder<Artwork>() }
 }

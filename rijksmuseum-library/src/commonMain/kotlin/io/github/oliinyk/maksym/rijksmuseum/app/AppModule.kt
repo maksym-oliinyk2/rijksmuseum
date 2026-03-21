@@ -2,12 +2,12 @@ package io.github.oliinyk.maksym.rijksmuseum.app
 
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
-import io.github.oliinyk.maksym.rijksmuseum.artwork.detailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
-import io.github.oliinyk.maksym.rijksmuseum.artworks.searchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
@@ -32,7 +32,7 @@ internal fun AppModule(
     backStack: NavBackStack<NavKey>,
     engine: HttpClientEngineFactory<HttpClientEngineConfig>,
 ): Module = module {
-    includes(searchModule, detailsModule)
+    includes(SearchModule, DetailsModule)
     single { HttpClient(LogLevel.ALL, engine) }
     single { Navigator(backStack, get(named<Artwork>())) }
     single(named<Artwork>()) { ValueHolder<Artwork>() }

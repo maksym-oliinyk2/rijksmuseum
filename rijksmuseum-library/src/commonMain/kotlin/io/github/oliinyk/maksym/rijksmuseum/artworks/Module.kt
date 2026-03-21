@@ -14,7 +14,7 @@ import org.koin.plugin.module.dsl.bind
 import org.koin.viewmodel.scope.viewModelScope
 
 @OptIn(KoinExperimentalAPI::class, KoinViewModelScopeApi::class)
-internal val searchModule: Module = module {
+internal val SearchModule: Module = module {
     viewModelOf(::ArtworksViewModel)
 
     viewModelScope {
