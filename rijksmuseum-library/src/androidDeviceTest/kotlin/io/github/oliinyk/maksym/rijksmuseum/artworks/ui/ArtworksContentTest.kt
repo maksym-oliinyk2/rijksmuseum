@@ -4,11 +4,15 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessageTag
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
 import kotlin.test.Test
 
@@ -48,5 +52,44 @@ class ArtworksContentTest {
             onNode(hasScrollAction()).performScrollToNode(hasTestTag(artwork.title.value))
             onNodeWithTag(artwork.title.value).assertExists()
         }
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun artworksContentDisplaysProgressIndicatorWhenLoading() = runComposeUiTest {
+        val state = ArtworksViewState(
+            artworks = Paginateable.loadingList()
+        )
+
+        setContent {
+            ArtworksContent(
+                state = state,
+                onMessage = {}
+            )
+        }
+
+        onNodeWithTag(ProgressIndicatorTag).assertExists()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun artworksContentDisplaysErrorMessageWhenException() = runComposeUiTest {
+        val errorMessage = "Failed to load artworks"
+        val state = ArtworksViewState(
+            artworks = Paginateable(
+                data = emptyList(),
+                state = Paginateable.Exception(AppException(errorMessage))
+            )
+        )
+
+        setContent {
+            ArtworksContent(
+                state = state,
+                onMessage = {}
+            )
+        }
+
+        onNodeWithTag(DisplayMessageTag).assertExists()
+        onNodeWithText(errorMessage).assertExists()
     }
 }

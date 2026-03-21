@@ -2,14 +2,18 @@ package io.github.oliinyk.maksym.rijksmuseum.artwork.ui
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContent
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsViewState
+import io.github.oliinyk.maksym.rijksmuseum.artwork.ContentTag
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessageTag
+import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
 import kotlin.test.Test
 
@@ -39,11 +43,8 @@ class ArtworkDetailsContentTest {
             )
         }
 
-        // CircularProgressIndicator doesn't have a default test tag or text,
-        // but we can check it doesn't crash and other content is NOT there.
-        // Actually, we could add a test tag to ProgressIndicator if needed,
-        // but for now let's check it doesn't show the artwork title.
-        onNodeWithText("Night Watch").assertDoesNotExist()
+        onNodeWithTag(ProgressIndicatorTag).assertIsDisplayed()
+        onNodeWithTag(ContentTag).assertDoesNotExist()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -62,7 +63,7 @@ class ArtworkDetailsContentTest {
             )
         }
 
-        onNodeWithText("Night Watch").assertIsDisplayed()
+        onNodeWithTag(ContentTag).assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -71,7 +72,7 @@ class ArtworkDetailsContentTest {
         val errorMessage = "Failed to load artwork"
         val state = ArtworkDetailsViewState(
             artworkId = testUrl,
-            artwork = Loadable(null as Artwork?, Loadable.Exception(AppException(errorMessage)))
+            artwork = Loadable(null, Loadable.Exception(AppException(errorMessage)))
         )
 
         setContent {
@@ -82,6 +83,8 @@ class ArtworkDetailsContentTest {
             )
         }
 
-        onNodeWithText(errorMessage).assertIsDisplayed()
+        onNodeWithTag(DisplayMessageTag)
+            .assertIsDisplayed()
+            .assertTextEquals(errorMessage)
     }
 }

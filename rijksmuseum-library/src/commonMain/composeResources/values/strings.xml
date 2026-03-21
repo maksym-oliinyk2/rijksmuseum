@@ -5,6 +5,8 @@
     <string name="artworks_image_description">Afbeelding van het kunstwerk</string>
     <string name="artworks_action_retry">Opnieuw proberen</string>
 
+    <string name="artwork_details_no_data">Geen gegevens beschikbaar</string>
+
     <string name="getty_aat_type_inscription">Inscriptie</string>
     <string name="getty_aat_type_notes">Notities</string>
     <string name="getty_aat_type_description">Beschrijving</string>

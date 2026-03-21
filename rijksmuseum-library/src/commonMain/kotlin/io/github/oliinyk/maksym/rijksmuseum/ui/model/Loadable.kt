@@ -45,8 +45,6 @@ public data class Loadable<out T>(
 
     public data object Loading : State
 
-    public data object LoadingNext : State
-
     public data object Refreshing : State
 
     public data object Idle : State

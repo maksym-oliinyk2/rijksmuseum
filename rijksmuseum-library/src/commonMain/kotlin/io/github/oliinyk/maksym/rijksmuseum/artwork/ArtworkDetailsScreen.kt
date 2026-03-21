@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -37,6 +38,8 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.artwork_details_no_data
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.contentPaddingValues
@@ -48,6 +51,8 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
+
+internal const val ContentTag = "Artwork details content"
 
 private val TopBarImageHeight = 300.dp
 
@@ -132,13 +137,11 @@ private fun ArtworkLoadableContent(
                 // Handle empty data if necessary, though for details it's likely an error if idle and null
                 DisplayMessage(
                     modifier = Modifier.fillMaxSize(),
-                    message = "No data available",
+                    message = stringResource(Res.string.artwork_details_no_data),
                     onRetry = onRefresh
                 )
             }
         }
-
-        else -> {}
     }
 }
 
@@ -148,7 +151,9 @@ private fun ArtworkDetails(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(ContentTag),
         contentPadding = contentPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal)
     ) {
@@ -212,7 +217,7 @@ private fun ArtworkDetailsContentPreview() {
                                 descriptions = NonEmptyList.of(
                                     Description(
                                         "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
-                                            "known as the ‘Night Watch’"
+                                                "known as the ‘Night Watch’"
                                     )
                                 )
                             )
