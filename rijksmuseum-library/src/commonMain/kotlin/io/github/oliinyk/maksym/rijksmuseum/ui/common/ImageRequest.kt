@@ -5,10 +5,10 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
+import io.github.oliinyk.maksym.rijksmuseum.domain.toStringValue
 
 @Composable
 internal fun Url.toImageRequest(): ImageRequest = ImageRequest.Builder(LocalPlatformContext.current)
-    .data(toExternalValue())
+    .data(toStringValue())
     .crossfade(true)
     .build()

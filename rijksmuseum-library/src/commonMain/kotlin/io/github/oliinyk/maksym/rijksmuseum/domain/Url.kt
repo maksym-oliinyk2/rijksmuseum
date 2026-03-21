@@ -7,4 +7,4 @@ public expect fun UrlFrom(
     value: String
 ): Url
 
-public expect fun Url.toExternalValue(): String
+public expect fun Url.toStringValue(): String

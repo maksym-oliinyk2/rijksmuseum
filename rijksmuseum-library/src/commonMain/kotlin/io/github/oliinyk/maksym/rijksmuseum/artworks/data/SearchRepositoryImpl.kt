@@ -2,7 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
 import arrow.core.Either
 import arrow.core.raise.either
-import arrow.fx.coroutines.parMapNotNull
+import arrow.fx.coroutines.parMap
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
@@ -12,13 +12,13 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 internal class SearchRepositoryImpl(
-    private val api: SearchApi,
+    private val api: RijksmuseumApi,
     cachedIds: List<Url> = emptyList(),
-    nextUrl: Url? = SearchUrl,
+    startUrl: Url? = RijksmuseumApi.InitialPageUrl,
 ) : SearchRepository {
-
+    // only one coroutine at a time can access the cache
     private val cachedIds = cachedIds.toMutableList()
-    private var nextPage: Url? = nextUrl
+    private var nextPage: Url? = startUrl
     private val mutex = Mutex()
 
     override suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>> =
@@ -29,9 +29,8 @@ internal class SearchRepositoryImpl(
                 @Suppress("UNCHECKED_CAST")
                 Page.End as Page<Artwork>
             } else {
-                val artworks = ids.parMapNotNull { id ->
-                    // todo skip item on error
-                    api.fetchDetails(id).getOrNull()
+                val artworks = ids.parMap { id ->
+                    api.fetchArtwork(id).bind()
                 }
 
                 Page(
@@ -44,7 +43,6 @@ internal class SearchRepositoryImpl(
     private suspend fun fetchArtworkIds(
         paging: Paging,
     ): Either<AppException, List<Url>> = mutex.withLock {
-        // only one coroutine at a time can access the cache
         either {
             val limit = paging.currentSize + paging.resultsPerPage
             // Incrementally fetch next pages until we have enough ids in the cache

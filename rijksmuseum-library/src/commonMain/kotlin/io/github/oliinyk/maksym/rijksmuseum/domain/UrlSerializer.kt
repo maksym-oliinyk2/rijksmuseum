@@ -13,6 +13,6 @@ internal object UrlSerializer : KSerializer<Url> {
     override fun deserialize(decoder: Decoder): Url = UrlFrom(decoder.decodeString())
 
     override fun serialize(encoder: Encoder, value: Url) {
-        encoder.encodeString(value.toExternalValue())
+        encoder.encodeString(value.toStringValue())
     }
 }

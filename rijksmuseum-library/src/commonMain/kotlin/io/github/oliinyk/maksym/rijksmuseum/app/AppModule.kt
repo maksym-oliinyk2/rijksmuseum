@@ -10,11 +10,13 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
+import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
@@ -37,6 +39,18 @@ private fun HttpClient(
     engine: HttpClientEngineFactory<HttpClientEngineConfig>,
 ): HttpClient = HttpClient(engine) {
     expectSuccess = true
+
+    headers {
+        append("Accept", "application/json")
+    }
+
+    install(HttpTimeout) {
+        // todo provide via build config
+        requestTimeoutMillis = RequestTimeoutMillis
+        connectTimeoutMillis = ConnectTimeoutMillis
+        socketTimeoutMillis = SocketTimeoutMillis
+    }
+
     install(ContentNegotiation) {
         json(
             json = Json {
@@ -52,3 +66,7 @@ private fun HttpClient(
         level = logLevel
     }
 }
+
+private const val RequestTimeoutMillis = 5000L
+private const val ConnectTimeoutMillis = 5000L
+private const val SocketTimeoutMillis = 7000L

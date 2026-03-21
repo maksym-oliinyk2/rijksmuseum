@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,17 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import arrow.core.NonEmptyList
 import coil3.compose.AsyncImage
 import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.contentPaddingValues
@@ -47,6 +47,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.jetbrains.compose.resources.stringResource
 
 private val TopBarImageHeight = 300.dp
 
@@ -85,7 +86,7 @@ internal fun ArtworkDetailsContent(
     )
 
     Scaffold(
-        modifier = modifier.navigationBarsPadding(),
+        modifier = modifier,
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -146,14 +147,12 @@ private fun ArtworkDetails(
     artwork: Artwork,
     modifier: Modifier = Modifier,
 ) {
-    val carousel = remember(artwork.images) { artwork.images.drop(1) }
-
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = contentPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal)
     ) {
-        val topImage = artwork.images.firstOrNull()
+        val topImage = artwork.primaryImage
 
         if (topImage != null) {
             item(key = "topImage") {
@@ -171,7 +170,7 @@ private fun ArtworkDetails(
         item(key = "title") {
             Text(
                 text = artwork.title.value,
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.h5
             )
         }
 
@@ -180,27 +179,15 @@ private fun ArtworkDetails(
         ) { linguisticObject ->
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.small)) {
                 Text(
-                    text = linguisticObject.type.name,
+                    text = stringResource(linguisticObject.type.displayName),
                     style = MaterialTheme.typography.subtitle1
                 )
-                Text(
-                    text = linguisticObject.description.value,
-                    style = MaterialTheme.typography.body1
-                )
-            }
-        }
-
-        if (carousel.isNotEmpty()) {
-            items(
-                items = carousel,
-                key = { it.toExternalValue() }
-            ) {
-                AsyncImage(
-                    modifier = Modifier.fillMaxWidth(),
-                    model = it.toImageRequest(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit
-                )
+                linguisticObject.descriptions.fastForEach { description ->
+                    Text(
+                        text = description.value,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
             }
         }
     }
@@ -218,13 +205,15 @@ private fun ArtworkDetailsContentPreview() {
                     Artwork(
                         url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                         title = Title("The Night Watch"),
-                        images = listOf(UrlFrom("https://lh3.googleusercontent.com/nightwatch")),
+                        primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
                         descriptions = listOf(
                             LinguisticObject(
                                 type = GettyAatType.Description,
-                                description = Description(
-                                    "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
-                                        "known as the ‘Night Watch’"
+                                descriptions = NonEmptyList.of(
+                                    Description(
+                                        "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
+                                            "known as the ‘Night Watch’"
+                                    )
                                 )
                             )
                         )
