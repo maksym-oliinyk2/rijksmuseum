@@ -18,7 +18,7 @@ class ArtworkDetailsViewStateTest {
         url = testUrl,
         title = Title("Artwork 1"),
         primaryImage = UrlFrom("https://example.com/1.jpg"),
-        descriptions = listOf()
+        linguisticObjects = listOf()
     )
 
     @Test

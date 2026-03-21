@@ -19,7 +19,7 @@ class ArtworksViewStateTest {
         url = UrlFrom("https://example.com/1"),
         title = Title("Artwork 1"),
         primaryImage = UrlFrom("https://example.com/1.jpg"),
-        descriptions = listOf()
+        linguisticObjects = listOf()
     )
 
     @Test
@@ -104,7 +104,7 @@ class ArtworksViewStateTest {
             url = UrlFrom("https://example.com/2"),
             title = Title("Artwork 2"),
             primaryImage = UrlFrom("https://example.com/2.jpg"),
-            descriptions = listOf()
+            linguisticObjects = listOf()
         )
         val initialState = ArtworksViewState(
             artworks = Paginateable(

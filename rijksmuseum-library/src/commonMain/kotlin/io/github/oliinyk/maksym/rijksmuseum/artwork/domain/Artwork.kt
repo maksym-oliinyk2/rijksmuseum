@@ -9,7 +9,7 @@ public data class Artwork(
     val url: Url,
     val title: Title,
     val primaryImage: Url?,
-    val descriptions: List<LinguisticObject>,
+    val linguisticObjects: List<LinguisticObject>,
 )
 
 public data class LinguisticObject(

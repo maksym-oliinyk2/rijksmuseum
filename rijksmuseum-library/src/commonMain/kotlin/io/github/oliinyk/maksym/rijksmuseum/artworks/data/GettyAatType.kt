@@ -27,6 +27,16 @@ public enum class GettyAatType(
     public val displayName: StringResource,
 ) {
     /**
+     * Original title on object ("originele titel op object")
+     */
+    OriginalTitle(UrlFrom("https://id.rijksmuseum.nl/22015530"), Res.string.getty_aat_type_original_title),
+
+    /**
+     * Original series title ("originele serietitel")
+     */
+    OriginalSeriesTitle(UrlFrom("https://id.rijksmuseum.nl/22015532"), Res.string.getty_aat_type_original_series_title),
+
+    /**
      * Inscriptions or marks ("Opschriften / Merken")
      */
     Inscription(UrlFrom("http://vocab.getty.edu/aat/300435414"), Res.string.getty_aat_type_inscription),
@@ -50,16 +60,6 @@ public enum class GettyAatType(
      * Dimensions ("Afmetingen")
      */
     Dimensions(UrlFrom("http://vocab.getty.edu/aat/300435430"), Res.string.getty_aat_type_dimensions),
-
-    /**
-     * Original title on object ("originele titel op object")
-     */
-    OriginalTitle(UrlFrom("https://id.rijksmuseum.nl/22015530"), Res.string.getty_aat_type_original_title),
-
-    /**
-     * Original series title ("originele serietitel")
-     */
-    OriginalSeriesTitle(UrlFrom("https://id.rijksmuseum.nl/22015532"), Res.string.getty_aat_type_original_series_title),
 
     /**
      * Collection or provenance information ("Collectie")

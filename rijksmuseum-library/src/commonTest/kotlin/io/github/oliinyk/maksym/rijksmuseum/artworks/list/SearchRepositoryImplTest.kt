@@ -45,13 +45,13 @@ class SearchRepositoryImplTest {
             url = item1Id,
             title = Title("The Night Watch"),
             primaryImage = UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B"),
-            descriptions = listOf(),
+            linguisticObjects = listOf(),
         )
         val artwork2 = Artwork(
             url = item2Id,
             title = Title("The Milkmaid"),
             primaryImage = UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B"),
-            descriptions = listOf(),
+            linguisticObjects = listOf(),
         )
 
         // Fill the details for all items to avoid errors during parMap
@@ -60,7 +60,7 @@ class SearchRepositoryImplTest {
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 primaryImage = UrlFrom("https://image.url/${item.id}"),
-                descriptions = listOf(),
+                linguisticObjects = listOf(),
             )
         }.toMutableMap()
 
@@ -107,7 +107,7 @@ class SearchRepositoryImplTest {
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 primaryImage = UrlFrom("https://image.url/${item.id}"),
-                descriptions = listOf(),
+                linguisticObjects = listOf(),
             )
         }
 
@@ -191,19 +191,19 @@ class SearchRepositoryImplTest {
                     url = item1Id,
                     title = Title("Title for $item1Id"),
                     primaryImage = UrlFrom("https://image.url/item-1"),
-                    descriptions = listOf()
+                    linguisticObjects = listOf()
                 ),
                 item2Id to Artwork(
                     url = item2Id,
                     title = Title("Title for $item2Id"),
                     primaryImage = UrlFrom("https://image.url/item-2"),
-                    descriptions = listOf()
+                    linguisticObjects = listOf()
                 ),
                 item3Id to Artwork(
                     url = item3Id,
                     title = Title("Title for $item3Id"),
                     primaryImage = UrlFrom("https://image.url/item-3"),
-                    descriptions = listOf()
+                    linguisticObjects = listOf()
                 )
             )
 
@@ -277,19 +277,19 @@ class SearchRepositoryImplTest {
                 url = item1Id,
                 title = Title("Title for $item1Id"),
                 primaryImage = UrlFrom("https://image.url/item-1"),
-                descriptions = listOf()
+                linguisticObjects = listOf()
             ),
             item2Id to Artwork(
                 url = item2Id,
                 title = Title("Title for $item2Id"),
                 primaryImage = UrlFrom("https://image.url/item-2"),
-                descriptions = listOf()
+                linguisticObjects = listOf()
             ),
             item3Id to Artwork(
                 url = item3Id,
                 title = Title("Title for $item3Id"),
                 primaryImage = UrlFrom("https://image.url/item-3"),
-                descriptions = listOf()
+                linguisticObjects = listOf()
             )
         )
 
@@ -380,7 +380,7 @@ class SearchRepositoryImplTest {
                 url = item1Id,
                 title = Title("Title"),
                 primaryImage = null,
-                descriptions = listOf()
+                linguisticObjects = listOf()
             )
         )
         val api = TestRijksmuseumApi(

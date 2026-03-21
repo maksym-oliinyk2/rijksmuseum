@@ -179,7 +179,7 @@ private fun ArtworkDetails(
         }
 
         items(
-            items = artwork.descriptions,
+            items = artwork.linguisticObjects,
         ) { linguisticObject ->
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.small)) {
                 Text(
@@ -210,7 +210,7 @@ private fun ArtworkDetailsContentPreview() {
                         url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                         title = Title("The Night Watch"),
                         primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
-                        descriptions = listOf(
+                        linguisticObjects = listOf(
                             LinguisticObject(
                                 type = GettyAatType.Description,
                                 descriptions = NonEmptyList.of(

@@ -30,7 +30,7 @@ class ArtworksContentTest {
                 url = UrlFrom("https://example.com/$i"),
                 title = Title("Artwork $i"),
                 primaryImage = UrlFrom("https://example.com/$i.jpg"),
-                descriptions = listOf()
+                linguisticObjects = listOf()
             )
         }
 

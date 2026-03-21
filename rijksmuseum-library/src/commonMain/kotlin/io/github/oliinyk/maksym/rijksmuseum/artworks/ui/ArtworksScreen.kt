@@ -259,13 +259,13 @@ private fun ArtworksContentPreview() {
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                             title = Title("The Night Watch"),
                             primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
-                            descriptions = emptyList()
+                            linguisticObjects = emptyList()
                         ),
                         Artwork(
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-2344"),
                             title = Title("The Milkmaid"),
                             primaryImage = UrlFrom("https://lh3.googleusercontent.com/milkmaid"),
-                            descriptions = emptyList()
+                            linguisticObjects = emptyList()
                         )
                     )
                 )

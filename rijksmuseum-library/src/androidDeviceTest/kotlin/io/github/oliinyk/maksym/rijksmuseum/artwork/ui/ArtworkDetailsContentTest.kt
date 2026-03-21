@@ -26,7 +26,7 @@ class ArtworkDetailsContentTest {
         url = testUrl,
         title = Title("Night Watch"),
         primaryImage = UrlFrom("https://example.com/1.jpg"),
-        descriptions = listOf()
+        linguisticObjects = listOf()
     )
 
     @Test

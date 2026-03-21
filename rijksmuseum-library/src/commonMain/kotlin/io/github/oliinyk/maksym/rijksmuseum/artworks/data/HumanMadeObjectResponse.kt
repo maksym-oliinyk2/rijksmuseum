@@ -1,5 +1,9 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 
+import arrow.core.toNonEmptyListOrNull
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Description
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.LinguisticObject
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlSerializer
 import kotlinx.serialization.SerialName
@@ -102,7 +106,8 @@ internal data class HumanMadeObjectResponse(
         @Serializable(with = UrlSerializer::class)
         val id: Url,
         @SerialName("type")
-        val type: String,
+        @Serializable(with = GettyAatTypeSerializer::class)
+        val type: GettyAatType?,
     )
 
     @Serializable
@@ -130,3 +135,35 @@ internal data class HumanMadeObjectResponse(
         val id: Url,
     )
 }
+
+internal val HumanMadeObjectResponse.title: Title?
+    get() = identifiedBy
+        .asSequence()
+        .filter { it.type.lowercase() == "name" }
+        .minByOrNull { identification ->
+            val types = identification.classifiedAs.mapNotNull { it.type }
+            // try to find the most relevant title type
+            when {
+                GettyAatType.OriginalTitle in types -> 0
+                GettyAatType.OriginalSeriesTitle in types -> 1
+                else -> 2
+            }
+        }
+        ?.content
+        ?.let(::Title)
+
+internal val HumanMadeObjectResponse.linguisticObjects: List<LinguisticObject>
+    get() = referredToBy
+        .asSequence()
+        .filter { it.language.any { lang -> lang.isDutch } }
+        .mapNotNull { obj ->
+            obj.content?.let { content ->
+                val type = obj.classifiedAs.firstNotNullOfOrNull { it.type }
+
+                type?.let { type -> type to Description(content) }
+            }
+        }
+        .groupBy({ it.first }, { it.second })
+        .mapNotNull { (type, descriptions) ->
+            descriptions.toNonEmptyListOrNull()?.let { LinguisticObject(type, it) }
+        }
