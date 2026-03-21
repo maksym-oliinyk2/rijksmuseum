@@ -27,7 +27,7 @@ internal interface RijksmuseumApi {
 
     companion object {
         // todo provide via build config
-        internal val InitialPageUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
+        val InitialPageUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
     }
 
     suspend fun fetchArtworkIds(page: Url): Either<AppException, PaginatedIds>
