@@ -52,6 +52,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
+internal const val ArtworkDetailsScreenTag = "Artwork details screen"
 internal const val ArtworkDetailsContentTag = "Artwork details content"
 
 private val TopBarImageHeight = 300.dp
@@ -91,7 +92,7 @@ internal fun ArtworkDetailsContent(
     )
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.testTag(ArtworkDetailsScreenTag),
     ) { paddingValues ->
         Box(
             modifier = Modifier
