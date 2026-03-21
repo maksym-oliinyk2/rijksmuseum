@@ -1,51 +1,11 @@
-/*
- * MIT License
- *
- * Copyright (c) 2022. Maksym Oliinyk.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
 import java.nio.file.Paths
 
 const val CommitHashLength = 6
-private const val RefBranch = "refs/heads/"
 private const val RefTag = "refs/tags/"
-
-val isCiEnv: Boolean
-    get() = getenvSafe("CI")?.toBoolean() == true
-
-val branch: String?
-    get() = getenvSafe("GITHUB_REF")
-        ?.takeIf { it.startsWith(RefBranch) || it.startsWith(RefTag) }
-        ?.removePrefix(RefBranch)
-        ?.removePrefix(RefTag)
-        ?: localBranch
-
-val branchOrDefault: String
-    get() = branch ?: "master"
 
 val tag: String?
     get() = getenvSafe("GITHUB_REF")
@@ -66,14 +26,6 @@ val Project.detektBaseline: File
 
 val Project.composeMetricsDir: File
     get() = File(layout.buildDirectory.get().asFile, "compose_metrics")
-
-val localBranch: String?
-    get() = ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD")
-        .start()
-        .also { it.waitFor() }
-        .takeIf { it.exitValue() == 0 }
-        ?.let { BufferedReader(InputStreamReader(it.inputStream)) }
-        ?.let { it.use { reader -> reader.readLine().trim() } }
 
 val Project.testReportsDir: Provider<out Directory>
     get() = rootMostProject.layout.buildDirectory.map { it.dir("junit-reports").dir(project.name) }
