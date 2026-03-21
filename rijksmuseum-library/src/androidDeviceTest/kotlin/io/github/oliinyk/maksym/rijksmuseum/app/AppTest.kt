@@ -39,7 +39,7 @@ class AppTest {
 
     @OptIn(ExperimentalTestApi::class, org.koin.core.annotation.KoinExperimentalAPI::class)
     @Test
-    fun when_composing_items_then_correct_sequence() = runComposeUiTest {
+    fun when_artwork_clicked_then_details_displayed() = runComposeUiTest {
         val artworks = List(ArtworksCount) { i ->
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
