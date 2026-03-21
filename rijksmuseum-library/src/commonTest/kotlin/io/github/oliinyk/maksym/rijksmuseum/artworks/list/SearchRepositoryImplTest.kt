@@ -2,12 +2,12 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.list
 
 import arrow.core.left
 import arrow.core.right
+import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi.Companion.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom

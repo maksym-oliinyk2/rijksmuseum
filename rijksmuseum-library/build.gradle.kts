@@ -157,6 +157,14 @@ buildConfig {
 
     logger.log(LogLevel.LIFECYCLE, "DEBUG enabled: $debugEnabled")
     buildConfigField("kotlin.Boolean", "DEBUG", "$debugEnabled")
+    buildConfigField("kotlin.Long", "RequestTimeoutMs", "5000L")
+    buildConfigField("kotlin.Long", "ConnectTimeoutMs", "5000L")
+    buildConfigField("kotlin.Long", "SocketTimeoutMs", "7000L")
+    buildConfigField(
+        "io.github.oliinyk.maksym.rijksmuseum.domain.Url",
+        "InitialPageUrl",
+        "io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom(\"https://data.rijksmuseum.nl/search/collection\")"
+    )
 }
 
 compose.resources {

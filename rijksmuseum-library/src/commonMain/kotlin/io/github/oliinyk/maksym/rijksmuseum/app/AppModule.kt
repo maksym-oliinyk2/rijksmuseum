@@ -2,6 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.app
 
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
@@ -27,7 +28,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
 
-@Suppress("FunctionName")
 internal fun AppModule(
     backStack: NavBackStack<NavKey>,
     engine: HttpClientEngineFactory<HttpClientEngineConfig>,
@@ -50,10 +50,9 @@ private fun HttpClient(
     }
 
     install(HttpTimeout) {
-        // todo provide via build config
-        requestTimeoutMillis = RequestTimeoutMillis
-        connectTimeoutMillis = ConnectTimeoutMillis
-        socketTimeoutMillis = SocketTimeoutMillis
+        requestTimeoutMillis = BuildConfig.RequestTimeoutMs
+        connectTimeoutMillis = BuildConfig.ConnectTimeoutMs
+        socketTimeoutMillis = BuildConfig.SocketTimeoutMs
     }
 
     install(ContentNegotiation) {
@@ -61,7 +60,6 @@ private fun HttpClient(
             json = Json {
                 ignoreUnknownKeys = true
                 useAlternativeNames = false
-                isLenient = true
             }
         )
     }
@@ -71,7 +69,3 @@ private fun HttpClient(
         level = logLevel
     }
 }
-
-private const val RequestTimeoutMillis = 5000L
-private const val ConnectTimeoutMillis = 5000L
-private const val SocketTimeoutMillis = 7000L

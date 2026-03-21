@@ -11,7 +11,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectRespons
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse.DigitalObjectDetails
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse.VisualItemDetails
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.domain.toStringValue
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -24,11 +23,6 @@ internal data class PaginatedIds(
 )
 
 internal interface RijksmuseumApi {
-
-    companion object {
-        // todo provide via build config
-        val InitialPageUrl = UrlFrom("https://data.rijksmuseum.nl/search/collection")
-    }
 
     suspend fun fetchArtworkIds(page: Url): Either<AppException, PaginatedIds>
 

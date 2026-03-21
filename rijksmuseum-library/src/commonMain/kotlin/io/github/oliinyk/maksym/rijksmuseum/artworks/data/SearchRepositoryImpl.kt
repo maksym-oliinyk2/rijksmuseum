@@ -3,6 +3,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.data
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.fx.coroutines.parMap
+import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
@@ -14,7 +15,7 @@ import kotlinx.coroutines.sync.withLock
 internal class SearchRepositoryImpl(
     private val api: RijksmuseumApi,
     cachedIds: List<Url> = emptyList(),
-    startUrl: Url? = RijksmuseumApi.InitialPageUrl,
+    startUrl: Url? = BuildConfig.InitialPageUrl,
 ) : SearchRepository {
     // only one coroutine at a time can access the cache
     private val cachedIds = cachedIds.toMutableList()

@@ -9,6 +9,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import arrow.core.right
+import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContentTag
 import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
@@ -17,7 +18,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi.Companion.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksScrollContainerTag
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
