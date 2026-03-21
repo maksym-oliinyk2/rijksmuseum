@@ -45,7 +45,7 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.domain.toExternalValue
+import io.github.oliinyk.maksym.rijksmuseum.domain.toStringValue
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
@@ -149,7 +149,7 @@ private fun LazyListScope.artworkItems(
 ) {
     items(
         items = paginateable.data,
-        key = { item -> item.url.toExternalValue() },
+        key = { item -> item.url.toStringValue() },
     ) { artwork ->
         ArtworkCard(
             artwork = artwork,

@@ -9,4 +9,4 @@ public actual fun UrlFrom(
     value: String
 ): Url = NSURL(string = value)
 
-public actual fun Url.toExternalValue(): String = toString()
+public actual fun Url.toStringValue(): String = toString()

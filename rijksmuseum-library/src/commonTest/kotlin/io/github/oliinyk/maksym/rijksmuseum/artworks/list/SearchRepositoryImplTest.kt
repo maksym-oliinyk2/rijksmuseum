@@ -67,7 +67,7 @@ class SearchRepositoryImplTest {
         artworksDetails[item1Id] = artwork1
         artworksDetails[item2Id] = artwork2
 
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = artworksDetails.mapValues { it.value.right() },
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(
@@ -111,7 +111,7 @@ class SearchRepositoryImplTest {
             )
         }
 
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = artworksDetails.mapValues { it.value.right() },
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(
@@ -140,7 +140,7 @@ class SearchRepositoryImplTest {
             items = listOf(HumanMadeObjectResponse.ArtworkIdItem(id = item1Id))
         )
 
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = mapOf(),
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(
@@ -207,7 +207,7 @@ class SearchRepositoryImplTest {
                 )
             )
 
-            val api = TestSearchApi(
+            val api = TestRijksmuseumApi(
                 artworksDetails = artworksDetails.mapValues { it.value.right() },
                 searchResponses = mapOf(
                     SearchUrl to PaginatedIds(
@@ -242,7 +242,7 @@ class SearchRepositoryImplTest {
             next = null,
             items = listOf(HumanMadeObjectResponse.ArtworkIdItem(id = item1Id))
         )
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = mapOf(),
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(
@@ -293,7 +293,7 @@ class SearchRepositoryImplTest {
             )
         )
 
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = artworksDetails.mapValues { it.value.right() },
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(
@@ -330,7 +330,7 @@ class SearchRepositoryImplTest {
         )
 
         val exception = AppException("Network error")
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = mapOf(item1Id to Either.Left(exception)),
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(
@@ -353,7 +353,7 @@ class SearchRepositoryImplTest {
     fun `when fetchArtworks and fetching ids fails then it returns failure`() = runTest {
         // Setup
         val exception = AppException("Network error")
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = mapOf(),
             searchResponses = mapOf(SearchUrl to Either.Left(exception))
         )
@@ -383,7 +383,7 @@ class SearchRepositoryImplTest {
                 descriptions = listOf()
             )
         )
-        val api = TestSearchApi(
+        val api = TestRijksmuseumApi(
             artworksDetails = artworksDetails.mapValues { it.value.right() },
             searchResponses = mapOf(
                 SearchUrl to PaginatedIds(

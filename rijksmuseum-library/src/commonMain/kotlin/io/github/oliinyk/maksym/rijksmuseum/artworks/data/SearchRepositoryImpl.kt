@@ -12,9 +12,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 internal class SearchRepositoryImpl(
-    private val api: SearchApi,
+    private val api: RijksmuseumApi,
     cachedIds: List<Url> = emptyList(),
-    startUrl: Url? = SearchUrl,
+    startUrl: Url? = RijksmuseumApi.InitialPageUrl,
 ) : SearchRepository {
     // only one coroutine at a time can access the cache
     private val cachedIds = cachedIds.toMutableList()
@@ -30,7 +30,7 @@ internal class SearchRepositoryImpl(
                 Page.End as Page<Artwork>
             } else {
                 val artworks = ids.parMap { id ->
-                    api.fetchDetails(id).bind()
+                    api.fetchArtwork(id).bind()
                 }
 
                 Page(
