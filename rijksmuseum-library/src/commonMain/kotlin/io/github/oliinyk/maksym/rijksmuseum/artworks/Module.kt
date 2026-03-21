@@ -1,7 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks
 
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepository
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
@@ -20,7 +18,6 @@ internal val searchModule: Module = module {
     viewModelOf(::ArtworksViewModel)
 
     viewModelScope {
-        scopedOf(::RijksmuseumApiImpl).bind(RijksmuseumApi::class)
         scoped { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)
         scopedOf(::SearchUseCase)
     }

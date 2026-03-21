@@ -26,7 +26,7 @@ class ArtworksContentTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun artworksContentDisplaysAllArtworks() = runComposeUiTest {
+    fun artworks_content_displays_all() = runComposeUiTest {
         val artworks = List(TestItemsCount) { i ->
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
@@ -55,7 +55,7 @@ class ArtworksContentTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun artworksContentDisplaysProgressIndicatorWhenLoading() = runComposeUiTest {
+    fun artworks_content_displays_progress_when_loading() = runComposeUiTest {
         val state = ArtworksViewState(
             artworks = Paginateable.loadingList()
         )
@@ -72,7 +72,7 @@ class ArtworksContentTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun artworksContentDisplaysErrorMessageWhenException() = runComposeUiTest {
+    fun artworks_content_displays_error_when_exception() = runComposeUiTest {
         val errorMessage = "Failed to load artworks"
         val state = ArtworksViewState(
             artworks = Paginateable(

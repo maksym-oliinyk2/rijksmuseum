@@ -21,7 +21,7 @@ class ArtworkRepositoryImplTest {
     )
 
     @Test
-    fun `when fetchArtworkDetails and cache is empty then it fetches from api`() = runTest {
+    fun when_fetch_cache_empty_then_api_call() = runTest {
         val api = TestRijksmuseumApi(
             artworksDetails = mapOf(testUrl to testArtwork.right())
         )
@@ -34,7 +34,7 @@ class ArtworkRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworkDetails and cache hit then it returns cached data`() = runTest {
+    fun when_fetch_cache_hit_then_cached_data() = runTest {
         val api = TestRijksmuseumApi(
             artworksDetails = emptyMap()
         )

@@ -22,7 +22,7 @@ import kotlin.test.assertSame
 class SearchRepositoryImplTest {
 
     @Test
-    fun `when fetchArtworks and cache is empty then it fetches from api`() = runTest {
+    fun when_fetch_cache_empty_then_api_call() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-3262")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-4878")
@@ -87,7 +87,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and cache hit with enough items then it returns cached data`() = runTest {
+    fun when_fetch_cache_hit_enough_then_cached_data() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
@@ -131,7 +131,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and cache hit and it is end of pagination then it returns end of page`() = runTest {
+    fun when_fetch_cache_hit_end_then_end_of_page() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
 
@@ -164,7 +164,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and cache hit but not enough items then it fetches next page`() =
+    fun when_fetch_cache_hit_not_enough_then_next_page() =
         runTest {
             // Setup
             val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
@@ -235,7 +235,7 @@ class SearchRepositoryImplTest {
         }
 
     @Test
-    fun `when fetchArtworks and request is beyond cache and no more pages then it returns end of page`() = runTest {
+    fun when_fetch_beyond_cache_no_more_then_end_of_page() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -266,7 +266,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and multiple pages need to be fetched then it fetches them all`() = runTest {
+    fun when_fetch_multiple_pages_then_fetches_all() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
@@ -321,7 +321,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and fetching details fails then it returns failure`() = runTest {
+    fun when_fetch_details_fails_then_failure() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -350,7 +350,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and fetching ids fails then it returns failure`() = runTest {
+    fun when_fetch_ids_fails_then_failure() = runTest {
         // Setup
         val exception = AppException("Network error")
         val api = TestRijksmuseumApi(
@@ -368,7 +368,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when hasMore and exactly at the end of items and no next page then it returns false`() = runTest {
+    fun when_hasMore_end_no_next_then_false() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(

@@ -22,7 +22,7 @@ class ArtworkDetailsViewStateTest {
     )
 
     @Test
-    fun `when update with Message OnReload then it returns loading state and load command`() {
+    fun when_OnReload_then_loading() {
         val initialState = ArtworkDetailsViewState(
             artworkId = testUrl,
             artwork = Loadable.idleSingle(testArtwork)
@@ -34,7 +34,7 @@ class ArtworkDetailsViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnRefresh and refreshable then it returns refreshing state and load command`() {
+    fun when_OnRefresh_refreshable_then_refreshing() {
         val initialState = ArtworkDetailsViewState(
             artworkId = testUrl,
             artwork = Loadable.idleSingle(testArtwork)
@@ -46,7 +46,7 @@ class ArtworkDetailsViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnRefresh and not refreshable then it returns current state and no commands`() {
+    fun when_OnRefresh_not_refreshable_then_no_change() {
         val initialState = ArtworkDetailsViewState(
             artworkId = testUrl,
             artwork = Loadable.loadingSingle()
@@ -58,7 +58,7 @@ class ArtworkDetailsViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnDataLoaded success then it returns idle state with data`() {
+    fun when_OnDataLoaded_success_then_idle_with_data() {
         val initialState = ArtworkDetailsViewState(
             artworkId = testUrl,
             artwork = Loadable.loadingSingle()
@@ -70,7 +70,7 @@ class ArtworkDetailsViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnDataLoaded failure then it returns exception state`() {
+    fun when_OnDataLoaded_failure_then_exception() {
         val initialState = ArtworkDetailsViewState(
             artworkId = testUrl,
             artwork = Loadable.loadingSingle()

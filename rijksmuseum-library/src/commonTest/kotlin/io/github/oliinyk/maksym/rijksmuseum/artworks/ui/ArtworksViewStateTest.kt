@@ -23,7 +23,7 @@ class ArtworksViewStateTest {
     )
 
     @Test
-    fun `when update with Message OnReload then it returns loading state and load command`() {
+    fun when_OnReload_then_loading() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork))
         )
@@ -34,7 +34,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnRefresh and refreshable then it returns refreshing state and load command`() {
+    fun when_OnRefresh_refreshable_then_refreshing() {
         // Refreshable if isIdle and data.isEmpty()
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf())
@@ -46,7 +46,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnRefresh and not refreshable then it returns current state and no commands`() {
+    fun when_OnRefresh_not_refreshable_then_no_change() {
         // Not refreshable if has data
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork))
@@ -58,7 +58,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnLoadNext and loadable then it returns loading next state and load command`() {
+    fun when_OnLoadNext_loadable_then_loading_next() {
         // Loadable if artworks.hasMore and artworks.isIdle
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork)).copy(hasMore = true)
@@ -73,7 +73,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnLoadNext and not loadable then it returns current state and no commands`() {
+    fun when_OnLoadNext_not_loadable_then_no_change() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.idleList(listOf(testArtwork)).copy(hasMore = false)
         )
@@ -84,7 +84,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnDataLoaded success then it returns idle state with data`() {
+    fun when_OnDataLoaded_success_then_idle_with_data() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.loadingList()
         )
@@ -99,7 +99,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnDataLoaded success and loading next then it appends data`() {
+    fun when_OnDataLoaded_success_loading_next_then_appends_data() {
         val artwork2 = Artwork(
             url = UrlFrom("https://example.com/2"),
             title = Title("Artwork 2"),
@@ -124,7 +124,7 @@ class ArtworksViewStateTest {
     }
 
     @Test
-    fun `when update with Message OnDataLoaded failure then it returns exception state`() {
+    fun when_OnDataLoaded_failure_then_exception() {
         val initialState = ArtworksViewState(
             artworks = Paginateable.loadingList()
         )

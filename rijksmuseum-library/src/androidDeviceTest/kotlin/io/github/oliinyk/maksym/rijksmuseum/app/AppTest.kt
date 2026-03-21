@@ -7,7 +7,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import arrow.core.Either
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContentTag
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
@@ -16,35 +15,17 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepository
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
-import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi.Companion.InitialPageUrl
+import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.searchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksScrollContainerTag
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksViewModel
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
-import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.bind
 import kotlin.test.Test
-
-private class TestRijksmuseumApi(
-    private val artworksDetails: Map<Url, Either<io.github.oliinyk.maksym.rijksmuseum.artworks.AppException, Artwork>>,
-    private val searchResponses:
-    Map<Url, Either<io.github.oliinyk.maksym.rijksmuseum.artworks.AppException, PaginatedIds>> = emptyMap(),
-) : RijksmuseumApi {
-    override suspend fun fetchArtworkIds(
-        page: Url
-    ): Either<io.github.oliinyk.maksym.rijksmuseum.artworks.AppException, PaginatedIds> =
-        searchResponses[page] ?: error("No search response for $page")
-
-    override suspend fun fetchArtwork(
-        url: Url
-    ): Either<io.github.oliinyk.maksym.rijksmuseum.artworks.AppException, Artwork> =
-        artworksDetails[url] ?: error("No artwork for $url")
-}
 
 class AppTest {
 
@@ -55,34 +36,34 @@ class AppTest {
 
     @OptIn(ExperimentalTestApi::class, org.koin.core.annotation.KoinExperimentalAPI::class)
     @Test
-    fun when_composing_items_then_correct_sequence_of_values_is_produced() = runComposeUiTest {
-        val artworks = GenerateArtworks(ArtworksCount)
+    fun when_composing_items_then_correct_sequence() = runComposeUiTest {
+        val artworks = List(ArtworksCount) { i ->
+            Artwork(
+                url = UrlFrom("https://example.com/$i"),
+                title = Title("Artwork $i"),
+                primaryImage = UrlFrom("https://example.com/$i.jpg"),
+                descriptions = listOf()
+            )
+        }
         val testApi = TestRijksmuseumApi(
             artworksDetails = artworks.associate { it.url to it.right() },
             searchResponses = mapOf(
-                RijksmuseumApi.InitialPageUrl to PaginatedIds(
+                InitialPageUrl to PaginatedIds(
                     next = null,
                     ids = artworks.map { it.url }
                 ).right()
             )
         )
 
-        val testModule = module {
-            viewModelOf(::ArtworksViewModel)
-            single<RijksmuseumApi> { testApi }
-            single<SearchRepository> { SearchRepositoryImpl(get()) }
-            single { SearchUseCase(get()) }
-        }
-
         setContent {
             App { backStack ->
                 KoinConfiguration {
                     modules(
-                        testModule,
+                        searchModule,
                         detailsModule,
                         module {
-                            single { backStack }
-                            single { Navigator(get(), get(named<Artwork>())) }
+                            single { testApi }.bind(RijksmuseumApi::class)
+                            single { Navigator(backStack, get(named<Artwork>())) }
                             single(named<Artwork>()) { ValueHolder<Artwork>() }
                         }
                     )
@@ -94,9 +75,7 @@ class AppTest {
         // User scrolls to 10-th item from the list of artworks
         onNodeWithTag(ArtworksScrollContainerTag)
             .performScrollToNode(hasTestTag(expectedArtwork.title.value))
-
         onNodeWithTag(expectedArtwork.title.value).assertExists()
-
         // User taps on the 10-th item in the list
         onNodeWithTag(expectedArtwork.title.value).performClick()
         // User navigates to the artwork details screen
@@ -104,16 +83,4 @@ class AppTest {
         // Artwork details screen is displayed
         onNodeWithText(expectedArtwork.title.value).assertExists()
     }
-
-}
-
-private fun GenerateArtworks(
-    size: Int,
-): List<Artwork> = List(size) { i ->
-    Artwork(
-        url = UrlFrom("https://example.com/$i"),
-        title = Title("Artwork $i"),
-        primaryImage = UrlFrom("https://example.com/$i.jpg"),
-        descriptions = listOf()
-    )
 }

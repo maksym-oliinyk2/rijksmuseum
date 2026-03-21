@@ -5,6 +5,8 @@ import androidx.navigation3.runtime.NavKey
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
 import io.github.oliinyk.maksym.rijksmuseum.artwork.detailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.searchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
 import io.ktor.client.HttpClient
@@ -20,8 +22,10 @@ import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.bind
 
 @Suppress("FunctionName")
 internal fun AppModule(
@@ -32,6 +36,7 @@ internal fun AppModule(
     single { HttpClient(LogLevel.ALL, engine) }
     single { Navigator(backStack, get(named<Artwork>())) }
     single(named<Artwork>()) { ValueHolder<Artwork>() }
+    singleOf(::RijksmuseumApiImpl).bind(RijksmuseumApi::class)
 }
 
 private fun HttpClient(
