@@ -56,8 +56,16 @@ internal class RijksmuseumApiImpl(
 
     private val HumanMadeObjectResponse.title: Title
         get() = identifiedBy
-            // todo use GettyAatType to get title
-            .firstOrNull { it.type == "Name" }
+            .asSequence()
+            .filter { it.type.lowercase() == "name" }
+            .minByOrNull { identification ->
+                val types = identification.classifiedAs.mapNotNull { GettyAatType.fromId(it.id) }
+                when {
+                    GettyAatType.OriginalTitle in types -> 0
+                    GettyAatType.OriginalSeriesTitle in types -> 1
+                    else -> 2
+                }
+            }
             ?.content
             ?.let(::Title)
             ?: error("No name found for $id")

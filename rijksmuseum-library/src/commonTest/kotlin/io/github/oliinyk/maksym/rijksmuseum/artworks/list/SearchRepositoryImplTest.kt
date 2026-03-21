@@ -27,7 +27,7 @@ class SearchRepositoryImplTest {
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-3262")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-4878")
 
-        val searchResponse = createSearchResponse(
+        val searchResponse = ArtworksResponse(
             item1Id,
             item2Id,
             UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-3"),
@@ -409,7 +409,7 @@ class SearchRepositoryImplTest {
     }
 }
 
-private fun createSearchResponse(
+private fun ArtworksResponse(
     vararg ids: Url
 ) = HumanMadeObjectResponse.ArtworksResponse(
     next = HumanMadeObjectResponse.NextPage(
