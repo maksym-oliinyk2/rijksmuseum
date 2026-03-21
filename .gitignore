@@ -1,6 +1,8 @@
 *.iml
 .gradle
 .idea
+!.idea/inspectionProfiles/Project_Default.xml
+!.idea/codeStyles/
 .DS_Store
 build
 captures
