@@ -14,35 +14,31 @@ class GettyAatTypeSerializerTest {
         val type: GettyAatType?
     )
 
-    private val json = Json {
-        ignoreUnknownKeys = true
-    }
-
     @Test
     fun when_deserialize_known_id_then_success() {
         val input = """{"type": "http://vocab.getty.edu/aat/300435414"}"""
-        val decoded = json.decodeFromString<TestData>(input)
+        val decoded = Json.decodeFromString<TestData>(input)
         assertEquals(GettyAatType.Inscription, decoded.type)
     }
 
     @Test
     fun when_deserialize_unknown_id_then_null() {
         val input = """{"type": "http://vocab.getty.edu/aat/unknown"}"""
-        val decoded = json.decodeFromString<TestData>(input)
+        val decoded = Json.decodeFromString<TestData>(input)
         assertNull(decoded.type)
     }
 
     @Test
     fun when_serialize_known_type_then_success() {
         val input = TestData(GettyAatType.Notes)
-        val encoded = json.encodeToString<TestData>(input)
+        val encoded = Json.encodeToString<TestData>(input)
         assertEquals("""{"type":"http://vocab.getty.edu/aat/300435452"}""", encoded)
     }
 
     @Test
     fun when_serialize_null_type_then_success() {
         val input = TestData(null)
-        val encoded = json.encodeToString<TestData>(input)
+        val encoded = Json.encodeToString<TestData>(input)
         assertEquals("""{"type":null}""", encoded)
     }
 }

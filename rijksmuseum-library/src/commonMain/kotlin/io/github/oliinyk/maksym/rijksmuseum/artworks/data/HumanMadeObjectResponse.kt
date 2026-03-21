@@ -14,7 +14,8 @@ internal data class HumanMadeObjectResponse(
     @SerialName("id")
     @Serializable(with = UrlSerializer::class)
     val id: Url,
-    @SerialName("identified_by") val identifiedBy: List<Identification> = emptyList(),
+    @SerialName("identified_by")
+    val identifiedBy: List<Identification> = emptyList(),
     @SerialName("shows")
     val shows: List<VisualItemBrief> = emptyList(),
     @SerialName("referred_to_by")
@@ -113,7 +114,7 @@ internal data class HumanMadeObjectResponse(
     @Serializable
     data class Identification(
         @SerialName("type")
-        val type: String, // filter for Name
+        val type: String,
         @SerialName("content")
         val content: String? = null,
         @SerialName("classified_as")
