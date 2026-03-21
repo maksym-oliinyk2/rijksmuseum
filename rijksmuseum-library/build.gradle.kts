@@ -23,6 +23,7 @@ kotlin {
             "-opt-in=org.koin.core.annotation.KoinExperimentalAPI",
             "-opt-in=org.koin.core.annotation.KoinViewModelScopeApi",
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.ui.test.ExperimentalTestApi",
         )
 
         if (project.findProperty("enableComposeCompilerLogs").toString().toBoolean()) {
@@ -110,9 +111,13 @@ kotlin {
         }
 
         commonTest {
+            compilerOptions {
+                freeCompilerArgs.addAll("-opt-in=androidx.compose.ui.test.ExperimentalTestApi")
+            }
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.coroutines.test)
+                implementation(libs.compose.ui.test)
             }
         }
 
@@ -131,20 +136,13 @@ kotlin {
         }
 
         getByName("androidHostTest") {
-            compilerOptions {
-                optIn.add("-opt-in=androidx.compose.ui.test.ExperimentalTestApi",)
-            }
-
             dependencies {
-                implementation(libs.kotlin.test)
                 implementation(libs.junit)
             }
         }
 
         getByName("androidDeviceTest") {
             dependencies {
-                implementation(libs.kotlin.test)
-                implementation(libs.compose.ui.test)
                 implementation(libs.compose.test.manifest)
             }
         }
