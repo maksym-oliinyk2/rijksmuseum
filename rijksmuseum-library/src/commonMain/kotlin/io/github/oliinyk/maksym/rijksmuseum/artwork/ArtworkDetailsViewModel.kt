@@ -8,14 +8,13 @@ import io.github.xlopec.tea.core.ShareOptions
 import io.github.xlopec.tea.core.effect
 import io.github.xlopec.tea.core.toStatesComponent
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import org.koin.viewmodel.scope.ScopeViewModel
 
 internal class ArtworkDetailsViewModel(
     key: ArtworkDetailsDestination,
-    initializer: Initializer<ArtworkDetailsViewState, LoadCommand>
+    initializer: Initializer<ArtworkDetailsViewState, LoadCommand>,
+    shareOptions: ShareOptions,
 ) : ScopeViewModel() {
-
     private val getArtworkUseCase: GetArtworkUseCase by scope.inject()
     private val component = Component<Message, ArtworkDetailsViewState, LoadCommand>(
         initializer = initializer,
@@ -28,7 +27,7 @@ internal class ArtworkDetailsViewModel(
             }
         },
         scope = viewModelScope,
-        shareOptions = ShareOptions(SharingStarted.Lazily, 1u)
+        shareOptions = shareOptions,
     ).toStatesComponent()
 
     operator fun invoke(message: Flow<Message>): Flow<ArtworkDetailsViewState> = component(message)

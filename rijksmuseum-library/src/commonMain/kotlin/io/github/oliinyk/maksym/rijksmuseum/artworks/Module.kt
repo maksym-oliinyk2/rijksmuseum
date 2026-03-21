@@ -12,7 +12,7 @@ import org.koin.plugin.module.dsl.bind
 import org.koin.viewmodel.scope.viewModelScope
 
 internal val SearchModule: Module = module {
-    viewModel { ArtworksViewModel(ArtworksViewState.Initial()) }
+    viewModel { ArtworksViewModel(ArtworksViewState.Initial(), get()) }
 
     viewModelScope {
         scoped { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)

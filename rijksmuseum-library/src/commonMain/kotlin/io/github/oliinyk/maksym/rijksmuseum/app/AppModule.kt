@@ -10,6 +10,7 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
+import io.github.xlopec.tea.core.ShareOptions
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
@@ -21,6 +22,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -35,6 +37,7 @@ internal fun AppModule(
     single { HttpClient(LogLevel.ALL, engine) }
     single { Navigator(backStack, get(named<Artwork>())) }
     single(named<Artwork>()) { ValueHolder<Artwork>() }
+    single { ShareOptions(SharingStarted.Lazily, 1u) }
     single { RijksmuseumApiImpl(get()) }.bind(RijksmuseumApi::class)
 }
 

@@ -11,12 +11,12 @@ import io.github.xlopec.tea.core.sideEffect
 import io.github.xlopec.tea.core.toStatesComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.withContext
 import org.koin.viewmodel.scope.ScopeViewModel
 
 internal class ArtworksViewModel(
-    initializer: Initializer<ArtworksViewState, ArtworksCommand>
+    initializer: Initializer<ArtworksViewState, ArtworksCommand>,
+    shareOptions: ShareOptions,
 ) : ScopeViewModel() {
 
     private val searchUseCase: SearchUseCase by scope.inject()
@@ -37,7 +37,7 @@ internal class ArtworksViewModel(
             }
         },
         scope = viewModelScope,
-        shareOptions = ShareOptions(SharingStarted.Lazily, 1u)
+        shareOptions = shareOptions,
     ).toStatesComponent()
 
     operator fun invoke(message: Flow<Message>): Flow<ArtworksViewState> = component(message)
