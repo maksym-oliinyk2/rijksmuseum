@@ -113,7 +113,9 @@ internal fun ArtworksContent(
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(ArtworksScrollContainerTag),
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
