@@ -52,7 +52,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
-internal const val ContentTag = "Artwork details content"
+internal const val ArtworkDetailsContentTag = "Artwork details content"
 
 private val TopBarImageHeight = 300.dp
 
@@ -153,7 +153,7 @@ private fun ArtworkDetails(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .testTag(ContentTag),
+            .testTag(ArtworkDetailsContentTag),
         contentPadding = contentPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal)
     ) {
@@ -217,7 +217,7 @@ private fun ArtworkDetailsContentPreview() {
                                 descriptions = NonEmptyList.of(
                                     Description(
                                         "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
-                                                "known as the ‘Night Watch’"
+                                            "known as the ‘Night Watch’"
                                     )
                                 )
                             )

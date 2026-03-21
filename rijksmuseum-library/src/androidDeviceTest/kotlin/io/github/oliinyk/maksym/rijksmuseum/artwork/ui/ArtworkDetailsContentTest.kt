@@ -6,8 +6,8 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContent
+import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContentTag
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsViewState
-import io.github.oliinyk.maksym.rijksmuseum.artwork.ContentTag
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
@@ -17,6 +17,9 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
 import kotlin.test.Test
 
+// This is actually a multiplatform test, but it's not possible to run it
+// reliable because of https://slack-chats.kotlinlang.org/t/18784429/topic
+// Once the issue fixed this class can be moved to the commonTest source set
 class ArtworkDetailsContentTest {
 
     private val testUrl = UrlFrom("https://example.com/1")
@@ -44,7 +47,7 @@ class ArtworkDetailsContentTest {
         }
 
         onNodeWithTag(ProgressIndicatorTag).assertIsDisplayed()
-        onNodeWithTag(ContentTag).assertDoesNotExist()
+        onNodeWithTag(ArtworkDetailsContentTag).assertDoesNotExist()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -63,7 +66,7 @@ class ArtworkDetailsContentTest {
             )
         }
 
-        onNodeWithTag(ContentTag).assertIsDisplayed()
+        onNodeWithTag(ArtworkDetailsContentTag).assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTestApi::class)

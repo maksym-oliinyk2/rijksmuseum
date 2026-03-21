@@ -61,6 +61,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
+internal const val ArtworksScrollContainerTag = "Scroll container"
 private val CardImageHeight = 200.dp
 
 // todo document - more than 4 action handler lambdas -> use message handler

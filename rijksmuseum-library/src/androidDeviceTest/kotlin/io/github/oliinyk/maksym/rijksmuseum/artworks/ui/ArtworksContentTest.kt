@@ -1,7 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -49,7 +48,7 @@ class ArtworksContentTest {
         }
 
         artworks.forEach { artwork ->
-            onNode(hasScrollAction()).performScrollToNode(hasTestTag(artwork.title.value))
+            onNodeWithTag(ArtworksScrollContainerTag).performScrollToNode(hasTestTag(artwork.title.value))
             onNodeWithTag(artwork.title.value).assertExists()
         }
     }
