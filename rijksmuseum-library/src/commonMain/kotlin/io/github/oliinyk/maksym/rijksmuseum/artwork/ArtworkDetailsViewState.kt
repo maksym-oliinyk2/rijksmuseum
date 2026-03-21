@@ -10,6 +10,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.toException
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toIdle
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toLoading
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toRefreshing
+import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.Update
 import io.github.xlopec.tea.core.command
 import io.github.xlopec.tea.core.noCommand
@@ -28,7 +29,11 @@ internal sealed interface Message {
 internal data class ArtworkDetailsViewState(
     val artworkId: Url,
     val artwork: Loadable<Artwork?> = Loadable.loadingSingle(),
-)
+) {
+    companion object {
+        fun Initial(id: Url) = Initializer(ArtworkDetailsViewState(id), LoadCommand(id))
+    }
+}
 
 @JvmInline
 internal value class LoadCommand(

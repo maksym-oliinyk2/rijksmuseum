@@ -12,14 +12,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import org.koin.viewmodel.scope.ScopeViewModel
 
 internal class ArtworkDetailsViewModel(
-    key: ArtworkDetailsDestination
+    key: ArtworkDetailsDestination,
+    initializer: Initializer<ArtworkDetailsViewState, LoadCommand>
 ) : ScopeViewModel() {
 
     private val getArtworkUseCase: GetArtworkUseCase by scope.inject()
-
     private val component = Component<Message, ArtworkDetailsViewState, LoadCommand>(
-        // todo inject initializer, and move initialization logic to ArtworkDetailsViewState.Companion
-        initializer = Initializer(ArtworkDetailsViewState(key.id), LoadCommand(key.id)),
+        initializer = initializer,
         updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->
             snapshot.commands.forEach { _ ->

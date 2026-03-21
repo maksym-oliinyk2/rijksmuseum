@@ -3,7 +3,6 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 import androidx.lifecycle.viewModelScope
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksCommand.LoadCommand
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
 import io.github.xlopec.tea.core.Component
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
@@ -16,14 +15,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.withContext
 import org.koin.viewmodel.scope.ScopeViewModel
 
-internal class ArtworksViewModel : ScopeViewModel() {
+internal class ArtworksViewModel(
+    initializer: Initializer<ArtworksViewState, ArtworksCommand>
+) : ScopeViewModel() {
 
     private val searchUseCase: SearchUseCase by scope.inject()
     private val navigator: Navigator by scope.inject()
-
     private val component = Component<Message, ArtworksViewState, ArtworksCommand>(
-        // todo inject initializer, and move initialization logic to ArtworkDetailsViewState.Companion
-        initializer = Initializer(ArtworksViewState(), LoadCommand(Paging.FirstPage)),
+        initializer = initializer,
         updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->
             snapshot.commands.forEach { command ->

@@ -23,7 +23,6 @@ import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
@@ -36,7 +35,7 @@ internal fun AppModule(
     single { HttpClient(LogLevel.ALL, engine) }
     single { Navigator(backStack, get(named<Artwork>())) }
     single(named<Artwork>()) { ValueHolder<Artwork>() }
-    singleOf(::RijksmuseumApiImpl).bind(RijksmuseumApi::class)
+    single { RijksmuseumApiImpl(get()) }.bind(RijksmuseumApi::class)
 }
 
 private fun HttpClient(

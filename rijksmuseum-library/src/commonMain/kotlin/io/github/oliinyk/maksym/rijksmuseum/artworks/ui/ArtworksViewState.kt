@@ -15,6 +15,7 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.toIdle
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toLoading
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toLoadingNextPage
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toRefreshing
+import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.Update
 import io.github.xlopec.tea.core.command
 import io.github.xlopec.tea.core.noCommand
@@ -38,7 +39,11 @@ internal sealed interface Message {
 
 internal data class ArtworksViewState(
     val artworks: Paginateable<Artwork> = Paginateable.loadingList(),
-)
+) {
+    companion object {
+        fun Initial() = Initializer(ArtworksViewState(), LoadCommand(Paging.FirstPage))
+    }
+}
 
 internal sealed interface ArtworksCommand {
 
