@@ -24,11 +24,13 @@ import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.nav.Navigator
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.flow.SharingStarted
+import org.koin.core.context.stopKoin
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
+import kotlin.test.AfterTest
 import kotlin.test.Test
 
 class AppTest {
@@ -36,6 +38,11 @@ class AppTest {
     private companion object {
         const val ArtworksCount = 20
         const val TenthIndex = 9
+    }
+
+    @AfterTest
+    fun tearDown() {
+        stopKoin()
     }
 
     @Test
