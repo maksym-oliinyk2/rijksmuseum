@@ -1,5 +1,10 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +36,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -188,7 +196,30 @@ private fun LazyListScope.paginateableContent(
                 onRetry = if (paginateable.data.isEmpty()) onReload else onLoadNext
             )
 
-        is Paginateable.Loading -> ProgressIndicator(modifier = Modifier.fillParentMaxSize())
+        is Paginateable.Loading -> {
+            val infiniteTransition = rememberInfiniteTransition()
+            val alpha by infiniteTransition.animateFloat(
+                initialValue = 0f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(
+                    animation = keyframes {
+                        durationMillis = 1000
+                        0.7f at 500
+                    },
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
+
+            items(10) {
+                ArtworkCard(
+                    modifier = Modifier.alpha(alpha),
+                    painter = ColorPainter(Color.Gray),
+                    contentDescription = null,
+                    onClick = {}
+                )
+            }
+
+        }
         is Paginateable.LoadingNext -> ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
         is Paginateable.Idle, is Paginateable.Refreshing -> {
             if (paginateable.data.isEmpty()) {
@@ -204,11 +235,12 @@ private fun LazyListScope.paginateableContent(
 
 @Composable
 private fun ArtworkCard(
+    modifier: Modifier = Modifier,
     artwork: Artwork,
     onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier.semantics(mergeDescendants = true) {
+        modifier = modifier.semantics(mergeDescendants = true) {
             testTag = artwork.title.value
         },
         elevation = MaterialTheme.paddings.small,
