@@ -20,6 +20,8 @@ import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.SearchReposito
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.Dispatchers
@@ -238,7 +240,7 @@ class ArtworksViewModelTest : KoinTest {
 
     @Test
     fun test_view_model_handles_data_loaded_error() = runTest {
-        val error = AppException("Error")
+        val error = AppException(Res.string.exception_unknown)
 
         declare {
             val api = TestRijksmuseumApi(

@@ -12,6 +12,8 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.toStringValue
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -32,7 +34,7 @@ internal class RijksmuseumApiImpl(
                     next = response.next?.id,
                     ids = response.items.map { it.id },
                 )
-            }
+            }.mapLeft { AppException(Res.string.exception_unknown, it) }
         }
 
     override suspend fun fetchArtwork(url: Url): Either<AppException, Artwork> =
@@ -46,7 +48,7 @@ internal class RijksmuseumApiImpl(
                     primaryImage = fetchPrimaryImage(response),
                     linguisticObjects = response.linguisticObjects,
                 )
-            }
+            }.mapLeft { AppException(Res.string.exception_unknown, it) }
         }
 
     private suspend fun fetchPrimaryImage(response: HumanMadeObjectResponse): Url? {

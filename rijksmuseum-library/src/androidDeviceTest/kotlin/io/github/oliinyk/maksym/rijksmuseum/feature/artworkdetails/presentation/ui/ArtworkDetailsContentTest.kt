@@ -14,6 +14,8 @@ import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsExceptionIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsRefreshIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsViewState
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import kotlin.test.Test
 
 // This is actually a multiplatform test, but it's not possible to run it
@@ -65,7 +67,7 @@ class ArtworkDetailsContentTest {
 
     @Test
     fun when_refresh_triggers_exception_then_exception_indicator_displayed() = runComposeUiTest {
-        val exception = AppException("Network error")
+        val exception = AppException(Res.string.exception_unknown)
         val state = ArtworkDetailsViewState(
             loadable = Loadable.idleSingle(testArtwork).toException(exception)
         )

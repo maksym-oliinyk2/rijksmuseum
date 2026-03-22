@@ -2,6 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation
 
 import arrow.core.left
 import arrow.core.right
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
@@ -9,6 +10,8 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -128,7 +131,7 @@ class ArtworksViewStateTest {
         val initialState = ArtworksViewState(
             artworks = Paginateable.loadingList()
         )
-        val exception = RuntimeException("Test Exception")
+        val exception = AppException(Res.string.exception_unknown)
         val (updatedState, commands) = initialState.update(Message.OnDataLoaded(exception.left()))
 
         assertEquals(Paginateable(data = listOf(), state = Paginateable.Exception(exception)), updatedState.artworks)

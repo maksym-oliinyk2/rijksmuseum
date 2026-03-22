@@ -9,6 +9,8 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.Command.LoadCommand
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.Command.OnBack
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -72,7 +74,7 @@ class ArtworkDetailsViewStateTest {
         val initialState = ArtworkDetailsViewState(
             loadable = Loadable(testArtwork, Loadable.Loading)
         )
-        val exception = AppException("Test Exception")
+        val exception = AppException(Res.string.exception_unknown)
         val (updatedState, commands) = initialState.update(Message.OnDataLoaded(exception.left()))
 
         assertEquals(Loadable(testArtwork, Loadable.Exception(exception)), updatedState.loadable)

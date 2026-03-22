@@ -16,6 +16,8 @@ import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.data.ArtworkR
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.ArtworkRepository
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.GetArtworkUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -169,7 +171,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
 
             assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
 
-            val error = AppException("Error")
+            val error = AppException(Res.string.exception_unknown)
             messages.emit(Message.OnDataLoaded(error.left()))
 
             assertEquals(
