@@ -1,19 +1,19 @@
-package io.github.oliinyk.maksym.rijksmuseum.artwork.ui
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ui
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContent
-import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContentTag
-import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsRefreshIndicatorTag
-import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsViewState
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessageTag
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContent
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContentTag
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsRefreshIndicatorTag
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsViewState
 import kotlin.test.Test
 
 // This is actually a multiplatform test, but it's not possible to run it

@@ -1,9 +1,11 @@
-package io.github.oliinyk.maksym.rijksmuseum.artwork.domain
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain
 
 import arrow.core.NonEmptyList
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.ArtworkSerializer
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.ArtworkSerializer
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals

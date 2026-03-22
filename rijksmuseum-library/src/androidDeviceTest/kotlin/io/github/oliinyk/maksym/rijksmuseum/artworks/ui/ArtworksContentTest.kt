@@ -1,17 +1,36 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessageTag
-import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicatorTag
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicatorTag
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksContent
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksScrollContainerTag
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewState
+import kotlin.test.Test
+
+..ui
+
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.runComposeUiTest
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicatorTag
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
 import kotlin.test.Test
 
 // This is actually a multiplatform test, but it's not possible to run it

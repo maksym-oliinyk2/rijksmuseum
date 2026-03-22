@@ -1,11 +1,20 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.list
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
 import arrow.core.Either
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.domain.Url
+import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
+
+..list
+
+import arrow.core.Either
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
+import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 
 internal class TestRijksmuseumApi(
     private val artworksDetails: Map<Url, Either<AppException, Artwork>>,

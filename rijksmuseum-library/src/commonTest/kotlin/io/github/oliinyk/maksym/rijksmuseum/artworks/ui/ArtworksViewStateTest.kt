@@ -1,14 +1,30 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
 import arrow.core.left
 import arrow.core.right
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksCommand.LoadCommand
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.Page
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewState
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+
+..ui
+
+import arrow.core.left
+import arrow.core.right
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

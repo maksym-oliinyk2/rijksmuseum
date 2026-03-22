@@ -2,11 +2,12 @@ package io.github.oliinyk.maksym.rijksmuseum.artwork
 
 import arrow.core.left
 import arrow.core.right
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsViewState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

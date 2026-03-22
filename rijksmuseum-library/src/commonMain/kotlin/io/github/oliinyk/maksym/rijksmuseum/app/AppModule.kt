@@ -3,11 +3,11 @@ package io.github.oliinyk.maksym.rijksmuseum.app
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
-import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
-import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
-import io.github.oliinyk.maksym.rijksmuseum.ui.nav.Navigator
+import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApiImpl
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.DetailsModule
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.SearchModule
 import io.github.xlopec.tea.core.ShareOptions
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig

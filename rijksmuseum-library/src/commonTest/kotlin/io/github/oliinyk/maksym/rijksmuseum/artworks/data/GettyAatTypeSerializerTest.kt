@@ -1,4 +1,9 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.data
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
+
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatTypeSerializer
+
+..data
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
