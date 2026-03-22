@@ -1,8 +1,8 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworks
 
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.SearchRepositoryImpl
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchRepository
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.ArtworksRepositoryImpl
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.ArtworksRepository
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.ArtworksUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewModel
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewState
 import org.koin.core.module.Module
@@ -15,7 +15,7 @@ internal val SearchModule: Module = module {
     viewModel { ArtworksViewModel(ArtworksViewState.Initial(), get()) }
 
     viewModelScope {
-        scoped { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)
-        scoped { SearchUseCase(get()) }
+        scoped { ArtworksRepositoryImpl(get()) }.bind(ArtworksRepository::class)
+        scoped { ArtworksUseCase(get()) }
     }
 }

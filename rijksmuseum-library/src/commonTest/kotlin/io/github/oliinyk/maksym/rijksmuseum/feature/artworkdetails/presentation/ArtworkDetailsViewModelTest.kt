@@ -14,7 +14,7 @@ import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.data.ArtworkRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.ArtworkRepository
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.GetArtworkUseCase
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.ArtworkUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
@@ -60,7 +60,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
             )
         }
         single<ArtworkRepository> { ArtworkRepositoryImpl(get()) }
-        single { GetArtworkUseCase(get()) }
+        single { ArtworkUseCase(get()) }
         single { ShareOptions(SharingStarted.Lazily, 1u) }
         factory { params ->
             val dest = params.get<ArtworkDetailsDestination>()

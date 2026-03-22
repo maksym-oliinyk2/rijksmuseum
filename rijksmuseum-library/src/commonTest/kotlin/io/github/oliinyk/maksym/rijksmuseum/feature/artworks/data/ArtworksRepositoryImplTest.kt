@@ -20,7 +20,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertSame
 
-class SearchRepositoryImplTest {
+class ArtworksRepositoryImplTest {
 
     @Test
     fun when_fetch_cache_empty_then_api_call() = runTest {
@@ -77,7 +77,7 @@ class SearchRepositoryImplTest {
                 ).right()
             )
         )
-        val repository = SearchRepositoryImpl(api)
+        val repository = ArtworksRepositoryImpl(api)
 
         // Execute
         val paging = Paging(currentSize = 0, resultsPerPage = 2)
@@ -121,7 +121,7 @@ class SearchRepositoryImplTest {
                 ).right()
             )
         )
-        val repository = SearchRepositoryImpl(api)
+        val repository = ArtworksRepositoryImpl(api)
 
         // Execute: Ask for 2 items starting from index 0
         val paging = Paging(currentSize = 0, resultsPerPage = 2)
@@ -150,7 +150,7 @@ class SearchRepositoryImplTest {
                 ).right()
             )
         )
-        val repository = SearchRepositoryImpl(
+        val repository = ArtworksRepositoryImpl(
             api = api,
             cachedIds = listOf(item1Id),
             startUrl = null
@@ -221,7 +221,7 @@ class SearchRepositoryImplTest {
                     ).right()
                 )
             )
-            val repository = SearchRepositoryImpl(api)
+            val repository = ArtworksRepositoryImpl(api)
 
             // Execute: currentSize = 0, resultsPerPage = 2.
             // cache has only 1 item. Need to fetch next page.
@@ -252,7 +252,7 @@ class SearchRepositoryImplTest {
                 ).right()
             )
         )
-        val repository = SearchRepositoryImpl(
+        val repository = ArtworksRepositoryImpl(
             api = api,
             cachedIds = listOf(item1Id),
             startUrl = null
@@ -311,7 +311,7 @@ class SearchRepositoryImplTest {
                 ).right()
             )
         )
-        val repository = SearchRepositoryImpl(api)
+        val repository = ArtworksRepositoryImpl(api)
 
         // Execute: resultsPerPage = 3. Cache only has 1 initially. Need to fetch page-2 and page-3.
         val paging = Paging(currentSize = 0, resultsPerPage = 3)
@@ -340,7 +340,7 @@ class SearchRepositoryImplTest {
                 ).right()
             )
         )
-        val repository = SearchRepositoryImpl(api)
+        val repository = ArtworksRepositoryImpl(api)
 
         // Execute
         val paging = Paging(currentSize = 0, resultsPerPage = 1)
@@ -358,7 +358,7 @@ class SearchRepositoryImplTest {
             artworksDetails = emptyMap(),
             searchResponses = mapOf(InitialPageUrl to exception.left())
         )
-        val repository = SearchRepositoryImpl(api)
+        val repository = ArtworksRepositoryImpl(api)
 
         // Execute
         val paging = Paging(currentSize = 0, resultsPerPage = 1)
@@ -393,7 +393,7 @@ class SearchRepositoryImplTest {
                 ).right()
             )
         )
-        val repository = SearchRepositoryImpl(
+        val repository = ArtworksRepositoryImpl(
             api = api,
             cachedIds = listOf(item1Id),
             startUrl = null

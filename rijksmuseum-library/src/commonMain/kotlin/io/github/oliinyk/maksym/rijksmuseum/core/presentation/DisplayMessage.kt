@@ -64,19 +64,6 @@ private fun DisplayMessagePreview() {
     RijksmuseumTheme {
         DisplayMessage(
             modifier = Modifier,
-            message = "Something went wrong. Please try again later.",
-            onRetry = {}
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-@Suppress("UnusedPrivateMember")
-private fun DisplayMessageWithIconPreview() {
-    RijksmuseumTheme {
-        DisplayMessage(
-            modifier = Modifier,
             imageVector = Icons.Default.Error,
             message = "Something went wrong. Please try again later.",
             onRetry = {}

@@ -10,15 +10,26 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchRepository
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.ArtworksRepository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-internal class SearchRepositoryImpl(
+/**
+ * [ArtworksRepository] implementation that fetches artwork IDs page-by-page from [RijksmuseumApi]
+ * and resolves each ID to a full [io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork] in parallel.
+ *
+ * Artwork IDs are cached in memory so that subsequent pages do not re-fetch already-seen IDs.
+ * A [kotlinx.coroutines.sync.Mutex] ensures only one coroutine at a time can mutate the cache.
+ *
+ * @param api The low-level API client used to fetch IDs and artwork details.
+ * @param cachedIds Pre-populated list of artwork IDs (used in tests; defaults to empty).
+ * @param startUrl The URL of the first page to fetch (defaults to [BuildConfig.InitialPageUrl]).
+ */
+internal class ArtworksRepositoryImpl(
     private val api: RijksmuseumApi,
     cachedIds: List<Url> = emptyList(),
     startUrl: Url? = BuildConfig.InitialPageUrl,
-) : SearchRepository {
+) : ArtworksRepository {
     // only one coroutine at a time can access the cache
     private val cachedIds = cachedIds.toMutableList()
     private var nextPage: Url? = startUrl

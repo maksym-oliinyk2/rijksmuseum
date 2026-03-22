@@ -83,7 +83,6 @@ private const val ShimmerDurationMillis = 1000
 private const val ShimmerPeakAlpha = 0.7f
 private const val ShimmerPeakAtMillis = 500
 
-// todo document - more than 4 action handler lambdas -> use message handler
 @Composable
 internal fun ArtworksScreen(
     modifier: Modifier = Modifier,
