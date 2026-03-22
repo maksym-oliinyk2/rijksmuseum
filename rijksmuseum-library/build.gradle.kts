@@ -158,8 +158,8 @@ buildConfig {
     val debugEnabled = project.findProperty("forceDebug")?.toString()
         ?.toBoolean() == true || libraryVersion.isSnapshot
 
-    logger.log(LogLevel.LIFECYCLE, "DEBUG enabled: $debugEnabled")
-    buildConfigField("kotlin.Boolean", "DEBUG", "$debugEnabled")
+    logger.log(LogLevel.LIFECYCLE, "Debug enabled: $debugEnabled")
+    buildConfigField("kotlin.Boolean", "Debug", "$debugEnabled")
     buildConfigField("kotlin.Long", "RequestTimeoutMs", "5000L")
     buildConfigField("kotlin.Long", "ConnectTimeoutMs", "5000L")
     buildConfigField("kotlin.Long", "SocketTimeoutMs", "7000L")

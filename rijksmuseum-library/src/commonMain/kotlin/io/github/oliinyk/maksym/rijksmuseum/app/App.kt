@@ -38,7 +38,7 @@ private val SavedStateConfig = SavedStateConfiguration {
 
 @Composable
 internal fun App(
-    logLevel: Level = if (BuildConfig.DEBUG) Level.DEBUG else Level.NONE,
+    logLevel: Level = if (BuildConfig.Debug) Level.DEBUG else Level.NONE,
     configurationProvider: (NavBackStack<NavKey>) -> KoinConfiguration,
 ) {
     // there won't be a memory leak here to pass navBackStack to koin configuration. The koin

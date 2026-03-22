@@ -25,8 +25,8 @@ internal fun AppModule(
     engine: HttpClientEngineFactory<HttpClientEngineConfig>,
 ): Module = module {
     includes(SearchModule, DetailsModule)
-    single { if (BuildConfig.DEBUG) Logger.SIMPLE else Logger.EMPTY }
-    single { if (BuildConfig.DEBUG) LogLevel.ALL else LogLevel.NONE }
+    single { if (BuildConfig.Debug) Logger.SIMPLE else Logger.EMPTY }
+    single { if (BuildConfig.Debug) LogLevel.ALL else LogLevel.NONE }
     single { HttpClient(get(), get(), engine) }
     single { Navigator(backStack) }
     single { ShareOptions(SharingStarted.Lazily, 1u) }
