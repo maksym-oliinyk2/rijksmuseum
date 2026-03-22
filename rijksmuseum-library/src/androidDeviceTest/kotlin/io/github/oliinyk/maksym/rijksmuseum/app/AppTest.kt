@@ -10,39 +10,23 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
+import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.DetailsModule
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContentTag
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.DetailsModule
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.SearchModule
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksScrollContainerTag
-import io.github.xlopec.tea.core.ShareOptions
-import kotlinx.coroutines.flow.SharingStarted
-import org.koin.core.module.Module
-import org.koin.dsl.KoinConfiguration
-import org.koin.dsl.module
-import org.koin.plugin.module.dsl.bind
-import kotlin.test.Test
-
-..SearchModule
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation..list.TestRijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksScrollContainerTag
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.flow.SharingStarted
 import org.koin.core.context.stopKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
-import org.koin.plugin.module.dsl.bind
 import kotlin.test.AfterTest
 import kotlin.test.Test
 
@@ -63,7 +47,7 @@ class AppTest {
         val artworks = List(ArtworksCount) { i ->
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
-                title = Title("Artwork $i"),
+                title = NonEmptyString("Artwork $i"),
                 primaryImage = UrlFrom("https://example.com/$i.jpg"),
                 linguisticObjects = listOf()
             )
@@ -105,6 +89,6 @@ private fun TestAppModule(
     backStack: NavBackStack<NavKey>
 ): Module = module {
     single { ShareOptions(SharingStarted.Lazily, 1u) }
-    single { testApi }.bind(RijksmuseumApi::class)
+    single<RijksmuseumApi> { testApi }
     single { Navigator(backStack) }
 }

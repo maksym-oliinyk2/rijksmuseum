@@ -1,19 +1,10 @@
-package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data
 
 import arrow.core.Either
+import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
-
-..list
-
-import arrow.core.Either
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 
 internal class TestRijksmuseumApi(

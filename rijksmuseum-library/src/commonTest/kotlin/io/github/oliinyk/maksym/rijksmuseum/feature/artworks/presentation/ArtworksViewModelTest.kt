@@ -1,25 +1,25 @@
-package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation
 
 import androidx.navigation3.runtime.NavKey
 import app.cash.turbine.turbineScope
 import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
+import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toLoading
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchRepositoryImpl
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsDestination
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.SearchRepositoryImpl
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewModel
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewState
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.Dispatchers
@@ -43,20 +43,12 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-..ui
-
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchRepositoryImpl
-
-..list.TestRijksmuseumApi
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class ArtworksViewModelTest : KoinTest {
 
     private val artwork = Artwork(
         url = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/1"),
-        title = Title("Title 1"),
+        title = NonEmptyString("Title 1"),
         primaryImage = null,
         linguisticObjects = listOf()
     )

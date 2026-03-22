@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation
 
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
@@ -7,23 +7,13 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksContent
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksScrollContainerTag
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewState
 import kotlin.test.Test
 
-..ui
-
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-
-// This is actually a multiplatform test, but it's not possible to run it
-// reliable because of https://slack-chats.kotlinlang.org/t/18784429/topic
-// Once the issue fixed this class can be moved to the commonTest source set
 class ArtworksContentTest {
 
     private companion object {
@@ -35,7 +25,7 @@ class ArtworksContentTest {
         val artworks = List(TestItemsCount) { i ->
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
-                title = Title("Artwork $i"),
+                title = NonEmptyString("Artwork $i"),
                 primaryImage = UrlFrom("https://example.com/$i.jpg"),
                 linguisticObjects = listOf()
             )

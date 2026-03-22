@@ -6,10 +6,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContent
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContentTag
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsRefreshIndicatorTag
@@ -24,7 +24,7 @@ class ArtworkDetailsContentTest {
     private val testUrl = UrlFrom("https://example.com/1")
     private val testArtwork = Artwork(
         url = testUrl,
-        title = Title("Night Watch"),
+        title = NonEmptyString("Night Watch"),
         primaryImage = UrlFrom("https://example.com/1.jpg"),
         linguisticObjects = listOf()
     )

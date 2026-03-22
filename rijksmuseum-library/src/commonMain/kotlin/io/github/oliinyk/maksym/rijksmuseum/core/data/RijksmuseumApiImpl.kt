@@ -1,6 +1,10 @@
 package io.github.oliinyk.maksym.rijksmuseum.core.data
 
 import arrow.core.Either
+import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.ArtworksResponse
+import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.DigitalObject
+import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.DigitalObjectDetails
+import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.VisualItemDetails
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
@@ -19,7 +23,7 @@ internal class RijksmuseumApiImpl(
     override suspend fun fetchArtworkIds(page: Url): Either<AppException, PaginatedIds> =
         withContext(dispatcher) {
             Either.catch {
-                val response = client.fetch<HumanMadeObjectResponse.ArtworksResponse>(page)
+                val response = client.fetch<ArtworksResponse>(page)
 
                 PaginatedIds(
                     next = response.next?.id,
@@ -44,17 +48,17 @@ internal class RijksmuseumApiImpl(
 
     private suspend fun fetchPrimaryImage(response: HumanMadeObjectResponse): Url? {
         val digitalObjects = response.shows
-            .firstNotNullOfOrNull { client.fetch<HumanMadeObjectResponse.VisualItemDetails>(it.id).digitallyShownBy }
+            .firstNotNullOfOrNull { client.fetch<VisualItemDetails>(it.id).digitallyShownBy }
 
         val digitalObjectDetails = digitalObjects?.firstNotNullOfOrNull { digitalObjectDetails(it) }
 
         return digitalObjectDetails?.accessPoint?.firstOrNull()?.id
     }
 
-    private suspend fun digitalObjectDetails(digitalObjectBrief: HumanMadeObjectResponse.DigitalObject): HumanMadeObjectResponse.DigitalObjectDetails {
-        val digitalObject = client.fetch<HumanMadeObjectResponse.DigitalObject>(digitalObjectBrief.id)
+    private suspend fun digitalObjectDetails(digitalObjectBrief: DigitalObject): DigitalObjectDetails {
+        val digitalObject = client.fetch<DigitalObject>(digitalObjectBrief.id)
 
-        return client.fetch<HumanMadeObjectResponse.DigitalObjectDetails>(digitalObject.id)
+        return client.fetch<DigitalObjectDetails>(digitalObject.id)
     }
 }
 

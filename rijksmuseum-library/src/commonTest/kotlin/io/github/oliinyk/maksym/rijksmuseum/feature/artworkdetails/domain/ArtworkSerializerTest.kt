@@ -4,6 +4,7 @@ import arrow.core.NonEmptyList
 import io.github.oliinyk.maksym.rijksmuseum.core.data.ArtworkSerializer
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import kotlinx.serialization.json.Json

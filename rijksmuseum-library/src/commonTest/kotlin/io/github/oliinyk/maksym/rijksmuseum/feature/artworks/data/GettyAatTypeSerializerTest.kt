@@ -1,15 +1,7 @@
-package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data
 
 import io.github.oliinyk.maksym.rijksmuseum.core.data.GettyAatTypeSerializer
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-
-..data
-
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.test.Test

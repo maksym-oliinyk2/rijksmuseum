@@ -1,14 +1,12 @@
-package io.github.oliinyk.maksym.rijksmuseum.artwork
+package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
 import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsViewState
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.update
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -18,7 +16,7 @@ class ArtworkDetailsViewStateTest {
     private val testUrl = UrlFrom("https://example.com/1")
     private val testArtwork = Artwork(
         url = testUrl,
-        title = Title("Artwork 1"),
+        title = NonEmptyString("Artwork 1"),
         primaryImage = UrlFrom("https://example.com/1.jpg"),
         linguisticObjects = listOf()
     )

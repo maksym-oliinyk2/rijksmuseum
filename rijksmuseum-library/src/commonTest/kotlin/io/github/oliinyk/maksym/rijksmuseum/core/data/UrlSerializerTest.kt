@@ -1,5 +1,7 @@
-package io.github.oliinyk.maksym.rijksmuseum.domain
+package io.github.oliinyk.maksym.rijksmuseum.core.data
 
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.toStringValue
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.test.Test

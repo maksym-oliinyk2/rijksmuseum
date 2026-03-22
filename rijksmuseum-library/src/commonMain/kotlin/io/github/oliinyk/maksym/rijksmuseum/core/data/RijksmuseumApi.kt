@@ -16,4 +16,3 @@ internal interface RijksmuseumApi {
 
     suspend fun fetchArtwork(url: Url): Either<AppException, Artwork>
 }
-

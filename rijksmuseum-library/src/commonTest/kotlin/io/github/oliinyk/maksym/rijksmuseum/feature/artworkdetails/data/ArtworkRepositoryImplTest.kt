@@ -2,15 +2,9 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.data
 
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.TestRijksmuseumApi
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-
-..list.TestRijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,7 +14,7 @@ class ArtworkRepositoryImplTest {
     private val testUrl = UrlFrom("https://example.com/1")
     private val testArtwork = Artwork(
         url = testUrl,
-        title = Title("Artwork 1"),
+        title = NonEmptyString("Artwork 1"),
         primaryImage = UrlFrom("https://example.com/1.jpg"),
         linguisticObjects = listOf()
     )
