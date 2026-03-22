@@ -27,9 +27,7 @@ UI via a `UIViewController` returned by `App_appleKt.appController()`. Has no bu
 
 The core Kotlin Multiplatform library shared between Android and iOS. Contains:
 
-- **`app/`** — App-level wiring: Koin DI module, HTTP client setup, navigation, and the `MessageHandler` pattern.
-  > **MessageHandler pattern**: when a composable needs more than 4 action handler lambdas, consolidate them into a single
-  `onMessage: (Message) -> Unit` lambda backed by a `MutableSharedFlow<Message>`. This keeps composable signatures clean and testable.
+- **`app/`** — App-level wiring: Koin DI module, HTTP client setup, navigation
 - **`core/data/`** — Ktor-based `RijksmuseumApi` and JSON DTOs/serializers for the Rijksmuseum REST API.
 - **`core/domain/`** — Domain models (`Artwork`, `Page`, `Url`, `GettyAatType`, `AppException`).
 - **`core/presentation/`** — Shared UI utilities: `Loadable`/`Paginateable` state wrappers, `Navigator`, theme (colors, typography,
