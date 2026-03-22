@@ -1,8 +1,8 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
 import androidx.navigation3.runtime.NavKey
+import io.github.oliinyk.maksym.rijksmuseum.core.data.ArtworkSerializer
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.ArtworkSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
 

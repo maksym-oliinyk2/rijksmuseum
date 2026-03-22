@@ -3,6 +3,7 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
+import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
@@ -10,7 +11,6 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchRepositoryImpl
 import kotlinx.coroutines.test.runTest
@@ -18,28 +18,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertSame
-import kotlin.to
 
 ..list
 
-import arrow.core.left
-import arrow.core.right
-import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchRepositoryImpl
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.assertSame
 
 class SearchRepositoryImplTest {
 

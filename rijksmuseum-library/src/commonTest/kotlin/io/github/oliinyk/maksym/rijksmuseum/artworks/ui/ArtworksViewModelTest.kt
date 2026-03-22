@@ -1,6 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import app.cash.turbine.turbineScope
 import arrow.core.left
@@ -8,11 +7,11 @@ import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.toLoading
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.toRefreshing
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toLoading
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
@@ -43,52 +42,14 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.to
 
 ..ui
 
-import androidx.navigation3.runtime.NavKey
-import app.cash.turbine.turbineScope
-import arrow.core.left
-import arrow.core.right
-import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsDestination
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchRepositoryImpl
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchUseCase
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation..list.TestRijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.toLoading
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.toRefreshing
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
-import io.github.xlopec.tea.core.Initializer
-import io.github.xlopec.tea.core.ShareOptions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
-import org.koin.dsl.module
-import org.koin.test.KoinTest
-import org.koin.test.get
-import org.koin.test.mock.declare
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
+
+..list.TestRijksmuseumApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ArtworksViewModelTest : KoinTest {

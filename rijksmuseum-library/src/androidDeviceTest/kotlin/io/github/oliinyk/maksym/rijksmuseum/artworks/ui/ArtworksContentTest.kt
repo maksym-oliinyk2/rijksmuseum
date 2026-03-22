@@ -7,10 +7,10 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicatorTag
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksContent
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksScrollContainerTag
@@ -19,19 +19,7 @@ import kotlin.test.Test
 
 ..ui
 
-import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performScrollToNode
-import androidx.compose.ui.test.runComposeUiTest
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicatorTag
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paginateable
-import kotlin.test.Test
 
 // This is actually a multiplatform test, but it's not possible to run it
 // reliable because of https://slack-chats.kotlinlang.org/t/18784429/topic

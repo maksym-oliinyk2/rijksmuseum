@@ -1,16 +1,14 @@
-package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data
+package io.github.oliinyk.maksym.rijksmuseum.core.data
 
 import arrow.core.NonEmptyList
 import arrow.core.toNonEmptyListOrNull
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatTypeSerializer
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer

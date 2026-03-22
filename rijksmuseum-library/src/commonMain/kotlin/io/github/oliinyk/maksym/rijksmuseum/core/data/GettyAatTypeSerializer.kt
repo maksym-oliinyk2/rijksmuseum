@@ -1,5 +1,7 @@
-package io.github.oliinyk.maksym.rijksmuseum.core.domain
+package io.github.oliinyk.maksym.rijksmuseum.core.data
 
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -13,7 +15,7 @@ internal object GettyAatTypeSerializer : KSerializer<GettyAatType?> {
 
     override fun deserialize(decoder: Decoder): GettyAatType? {
         val id = decoder.decodeString()
-        return GettyAatType.fromId(UrlFrom(id))
+        return GettyAatType.Companion.fromId(UrlFrom(id))
     }
 
     @OptIn(ExperimentalSerializationApi::class)

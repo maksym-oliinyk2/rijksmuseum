@@ -3,12 +3,12 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 import arrow.core.Either
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.isRefreshable
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.toException
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.toIdle
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.toRefreshing
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toIdle
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toRefreshing
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.Update
 import io.github.xlopec.tea.core.command

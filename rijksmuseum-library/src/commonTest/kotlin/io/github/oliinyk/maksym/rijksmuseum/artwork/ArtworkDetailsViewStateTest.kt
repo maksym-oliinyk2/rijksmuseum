@@ -4,10 +4,11 @@ import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsViewState
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.update
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

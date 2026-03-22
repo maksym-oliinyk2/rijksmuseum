@@ -34,14 +34,14 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.displayMessage
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.isRefreshable
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.contentPaddingValues
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.paddings
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.toImageRequest

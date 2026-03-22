@@ -1,6 +1,8 @@
-package io.github.oliinyk.maksym.rijksmuseum.core.domain
+package io.github.oliinyk.maksym.rijksmuseum.core.presentation.model
 
 import androidx.compose.runtime.Immutable
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
 import kotlin.jvm.JvmInline
 
 @Immutable
