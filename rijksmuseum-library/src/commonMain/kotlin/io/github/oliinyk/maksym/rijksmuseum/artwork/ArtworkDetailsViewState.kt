@@ -8,7 +8,6 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toException
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toIdle
-import io.github.oliinyk.maksym.rijksmuseum.ui.model.toLoading
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.toRefreshing
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.Update
@@ -27,11 +26,11 @@ internal sealed interface Message {
 }
 
 internal data class ArtworkDetailsViewState(
-    val artworkId: Url,
-    val artwork: Loadable<Artwork?> = Loadable.loadingSingle(),
+    val artwork: Loadable<Artwork>,
 ) {
     companion object {
-        fun Initial(id: Url) = Initializer(ArtworkDetailsViewState(id), LoadCommand(id))
+        fun Initial(artwork: Artwork): Initializer<ArtworkDetailsViewState, LoadCommand> =
+            Initializer(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), emptySet<LoadCommand>())
     }
 }
 
@@ -49,14 +48,14 @@ internal fun ArtworkDetailsViewState.update(message: Message): Update<ArtworkDet
 }
 
 private fun ArtworkDetailsViewState.onReload(): Update<ArtworkDetailsViewState, LoadCommand> {
-    return copy(artwork = artwork.toLoading())
-        .command(LoadCommand(artworkId))
+    return copy(artwork = Loadable(artwork.data, Loadable.Loading))
+        .command(LoadCommand(artwork.data.url))
 }
 
 private fun ArtworkDetailsViewState.onRefresh(): Update<ArtworkDetailsViewState, LoadCommand> {
     return if (artwork.isRefreshable) {
         copy(artwork = artwork.toRefreshing())
-            .command(LoadCommand(artworkId))
+            .command(LoadCommand(artwork.data.url))
     } else {
         noCommand()
     }

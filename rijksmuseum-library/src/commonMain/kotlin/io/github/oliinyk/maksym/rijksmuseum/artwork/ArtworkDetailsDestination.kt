@@ -1,17 +1,15 @@
 package io.github.oliinyk.maksym.rijksmuseum.artwork
 
 import androidx.navigation3.runtime.NavKey
-import io.github.oliinyk.maksym.rijksmuseum.domain.Url
-import io.github.oliinyk.maksym.rijksmuseum.domain.UrlSerializer
+import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.ArtworkSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
-import kotlin.jvm.JvmInline
 
 @Serializable
-@JvmInline
-internal value class ArtworkDetailsDestination(
-    @Serializable(with = UrlSerializer::class)
-    val id: Url
+internal data class ArtworkDetailsDestination(
+    @Serializable(with = ArtworkSerializer::class)
+    val artwork: Artwork
 ) : NavKey
 
 internal fun PolymorphicModuleBuilder<NavKey>.registerArtworkNavEntry() {

@@ -13,9 +13,7 @@ import io.github.xlopec.tea.core.Snapshot
 import io.github.xlopec.tea.core.effect
 import io.github.xlopec.tea.core.sideEffect
 import io.github.xlopec.tea.core.toStatesComponent
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import org.koin.viewmodel.scope.ScopeViewModel
 
 internal class ArtworksViewModel(
@@ -46,9 +44,7 @@ internal class ArtworksViewModel(
                 }
 
                 is NavigateToDetails -> ctx sideEffect {
-                    withContext(Dispatchers.Main.immediate) {
-                        navigator.navigateToDetails(command.artwork)
-                    }
+                    navigator.navigateToDetails(command.artwork)
                 }
             }
         }

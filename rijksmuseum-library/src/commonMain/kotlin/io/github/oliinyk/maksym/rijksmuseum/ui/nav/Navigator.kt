@@ -2,12 +2,10 @@ package io.github.oliinyk.maksym.rijksmuseum.ui.nav
 
 import androidx.navigation3.runtime.NavKey
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsDestination
-import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 
 internal class Navigator(
     private val navBackStack: MutableList<NavKey>,
-    private val artworkValueHolder: ValueHolder<Artwork>,
 ) : List<NavKey> by navBackStack {
 
     fun navigateBack() {
@@ -15,7 +13,6 @@ internal class Navigator(
     }
 
     fun navigateToDetails(artwork: Artwork) {
-        artworkValueHolder.value = artwork
-        navBackStack.add(ArtworkDetailsDestination(artwork.url))
+        navBackStack.add(ArtworkDetailsDestination(artwork))
     }
 }
