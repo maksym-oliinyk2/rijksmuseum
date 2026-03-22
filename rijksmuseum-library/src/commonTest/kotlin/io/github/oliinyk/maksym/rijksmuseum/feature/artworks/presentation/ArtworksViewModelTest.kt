@@ -8,7 +8,6 @@ import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
@@ -50,7 +49,7 @@ class ArtworksViewModelTest : KoinTest {
 
     private val artwork = Artwork(
         url = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/1"),
-        title = NonEmptyString("Title 1"),
+        title = "Title 1",
         primaryImage = null,
         linguisticObjects = listOf()
     )

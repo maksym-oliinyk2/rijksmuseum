@@ -1,7 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.core.data.dto
 
 import arrow.core.toNonEmptyListOrNull
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
@@ -148,7 +147,7 @@ internal val HumanMadeObjectResponse.title: Title?
             }
         }
         ?.content
-        ?.let(Title::createOrNull)
+        ?.takeIf { it.isNotBlank() }
 
 internal val HumanMadeObjectResponse.linguisticObjects: List<LinguisticObject>
     get() = referredToBy
@@ -158,7 +157,7 @@ internal val HumanMadeObjectResponse.linguisticObjects: List<LinguisticObject>
             obj.content?.let { content ->
                 val type = obj.classifiedAs.firstNotNullOfOrNull { it.type }
 
-                type?.let { type -> type to Description(content) }
+                type?.let { type -> type to content }
             }
         }
         .groupBy({ it.first }, { it.second })

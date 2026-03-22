@@ -22,7 +22,7 @@ struct ios_appApp: App {
 struct ComposeViewController: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIViewController {
-        App_appleKt.appController()
+        RijksmuseumApp_appleKt.appController()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {

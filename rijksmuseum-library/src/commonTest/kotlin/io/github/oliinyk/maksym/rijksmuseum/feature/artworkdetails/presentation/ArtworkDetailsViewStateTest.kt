@@ -4,7 +4,6 @@ import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.Command.LoadCommand
@@ -20,7 +19,7 @@ class ArtworkDetailsViewStateTest {
     private val testUrl = UrlFrom("https://example.com/1")
     private val testArtwork = Artwork(
         url = testUrl,
-        title = NonEmptyString("Artwork 1"),
+        title = "Artwork 1",
         primaryImage = UrlFrom("https://example.com/1.jpg"),
         linguisticObjects = listOf()
     )

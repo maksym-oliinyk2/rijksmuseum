@@ -7,7 +7,6 @@ import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
@@ -46,7 +45,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
 
     private val artwork = Artwork(
         url = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/1"),
-        title = NonEmptyString("Title 1"),
+        title = "Title 1",
         primaryImage = null,
         linguisticObjects = emptyList()
     )

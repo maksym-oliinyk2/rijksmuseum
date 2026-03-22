@@ -8,33 +8,20 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.NavSavedStateConfig
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsDestination
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsScreen
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.registerArtworkNavEntry
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksDestination
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksScreen
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.registerArtworksNavEntry
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.logger.Level
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.KoinConfiguration
-
-private val SavedStateConfig = SavedStateConfiguration {
-    serializersModule = SerializersModule {
-        polymorphic(NavKey::class) {
-            registerArtworksNavEntry()
-            registerArtworkNavEntry()
-        }
-    }
-}
 
 @Composable
 internal fun RijksmuseumApp(
@@ -50,7 +37,7 @@ internal fun RijksmuseumApp(
     KoinApplication(
         logLevel = logLevel,
         configuration = configurationProvider(
-            rememberNavBackStack(SavedStateConfig, ArtworksDestination)
+            rememberNavBackStack(NavSavedStateConfig, ArtworksDestination)
         )
     ) {
         RijksmuseumTheme {

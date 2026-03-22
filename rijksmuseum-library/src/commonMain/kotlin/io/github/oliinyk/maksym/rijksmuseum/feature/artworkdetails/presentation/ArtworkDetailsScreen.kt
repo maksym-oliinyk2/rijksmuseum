@@ -37,10 +37,8 @@ import arrow.core.NonEmptyList
 import coil3.compose.AsyncImage
 import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.RoundedIconButton
@@ -178,7 +176,7 @@ private fun ArtworkDetails(
 
         item(key = "title") {
             Text(
-                text = artwork.title.value,
+                text = artwork.title,
                 style = MaterialTheme.typography.h5
             )
         }
@@ -193,7 +191,7 @@ private fun ArtworkDetails(
                 )
                 linguisticObject.descriptions.fastForEach { description ->
                     Text(
-                        text = description.value,
+                        text = description,
                         style = MaterialTheme.typography.body1
                     )
                 }
@@ -212,16 +210,14 @@ private fun ArtworkDetailsContentPreview() {
                 loadable = Loadable.idleSingle(
                     Artwork(
                         url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
-                        title = Title("The Night Watch"),
+                        title = "The Night Watch",
                         primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
                         linguisticObjects = listOf(
                             LinguisticObject(
                                 type = GettyAatType.Description,
                                 descriptions = NonEmptyList.of(
-                                    Description(
-                                        "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
-                                            "known as the ‘Night Watch’"
-                                    )
+                                    "Militia Company of District II under the Command of Captain Frans Banninck Cocq, " +
+                                        "known as the ‘Night Watch’"
                                 )
                             )
                         )

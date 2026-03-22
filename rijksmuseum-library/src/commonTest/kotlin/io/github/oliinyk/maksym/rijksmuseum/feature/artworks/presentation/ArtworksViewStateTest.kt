@@ -4,7 +4,6 @@ import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
@@ -20,7 +19,7 @@ class ArtworksViewStateTest {
 
     private val testArtwork = Artwork(
         url = UrlFrom("https://example.com/1"),
-        title = NonEmptyString("Artwork 1"),
+        title = "Artwork 1",
         primaryImage = UrlFrom("https://example.com/1.jpg"),
         linguisticObjects = listOf()
     )
@@ -105,7 +104,7 @@ class ArtworksViewStateTest {
     fun when_OnDataLoaded_success_loading_next_then_appends_data() {
         val artwork2 = Artwork(
             url = UrlFrom("https://example.com/2"),
-            title = NonEmptyString("Artwork 2"),
+            title = "Artwork 2",
             primaryImage = UrlFrom("https://example.com/2.jpg"),
             linguisticObjects = listOf()
         )

@@ -258,7 +258,7 @@ private fun LazyListScope.shimmerItems(
                 modifier = Modifier
                     .graphicsLayer { this.alpha = alpha }
                     .testTag(ArtworksShimmerItemTag),
-                title = Title(shimmerTitles[i])
+                title = shimmerTitles[i]
             )
         }
     }
@@ -286,7 +286,7 @@ private fun ArtworkCard(
 ) {
     ArtworkCard(
         modifier = modifier.semantics(mergeDescendants = true) {
-            testTag = artwork.title.value
+            testTag = artwork.title
         },
         title = artwork.title,
         image = artwork.primaryImage,
@@ -335,7 +335,7 @@ private fun ArtworkCard(
 
             Text(
                 modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium),
-                text = title.value,
+                text = title,
                 style = typography.h6,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
@@ -355,13 +355,13 @@ private fun ArtworksContentPreview() {
                     data = listOf(
                         Artwork(
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
-                            title = Title("The Night Watch"),
+                            title = "The Night Watch",
                             primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
                             linguisticObjects = emptyList()
                         ),
                         Artwork(
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-2344"),
-                            title = Title("The Milkmaid"),
+                            title = "The Milkmaid",
                             primaryImage = UrlFrom("https://lh3.googleusercontent.com/milkmaid"),
                             linguisticObjects = emptyList()
                         )

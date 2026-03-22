@@ -13,7 +13,6 @@ import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.core.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.DetailsModule
@@ -47,7 +46,7 @@ class AppTest {
         val artworks = List(ArtworksCount) { i ->
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
-                title = NonEmptyString("Artwork $i"),
+                title = "Artwork $i",
                 primaryImage = UrlFrom("https://example.com/$i.jpg"),
                 linguisticObjects = listOf()
             )
@@ -73,14 +72,14 @@ class AppTest {
         val expectedArtwork = artworks[TenthIndex]
         // User scrolls to 10-th item from the list of artworks
         onNodeWithTag(ArtworksScrollContainerTag)
-            .performScrollToNode(hasTestTag(expectedArtwork.title.value))
-        onNodeWithTag(expectedArtwork.title.value).assertExists()
+            .performScrollToNode(hasTestTag(expectedArtwork.title))
+        onNodeWithTag(expectedArtwork.title).assertExists()
         // User taps on the 10-th item in the list
-        onNodeWithTag(expectedArtwork.title.value).performClick()
+        onNodeWithTag(expectedArtwork.title).performClick()
         // User navigates to the artwork details screen
         onNodeWithTag(ArtworkDetailsContentTag).assertExists()
         // Artwork details screen is displayed
-        onNodeWithText(expectedArtwork.title.value).assertExists()
+        onNodeWithText(expectedArtwork.title).assertExists()
     }
 }
 
