@@ -70,25 +70,18 @@ import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.Artwor
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
+import io.github.oliinyk.maksym.rijksmuseum.res.artworks_shimmer_items
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 
 internal const val ArtworksScreenTag = "Artworks screen"
 internal const val ArtworksScrollContainerTag = "Artworks scroll container"
 internal const val ArtworksShimmerItemTag = "Artworks shimmer item"
 private val CardImageHeight = 200.dp
-private val ShimmerTitles = listOf(
-    "The Night Watch",
-    "Girl with a Pearl Earring",
-    "The Milkmaid",
-    "Starry Night",
-    "The Birth of Venus",
-    "The Persistence of Memory",
-    "Water Lilies",
-    "The Last Supper",
-    "The Scream",
-    "Las Meninas",
-)
+private const val ShimmerDurationMillis = 1000
+private const val ShimmerPeakAlpha = 0.7f
+private const val ShimmerPeakAtMillis = 500
 
 // todo document - more than 4 action handler lambdas -> use message handler
 @Composable
@@ -135,6 +128,8 @@ internal fun ArtworksContent(
                 .pullRefresh(refreshState, state.artworks.isRefreshable),
             contentAlignment = Alignment.TopCenter
         ) {
+            val shimmerTitles = stringArrayResource(Res.array.artworks_shimmer_items)
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -154,6 +149,7 @@ internal fun ArtworksContent(
 
                 paginateableContent(
                     paginateable = state.artworks,
+                    shimmerTitles = shimmerTitles,
                     onRefresh = { onMessage(Message.OnRefresh) },
                     onReload = { onMessage(Message.OnReload) },
                     onLoadNext = { onMessage(Message.OnLoadNext) }
@@ -193,6 +189,7 @@ private fun LazyListScope.artworkItems(
 
 private fun LazyListScope.paginateableContent(
     paginateable: Paginateable<Artwork>,
+    shimmerTitles: List<String>,
     onRefresh: () -> Unit,
     onReload: () -> Unit,
     onLoadNext: () -> Unit,
@@ -214,7 +211,7 @@ private fun LazyListScope.paginateableContent(
             )
         }
 
-        is Paginateable.Loading -> shimmerItems()
+        is Paginateable.Loading -> shimmerItems(shimmerTitles)
 
         is Paginateable.LoadingNext -> item(
             key = paginateable.state::class.simpleName,
@@ -240,8 +237,10 @@ private fun LazyListScope.paginateableContent(
     }
 }
 
-private fun LazyListScope.shimmerItems() {
-    repeat(ShimmerTitles.size) { i ->
+private fun LazyListScope.shimmerItems(
+    shimmerTitles: List<String>
+) {
+    repeat(shimmerTitles.size) { i ->
         item {
             val infiniteTransition = rememberInfiniteTransition()
             val alpha by infiniteTransition.animateFloat(
@@ -249,8 +248,8 @@ private fun LazyListScope.shimmerItems() {
                 targetValue = 1f,
                 animationSpec = infiniteRepeatable(
                     animation = keyframes {
-                        durationMillis = 1000
-                        0.7f at 500
+                        durationMillis = ShimmerDurationMillis
+                        ShimmerPeakAlpha at ShimmerPeakAtMillis
                     },
                     repeatMode = RepeatMode.Reverse
                 )
@@ -260,7 +259,7 @@ private fun LazyListScope.shimmerItems() {
                 modifier = Modifier
                     .graphicsLayer { this.alpha = alpha }
                     .testTag(ArtworksShimmerItemTag),
-                title = Title(ShimmerTitles[i])
+                title = Title(shimmerTitles[i])
             )
         }
     }

@@ -4,6 +4,18 @@
     <string name="artworks_no_data_message">Geen kunstwerken gevonden</string>
     <string name="artworks_image_description">Afbeelding van het kunstwerk</string>
     <string name="artworks_action_retry">Opnieuw proberen</string>
+    <string-array name="artworks_shimmer_items">
+        <item>The Night Watch</item>
+        <item>girl with A Pearl Earring</item>
+        <item>The Milkmaid</item>
+        <item>Starry Night</item>
+        <item>The birth Of Venus</item>
+        <item>The persistence Of Memory</item>
+        <item>Water Lilies</item>
+        <item>The Last Supper</item>
+        <item>The Scream</item>
+        <item>Las Meninas</item>
+    </string-array>
 
     <string name="artwork_details_no_data">Geen gegevens beschikbaar</string>
     <string name="artwork_details_navigate_back">Terug navigeren</string>
