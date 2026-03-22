@@ -36,9 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -51,6 +49,7 @@ import coil3.compose.AsyncImage
 import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.toStringValue
@@ -59,6 +58,7 @@ import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.contentPaddingValues
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.canLoadNextForIndex
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isLoading
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.RijksmuseumTheme
@@ -127,6 +127,7 @@ internal fun ArtworksContent(
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
+                userScrollEnabled = !state.artworks.isLoading,
             ) {
                 if (state.artworks.data.isNotEmpty()) {
                     artworkItems(
@@ -180,12 +181,12 @@ private fun LazyListScope.paginateableContent(
     onRefresh: () -> Unit,
     onReload: () -> Unit,
     onLoadNext: () -> Unit,
-) = item(
-    key = paginateable.state::class.simpleName,
-    contentType = paginateable.state::class
 ) {
     when (val state = paginateable.state) {
-        is Paginateable.Exception ->
+        is Paginateable.Exception -> item(
+            key = paginateable.state::class.simpleName,
+            contentType = paginateable.state::class
+        ) {
             DisplayMessage(
                 modifier = if (paginateable.data.isEmpty()) {
                     Modifier.fillParentMaxSize()
@@ -195,8 +196,35 @@ private fun LazyListScope.paginateableContent(
                 message = state.exception.displayMessage,
                 onRetry = if (paginateable.data.isEmpty()) onReload else onLoadNext
             )
+        }
 
-        is Paginateable.Loading -> {
+        is Paginateable.Loading -> shimmerItems()
+
+        is Paginateable.LoadingNext -> item(
+            key = paginateable.state::class.simpleName,
+            contentType = paginateable.state::class
+        ) {
+            ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
+        }
+
+        is Paginateable.Idle, is Paginateable.Refreshing -> item(
+            key = paginateable.state::class.simpleName,
+            contentType = paginateable.state::class
+        ) {
+            if (paginateable.data.isEmpty()) {
+                DisplayMessage(
+                    modifier = Modifier.fillParentMaxSize(),
+                    message = stringResource(Res.string.artworks_no_data_message),
+                    onRetry = onRefresh
+                )
+            }
+        }
+    }
+}
+
+private fun LazyListScope.shimmerItems() {
+    repeat(10) { i ->
+        item {
             val infiniteTransition = rememberInfiniteTransition()
             val alpha by infiniteTransition.animateFloat(
                 initialValue = 0f,
@@ -210,27 +238,26 @@ private fun LazyListScope.paginateableContent(
                 )
             )
 
-            items(10) {
-                ArtworkCard(
-                    modifier = Modifier.alpha(alpha),
-                    painter = ColorPainter(Color.Gray),
-                    contentDescription = null,
-                    onClick = {}
-                )
-            }
-
-        }
-        is Paginateable.LoadingNext -> ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
-        is Paginateable.Idle, is Paginateable.Refreshing -> {
-            if (paginateable.data.isEmpty()) {
-                DisplayMessage(
-                    modifier = Modifier.fillParentMaxSize(),
-                    message = stringResource(Res.string.artworks_no_data_message),
-                    onRetry = onRefresh
-                )
-            }
+            ShimmerCard(
+                modifier = Modifier.graphicsLayer { this.alpha = alpha },
+                title = Title("Title $i")
+            )
         }
     }
+}
+
+@Composable
+private fun ShimmerCard(
+    modifier: Modifier = Modifier,
+    title: Title,
+) {
+    ArtworkCard(
+        modifier = modifier,
+        title = title,
+        image = null,
+        onClick = { },
+        enabled = false,
+    )
 }
 
 @Composable
@@ -239,13 +266,30 @@ private fun ArtworkCard(
     artwork: Artwork,
     onClick: () -> Unit,
 ) {
-    Card(
+    ArtworkCard(
         modifier = modifier.semantics(mergeDescendants = true) {
             testTag = artwork.title.value
         },
+        title = artwork.title,
+        image = artwork.primaryImage,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun ArtworkCard(
+    modifier: Modifier = Modifier,
+    title: Title,
+    image: Url?,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = modifier,
         elevation = MaterialTheme.paddings.small,
         shape = MaterialTheme.shapes.medium,
-        onClick = onClick
+        enabled = enabled,
+        onClick = onClick,
     ) {
         Column(
             modifier = Modifier.padding(bottom = MaterialTheme.paddings.medium),
@@ -261,9 +305,9 @@ private fun ArtworkCard(
                 ),
                 color = colors.onSurface.copy(alpha = 0.2f)
             ) {
-                if (artwork.primaryImage != null) {
+                if (image != null) {
                     AsyncImage(
-                        model = artwork.primaryImage.toImageRequest(),
+                        model = image.toImageRequest(),
                         contentDescription = stringResource(Res.string.artworks_image_description),
                         modifier = Modifier.fillMaxWidth(),
                         contentScale = ContentScale.Crop,
@@ -273,7 +317,7 @@ private fun ArtworkCard(
 
             Text(
                 modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium),
-                text = artwork.title.value,
+                text = title.value,
                 style = typography.h6,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
