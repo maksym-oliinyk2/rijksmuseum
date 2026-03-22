@@ -53,7 +53,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
             )
         } bind RijksmuseumApi::class
         single(named<Artwork>()) { ValueHolder(artwork) }
-        single { ArtworkRepositoryImpl(get(), get(named<Artwork>())) } bind ArtworkRepository::class
+        single { ArtworkRepositoryImpl(get()) } bind ArtworkRepository::class
         single { GetArtworkUseCase(get()) }
         single { ShareOptions(SharingStarted.Lazily, 1u) }
         factory { params ->

@@ -4,8 +4,6 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
-import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
-import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
@@ -25,7 +23,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
 
@@ -35,8 +32,7 @@ internal fun AppModule(
 ): Module = module {
     includes(SearchModule, DetailsModule)
     single { HttpClient(LogLevel.ALL, engine) }
-    single { Navigator(backStack, get(named<Artwork>())) }
-    single(named<Artwork>()) { ValueHolder<Artwork>() }
+    single { Navigator(backStack) }
     single { ShareOptions(SharingStarted.Lazily, 1u) }
     single { RijksmuseumApiImpl(get()) }.bind(RijksmuseumApi::class)
 }

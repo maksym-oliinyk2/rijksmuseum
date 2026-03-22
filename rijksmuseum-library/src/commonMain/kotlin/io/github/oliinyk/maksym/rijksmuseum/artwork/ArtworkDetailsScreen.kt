@@ -37,8 +37,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.res.Res
-import io.github.oliinyk.maksym.rijksmuseum.res.artwork_details_no_data
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.contentPaddingValues
@@ -115,7 +113,7 @@ internal fun ArtworkDetailsContent(
 
 @Composable
 private fun ArtworkLoadableContent(
-    state: Loadable<Artwork?>,
+    state: Loadable<Artwork>,
     onRefresh: () -> Unit,
     onReload: () -> Unit,
 ) {
@@ -129,17 +127,7 @@ private fun ArtworkLoadableContent(
         Loadable.Loading -> ProgressIndicator(modifier = Modifier.fillMaxSize())
 
         Loadable.Idle, Loadable.Refreshing -> {
-            val artwork = state.data
-            if (artwork != null) {
-                ArtworkDetails(artwork)
-            } else {
-                // Handle empty data if necessary, though for details it's likely an error if idle and null
-                DisplayMessage(
-                    modifier = Modifier.fillMaxSize(),
-                    message = stringResource(Res.string.artwork_details_no_data),
-                    onRetry = onRefresh
-                )
-            }
+            ArtworkDetails(state.data)
         }
     }
 }
@@ -204,7 +192,6 @@ private fun ArtworkDetailsContentPreview() {
     RijksmuseumTheme {
         ArtworkDetailsContent(
             state = ArtworkDetailsViewState(
-                artworkId = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                 artwork = Loadable.idleSingle(
                     Artwork(
                         url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),

@@ -26,7 +26,7 @@ class ArtworkRepositoryImplTest {
             artworksDetails = mapOf(testUrl to testArtwork.right())
         )
         val cache = ValueHolder<Artwork>()
-        val repository = ArtworkRepositoryImpl(api, cache, StandardTestDispatcher(testScheduler))
+        val repository = ArtworkRepositoryImpl(api, StandardTestDispatcher(testScheduler))
 
         val result = repository.fetchArtworkDetails(testUrl)
 
@@ -39,7 +39,7 @@ class ArtworkRepositoryImplTest {
             artworksDetails = emptyMap()
         )
         val cache = ValueHolder(testArtwork)
-        val repository = ArtworkRepositoryImpl(api, cache, StandardTestDispatcher(testScheduler))
+        val repository = ArtworkRepositoryImpl(api, StandardTestDispatcher(testScheduler))
 
         val result = repository.fetchArtworkDetails(testUrl)
 
