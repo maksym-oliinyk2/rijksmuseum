@@ -60,6 +60,8 @@ internal fun RijksmuseumApp(
             NavDisplay(
                 backStack = navigator,
                 onBack = { navigator.navigateBack() },
+                transitionSpec = AppTransitionSpec(),
+                popTransitionSpec = AppPopTransitionSpec(),
                 // In order to add the `ViewModelStoreNavEntryDecorator` (see comment below for why)
                 // we also need to add the default `NavEntryDecorator`s as well. These provide
                 // extra information to the entry's content to enable it to display correctly
