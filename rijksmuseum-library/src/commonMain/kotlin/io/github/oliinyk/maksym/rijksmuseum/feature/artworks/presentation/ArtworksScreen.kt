@@ -1,5 +1,10 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -22,6 +27,8 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -31,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -43,6 +51,7 @@ import coil3.compose.AsyncImage
 import io.github.oliinyk.maksym.rijksmuseum.app.rememberMessageHandler
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.toStringValue
@@ -50,20 +59,29 @@ import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.contentPaddingValues
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.canLoadNextForIndex
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isLoading
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.paddings
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.toImageRequest
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewState.Companion.StartPreloadBeforeItems
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
+import io.github.oliinyk.maksym.rijksmuseum.res.artworks_shimmer_items
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 
 internal const val ArtworksScreenTag = "Artworks screen"
-internal const val ArtworksScrollContainerTag = "Scroll container"
+internal const val ArtworksScrollContainerTag = "Artworks scroll container"
+internal const val ArtworksShimmerItemTag = "Artworks shimmer item"
 private val CardImageHeight = 200.dp
+private const val ShimmerDurationMillis = 1000
+private const val ShimmerPeakAlpha = 0.7f
+private const val ShimmerPeakAtMillis = 500
 
 // todo document - more than 4 action handler lambdas -> use message handler
 @Composable
@@ -110,6 +128,8 @@ internal fun ArtworksContent(
                 .pullRefresh(refreshState, state.artworks.isRefreshable),
             contentAlignment = Alignment.TopCenter
         ) {
+            val shimmerTitles = stringArrayResource(Res.array.artworks_shimmer_items)
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -117,26 +137,23 @@ internal fun ArtworksContent(
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
+                userScrollEnabled = !state.artworks.isLoading,
             ) {
                 if (state.artworks.data.isNotEmpty()) {
-                    artworkItems(state.artworks) {
-                        onMessage(Message.OnNavigateToDetails(it))
-                    }
+                    artworkItems(
+                        paginateable = state.artworks,
+                        onNavigateToDetails = { onMessage(Message.OnNavigateToDetails(it)) },
+                        onLoadNext = { onMessage(Message.OnLoadNext) },
+                    )
                 }
 
                 paginateableContent(
                     paginateable = state.artworks,
+                    shimmerTitles = shimmerTitles,
                     onRefresh = { onMessage(Message.OnRefresh) },
                     onReload = { onMessage(Message.OnReload) },
                     onLoadNext = { onMessage(Message.OnLoadNext) }
                 )
-
-                item {
-                    // todo play with preloading strategy
-                    LaunchedEffect(Unit) {
-                        onMessage(Message.OnLoadNext)
-                    }
-                }
             }
 
             PullRefreshIndicator(
@@ -151,45 +168,67 @@ internal fun ArtworksContent(
 private fun LazyListScope.artworkItems(
     paginateable: Paginateable<Artwork>,
     onNavigateToDetails: (Artwork) -> Unit,
+    onLoadNext: () -> Unit,
 ) {
-    items(
+    itemsIndexed(
         items = paginateable.data,
-        key = { item -> item.url.toStringValue() },
-    ) { artwork ->
+        key = { _, item -> item.url.toStringValue() },
+    ) { i, artwork ->
         ArtworkCard(
             artwork = artwork,
             onClick = { onNavigateToDetails(artwork) }
         )
+
+        if (paginateable.canLoadNextForIndex(i, StartPreloadBeforeItems)) {
+            LaunchedEffect(Unit) {
+                onLoadNext()
+            }
+        }
     }
 }
 
 private fun LazyListScope.paginateableContent(
     paginateable: Paginateable<Artwork>,
+    shimmerTitles: List<String>,
     onRefresh: () -> Unit,
     onReload: () -> Unit,
     onLoadNext: () -> Unit,
-) = item(
-    key = paginateable.state::class.simpleName,
-    contentType = paginateable.state::class
 ) {
     when (val state = paginateable.state) {
-        is Paginateable.Exception ->
+        is Paginateable.Exception -> item(
+            key = paginateable.state::class.simpleName,
+            contentType = paginateable.state::class
+        ) {
             DisplayMessage(
                 modifier = if (paginateable.data.isEmpty()) {
                     Modifier.fillParentMaxSize()
                 } else {
                     Modifier.fillParentMaxWidth()
-                },
+                }.padding(MaterialTheme.paddings.normal),
+                imageVector = Icons.Default.Error,
                 message = state.exception.displayMessage,
                 onRetry = if (paginateable.data.isEmpty()) onReload else onLoadNext
             )
+        }
 
-        is Paginateable.Loading -> ProgressIndicator(modifier = Modifier.fillParentMaxSize())
-        is Paginateable.LoadingNext -> ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
-        is Paginateable.Idle, is Paginateable.Refreshing -> {
+        is Paginateable.Loading -> shimmerItems(shimmerTitles)
+
+        is Paginateable.LoadingNext -> item(
+            key = paginateable.state::class.simpleName,
+            contentType = paginateable.state::class
+        ) {
+            ProgressIndicator(modifier = Modifier.fillParentMaxWidth())
+        }
+
+        is Paginateable.Idle, is Paginateable.Refreshing -> item(
+            key = paginateable.state::class.simpleName,
+            contentType = paginateable.state::class
+        ) {
             if (paginateable.data.isEmpty()) {
                 DisplayMessage(
-                    modifier = Modifier.fillParentMaxSize(),
+                    modifier = Modifier
+                        .padding(MaterialTheme.paddings.normal)
+                        .fillParentMaxSize(),
                     message = stringResource(Res.string.artworks_no_data_message),
                     onRetry = onRefresh
                 )
@@ -198,18 +237,78 @@ private fun LazyListScope.paginateableContent(
     }
 }
 
+private fun LazyListScope.shimmerItems(
+    shimmerTitles: List<String>
+) {
+    repeat(shimmerTitles.size) { i ->
+        item {
+            val infiniteTransition = rememberInfiniteTransition()
+            val alpha by infiniteTransition.animateFloat(
+                initialValue = 0f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(
+                    animation = keyframes {
+                        durationMillis = ShimmerDurationMillis
+                        ShimmerPeakAlpha at ShimmerPeakAtMillis
+                    },
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
+
+            ShimmerCard(
+                modifier = Modifier
+                    .graphicsLayer { this.alpha = alpha }
+                    .testTag(ArtworksShimmerItemTag),
+                title = Title(shimmerTitles[i])
+            )
+        }
+    }
+}
+
+@Composable
+private fun ShimmerCard(
+    modifier: Modifier = Modifier,
+    title: Title,
+) {
+    ArtworkCard(
+        modifier = modifier,
+        title = title,
+        image = null,
+        onClick = { },
+        enabled = false,
+    )
+}
+
 @Composable
 private fun ArtworkCard(
+    modifier: Modifier = Modifier,
     artwork: Artwork,
     onClick: () -> Unit,
 ) {
-    Card(
-        modifier = Modifier.semantics(mergeDescendants = true) {
+    ArtworkCard(
+        modifier = modifier.semantics(mergeDescendants = true) {
             testTag = artwork.title.value
         },
+        title = artwork.title,
+        image = artwork.primaryImage,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun ArtworkCard(
+    modifier: Modifier = Modifier,
+    title: Title,
+    image: Url?,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = modifier,
         elevation = MaterialTheme.paddings.small,
         shape = MaterialTheme.shapes.medium,
-        onClick = onClick
+        enabled = enabled,
+        onClick = onClick,
     ) {
         Column(
             modifier = Modifier.padding(bottom = MaterialTheme.paddings.medium),
@@ -225,9 +324,9 @@ private fun ArtworkCard(
                 ),
                 color = colors.onSurface.copy(alpha = 0.2f)
             ) {
-                if (artwork.primaryImage != null) {
+                if (image != null) {
                     AsyncImage(
-                        model = artwork.primaryImage.toImageRequest(),
+                        model = image.toImageRequest(),
                         contentDescription = stringResource(Res.string.artworks_image_description),
                         modifier = Modifier.fillMaxWidth(),
                         contentScale = ContentScale.Crop,
@@ -237,7 +336,7 @@ private fun ArtworkCard(
 
             Text(
                 modifier = Modifier.padding(horizontal = MaterialTheme.paddings.medium),
-                text = artwork.title.value,
+                text = title.value,
                 style = typography.h6,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,

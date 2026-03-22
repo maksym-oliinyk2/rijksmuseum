@@ -15,7 +15,7 @@ val tag: String?
 val commitSha: String?
     get() = getenvSafe("GITHUB_SHA")
 
-val libraryVersion: Version
+val projectVersion: Version
     get() = Version(tag, commitSha)
 
 val Project.detektConfig: File
@@ -26,6 +26,9 @@ val Project.detektBaseline: File
 
 val Project.composeMetricsDir: File
     get() = File(layout.buildDirectory.get().asFile, "compose_metrics")
+
+val Project.composeConfigFile: File
+    get() = File(projectDir, "compose_compiler_config.conf")
 
 val Project.testReportsDir: Provider<out Directory>
     get() = rootMostProject.layout.buildDirectory.map { it.dir("junit-reports").dir(project.name) }

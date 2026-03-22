@@ -20,6 +20,8 @@ import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.SearchReposito
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.Dispatchers
@@ -85,7 +87,7 @@ class ArtworksViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_loads_artwork_from_use_case() = runTest {
+    fun when_initialized_then_loads_artworks() = runTest {
         val viewModel = get<ArtworksViewModel>()
         val states = viewModel(flowOf())
 
@@ -105,7 +107,7 @@ class ArtworksViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_navigation_to_details() = runTest {
+    fun when_OnNavigateToDetails_then_navigates_to_details() = runTest {
         val viewState = ArtworksViewState(artworks = Paginateable.idleList(listOf(artwork)))
 
         declare {
@@ -133,7 +135,7 @@ class ArtworksViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_refreshes_artworks() = runTest {
+    fun when_OnRefresh_then_refreshes_artworks() = runTest {
         val initialState = ArtworksViewState(artworks = Paginateable.idleList())
         declare {
             ArtworksViewModel(Initializer(initialState), get())
@@ -157,7 +159,7 @@ class ArtworksViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_reloads_artworks() = runTest {
+    fun when_OnReload_then_reloads_artworks() = runTest {
         val initialState = ArtworksViewState(artworks = Paginateable.idleList(listOf(artwork)))
         declare {
             ArtworksViewModel(Initializer(initialState), get())
@@ -181,7 +183,7 @@ class ArtworksViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_loads_next_page() = runTest {
+    fun when_OnLoadNextPage_then_loads_next_page() = runTest {
         val artwork2 = artwork.copy(url = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/2"))
         val nextUrl = UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2")
 
@@ -237,8 +239,8 @@ class ArtworksViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_handles_data_loaded_error() = runTest {
-        val error = AppException("Error")
+    fun when_OnDataLoaded_failure_then_exception() = runTest {
+        val error = AppException(Res.string.exception_unknown)
 
         declare {
             val api = TestRijksmuseumApi(

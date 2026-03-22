@@ -1,8 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.app
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -20,8 +18,6 @@ import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksDestination
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksScreen
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.registerArtworksNavEntry
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.KoinApplication
@@ -40,24 +36,9 @@ private val SavedStateConfig = SavedStateConfiguration {
     }
 }
 
-internal typealias MessageHandler<M> = (M) -> Unit
-
 @Composable
-internal fun <M> rememberMessageHandler(
-    input: suspend (M) -> Unit,
-): MessageHandler<M> {
-    val scope = rememberCoroutineScope { Dispatchers.Main.immediate }
-
-    return remember(scope, input) {
-        {
-            scope.launch { input(it) }
-        }
-    }
-}
-
-@Composable
-internal fun App(
-    logLevel: Level = if (BuildConfig.DEBUG) Level.DEBUG else Level.NONE,
+internal fun RijksmuseumApp(
+    logLevel: Level = if (BuildConfig.Debug) Level.DEBUG else Level.NONE,
     configurationProvider: (NavBackStack<NavKey>) -> KoinConfiguration,
 ) {
     // there won't be a memory leak here to pass navBackStack to koin configuration. The koin
@@ -67,7 +48,6 @@ internal fun App(
     // Also, we need to make sure we don't reference non-singletons inside nav entries!
     // see CompositionKoinApplicationLoader
     KoinApplication(
-        // todo check if rememberUpdatedState is needed here
         logLevel = logLevel,
         configuration = configurationProvider(
             rememberNavBackStack(SavedStateConfig, ArtworksDestination)
@@ -79,6 +59,8 @@ internal fun App(
             NavDisplay(
                 backStack = navigator,
                 onBack = { navigator.navigateBack() },
+                transitionSpec = AppTransitionSpec(),
+                popTransitionSpec = AppPopTransitionSpec(),
                 // In order to add the `ViewModelStoreNavEntryDecorator` (see comment below for why)
                 // we also need to add the default `NavEntryDecorator`s as well. These provide
                 // extra information to the entry's content to enable it to display correctly

@@ -17,6 +17,6 @@ internal fun contentPaddingValues(): PaddingValues {
         start = MaterialTheme.paddings.normal,
         end = MaterialTheme.paddings.normal,
         bottom = WindowInsets.navigationBars.asPaddingValues()
-            .calculateBottomPadding() + MaterialTheme.paddings.normal,
+            .calculateTopPadding() + MaterialTheme.paddings.normal,
     )
 }

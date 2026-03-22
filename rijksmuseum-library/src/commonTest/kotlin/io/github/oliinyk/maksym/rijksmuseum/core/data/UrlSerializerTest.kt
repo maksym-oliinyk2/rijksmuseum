@@ -1,5 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.core.data
 
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.UrlSerializer
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.toStringValue
 import kotlinx.serialization.Serializable

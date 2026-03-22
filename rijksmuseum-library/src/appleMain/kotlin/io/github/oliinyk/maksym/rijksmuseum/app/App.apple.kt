@@ -7,5 +7,5 @@ import platform.UIKit.UIViewController
 
 @ObjCName("appController")
 public fun AppController(): UIViewController = ComposeUIViewController {
-    App { koinConfiguration { modules(AppModule(it, Darwin)) } }
+    RijksmuseumApp { koinConfiguration { modules(AppModule(it, Darwin)) } }
 }

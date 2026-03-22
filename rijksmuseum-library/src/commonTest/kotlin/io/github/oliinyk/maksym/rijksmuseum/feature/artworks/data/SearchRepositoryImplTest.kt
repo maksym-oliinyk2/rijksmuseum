@@ -3,8 +3,8 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data
 import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
-import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
@@ -12,6 +12,8 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -328,7 +330,7 @@ class SearchRepositoryImplTest {
             items = listOf(HumanMadeObjectResponse.ArtworkIdItem(id = item1Id))
         )
 
-        val exception = AppException("Network error")
+        val exception = AppException(Res.string.exception_unknown)
         val api = TestRijksmuseumApi(
             artworksDetails = mapOf(item1Id to exception.left()),
             searchResponses = mapOf(
@@ -351,7 +353,7 @@ class SearchRepositoryImplTest {
     @Test
     fun when_fetch_ids_fails_then_failure() = runTest {
         // Setup
-        val exception = AppException("Network error")
+        val exception = AppException(Res.string.exception_unknown)
         val api = TestRijksmuseumApi(
             artworksDetails = emptyMap(),
             searchResponses = mapOf(InitialPageUrl to exception.left())

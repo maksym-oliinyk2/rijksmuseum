@@ -1,19 +1,21 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ui
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContent
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContentTag
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsExceptionIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsRefreshIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsViewState
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import kotlin.test.Test
 
 // This is actually a multiplatform test, but it's not possible to run it
@@ -32,14 +34,14 @@ class ArtworkDetailsContentTest {
     @Test
     fun when_idle_with_artwork_then_details_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
-            artwork = Loadable.idleSingle(testArtwork)
+            loadable = Loadable.idleSingle(testArtwork)
         )
 
         setContent {
             ArtworkDetailsContent(
                 state = state,
                 onRefresh = {},
-                onReload = {}
+                onBack = {},
             )
         }
 
@@ -47,39 +49,37 @@ class ArtworkDetailsContentTest {
     }
 
     @Test
-    fun when_exception_then_error_displayed() = runComposeUiTest {
-        val errorMessage = "Failed to load artwork"
-        val state = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Exception(AppException(errorMessage)))
-        )
-
-        setContent {
-            ArtworkDetailsContent(
-                state = state,
-                onRefresh = {},
-                onReload = {}
-            )
-        }
-
-        onNodeWithTag(DisplayMessageTag)
-            .assertIsDisplayed()
-            .assertTextEquals(errorMessage)
-    }
-
-    @Test
     fun when_refreshing_then_progress_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Refreshing)
+            loadable = Loadable(testArtwork, Loadable.Refreshing)
         )
 
         setContent {
             ArtworkDetailsContent(
                 state = state,
                 onRefresh = {},
-                onReload = {}
+                onBack = {},
             )
         }
 
         onNodeWithTag(ArtworkDetailsRefreshIndicatorTag).assertIsDisplayed()
+    }
+
+    @Test
+    fun when_refresh_triggers_exception_then_exception_indicator_displayed() = runComposeUiTest {
+        val exception = AppException(Res.string.exception_unknown)
+        val state = ArtworkDetailsViewState(
+            loadable = Loadable.idleSingle(testArtwork).toException(exception)
+        )
+
+        setContent {
+            ArtworkDetailsContent(
+                state = state,
+                onRefresh = {},
+                onBack = {},
+            )
+        }
+
+        onNodeWithTag(ArtworkDetailsExceptionIndicatorTag).assertIsDisplayed()
     }
 }

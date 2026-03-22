@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.oliinyk.maksym.rijksmuseum"
-version = libraryVersion.toVersionName()
+version = projectVersion.toVersionName()
 
 kotlin {
     explicitApi()
@@ -24,6 +24,8 @@ kotlin {
             "-opt-in=org.koin.core.annotation.KoinViewModelScopeApi",
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
             "-opt-in=androidx.compose.ui.test.ExperimentalTestApi",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=${project.composeConfigFile.absolutePath}"
         )
 
         if (project.findProperty("enableComposeCompilerLogs").toString().toBoolean()) {
@@ -156,10 +158,10 @@ buildConfig {
     useKotlinOutput { internalVisibility = true }
 
     val debugEnabled = project.findProperty("forceDebug")?.toString()
-        ?.toBoolean() == true || libraryVersion.isSnapshot
+        ?.toBoolean() == true || projectVersion.isSnapshot
 
-    logger.log(LogLevel.LIFECYCLE, "DEBUG enabled: $debugEnabled")
-    buildConfigField("kotlin.Boolean", "DEBUG", "$debugEnabled")
+    logger.log(LogLevel.LIFECYCLE, "Debug enabled: $debugEnabled")
+    buildConfigField("kotlin.Boolean", "Debug", "$debugEnabled")
     buildConfigField("kotlin.Long", "RequestTimeoutMs", "5000L")
     buildConfigField("kotlin.Long", "ConnectTimeoutMs", "5000L")
     buildConfigField("kotlin.Long", "SocketTimeoutMs", "7000L")

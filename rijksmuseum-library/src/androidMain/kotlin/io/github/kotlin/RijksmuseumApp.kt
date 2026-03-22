@@ -11,7 +11,7 @@ public class RijksmuseumApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.Debug) {
             setupStrictAppPolicies()
         }
     }

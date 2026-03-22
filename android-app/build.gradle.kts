@@ -11,8 +11,8 @@ android {
         applicationId = "com.oliinyk.maksym.rijksmuseum.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = projectVersion.versionCode
+        versionName = projectVersion.toVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,5 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
+import androidx.navigation3.runtime.NavKey
 import app.cash.turbine.turbineScope
 import arrow.core.left
 import arrow.core.right
@@ -10,10 +11,13 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.data.ArtworkRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.ArtworkRepository
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.GetArtworkUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,10 +34,12 @@ import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
+import org.koin.test.mock.declare
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ArtworkDetailsViewModelTest : KoinTest {
@@ -77,7 +83,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_displays_initial_artwork() = runTest {
+    fun when_initialized_then_displays_initial_artwork() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val states = viewModel(flowOf())
 
@@ -90,7 +96,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_refreshes_artwork() = runTest {
+    fun when_OnRefresh_then_refreshes_artwork() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val messages = MutableSharedFlow<Message>()
         val states = viewModel(messages)
@@ -110,7 +116,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_reloads_artwork() = runTest {
+    fun when_OnReload_then_reloads_artwork() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val messages = MutableSharedFlow<Message>()
         val states = viewModel(messages)
@@ -130,7 +136,13 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_handles_data_loaded_error() = runTest {
+    fun when_OnBack_then_navigates_back() = runTest {
+        val backStack = mutableListOf<NavKey>(ArtworkDetailsDestination(artwork))
+
+        declare {
+            Navigator(backStack)
+        }
+
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val messages = MutableSharedFlow<Message>()
         val states = viewModel(messages)
@@ -140,7 +152,26 @@ class ArtworkDetailsViewModelTest : KoinTest {
 
             assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
 
-            val error = AppException("Error")
+            messages.emit(Message.OnBack)
+
+            assertTrue(backStack.isEmpty())
+
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun when_OnDataLoaded_failure_then_exception() = runTest {
+        val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
+        val messages = MutableSharedFlow<Message>()
+        val states = viewModel(messages)
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            val error = AppException(Res.string.exception_unknown)
             messages.emit(Message.OnDataLoaded(error.left()))
 
             assertEquals(

@@ -44,7 +44,8 @@ public val Paginateable<*>.isRefreshable: Boolean
 
 public fun Paginateable<*>.canLoadNextForIndex(
     index: Int,
-): Boolean = hasMore && index == data.lastIndex
+    preloadOffset: Int,
+): Boolean = state === Paginateable.Idle && hasMore && index >= data.lastIndex - preloadOffset
 
 public val Paginateable<*>.isLoading: Boolean
     get() = state === Paginateable.Loading

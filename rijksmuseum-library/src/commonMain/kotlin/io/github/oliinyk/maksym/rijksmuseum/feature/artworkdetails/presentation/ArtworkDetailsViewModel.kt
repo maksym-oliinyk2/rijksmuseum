@@ -1,27 +1,35 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
 import androidx.lifecycle.viewModelScope
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.GetArtworkUseCase
 import io.github.xlopec.tea.core.Component
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import io.github.xlopec.tea.core.effect
+import io.github.xlopec.tea.core.sideEffect
 import io.github.xlopec.tea.core.toStatesComponent
 import kotlinx.coroutines.flow.Flow
 import org.koin.viewmodel.scope.ScopeViewModel
 
 internal class ArtworkDetailsViewModel(
-    initializer: Initializer<ArtworkDetailsViewState, LoadCommand>,
+    initializer: Initializer<ArtworkDetailsViewState, Command>,
     shareOptions: ShareOptions,
 ) : ScopeViewModel() {
     private val getArtworkUseCase: GetArtworkUseCase by scope.inject()
-    private val component = Component<Message, ArtworkDetailsViewState, LoadCommand>(
+    private val navigator: Navigator by scope.inject()
+    private val component = Component<Message, ArtworkDetailsViewState, Command>(
         initializer = initializer,
         updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->
             snapshot.commands.forEach { command ->
-                ctx effect {
-                    Message.OnDataLoaded(getArtworkUseCase.getArtwork(command.artworkId))
+                when (command) {
+                    is Command.LoadCommand -> ctx effect {
+                        Message.OnDataLoaded(getArtworkUseCase.getArtwork(command.artworkId))
+                    }
+                    Command.OnBack -> ctx.sideEffect {
+                        navigator.navigateBack()
+                    }
                 }
             }
         },
