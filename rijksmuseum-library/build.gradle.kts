@@ -24,6 +24,8 @@ kotlin {
             "-opt-in=org.koin.core.annotation.KoinViewModelScopeApi",
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
             "-opt-in=androidx.compose.ui.test.ExperimentalTestApi",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=${project.composeConfigFile.absolutePath}"
         )
 
         if (project.findProperty("enableComposeCompilerLogs").toString().toBoolean()) {

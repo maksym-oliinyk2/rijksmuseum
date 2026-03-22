@@ -27,6 +27,9 @@ val Project.detektBaseline: File
 val Project.composeMetricsDir: File
     get() = File(layout.buildDirectory.get().asFile, "compose_metrics")
 
+val Project.composeConfigFile: File
+    get() = File(projectDir, "compose_compiler_config.conf")
+
 val Project.testReportsDir: Provider<out Directory>
     get() = rootMostProject.layout.buildDirectory.map { it.dir("junit-reports").dir(project.name) }
 
