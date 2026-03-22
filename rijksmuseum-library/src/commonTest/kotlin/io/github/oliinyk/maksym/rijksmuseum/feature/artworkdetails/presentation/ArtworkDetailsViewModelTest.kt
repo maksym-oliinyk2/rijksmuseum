@@ -1,5 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
+import androidx.navigation3.runtime.NavKey
 import app.cash.turbine.turbineScope
 import arrow.core.left
 import arrow.core.right
@@ -10,6 +11,7 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.data.ArtworkRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.ArtworkRepository
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain.GetArtworkUseCase
@@ -30,10 +32,12 @@ import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
+import org.koin.test.mock.declare
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ArtworkDetailsViewModelTest : KoinTest {
@@ -124,6 +128,31 @@ class ArtworkDetailsViewModelTest : KoinTest {
 
             assertEquals(ArtworkDetailsViewState(Loadable(artwork, Loadable.Loading)), actualStates.awaitItem())
             assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_navigates_back_on_OnBack() = runTest {
+        val backStack = mutableListOf<NavKey>(ArtworkDetailsDestination(artwork))
+
+        declare {
+            Navigator(backStack)
+        }
+
+        val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
+        val messages = MutableSharedFlow<Message>()
+        val states = viewModel(messages)
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            messages.emit(Message.OnBack)
+
+            assertTrue(backStack.isEmpty())
 
             actualStates.cancelAndConsumeRemainingEvents()
         }

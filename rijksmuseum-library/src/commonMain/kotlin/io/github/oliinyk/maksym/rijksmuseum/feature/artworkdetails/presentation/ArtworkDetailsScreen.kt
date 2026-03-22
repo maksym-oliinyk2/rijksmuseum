@@ -1,6 +1,5 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
@@ -47,6 +43,7 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.displayMessage
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.RoundedIconButton
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.contentPaddingValues
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshable
@@ -138,19 +135,14 @@ internal fun ArtworkDetailsContent(
                 state = refreshState,
             )
 
-            IconButton(
+            RoundedIconButton(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(MaterialTheme.paddings.normal)
-                    .statusBarsPadding()
-                    .background(MaterialTheme.colors.surface, RoundedCornerShape(percent = 50)),
-                onClick = onBack
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Close,
-                    contentDescription = "Go back"
-                )
-            }
+                    .padding(MaterialTheme.paddings.normal),
+                imageVector = Icons.Outlined.Close,
+                contentDescription = "Navigate back",
+                onClick = onBack,
+            )
         }
     }
 }

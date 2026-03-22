@@ -7,6 +7,8 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.Command.LoadCommand
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.Command.OnBack
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -75,5 +77,16 @@ class ArtworkDetailsViewStateTest {
 
         assertEquals(Loadable(testArtwork, Loadable.Exception(exception)), updatedState.loadable)
         assertTrue(commands.isEmpty())
+    }
+
+    @Test
+    fun when_OnBack_then_emits_OnBack_command() {
+        val initialState = ArtworkDetailsViewState(
+            loadable = Loadable.idleSingle(testArtwork)
+        )
+        val (updatedState, commands) = initialState.update(Message.OnBack)
+
+        assertEquals(initialState, updatedState)
+        assertEquals(setOf(OnBack), commands)
     }
 }

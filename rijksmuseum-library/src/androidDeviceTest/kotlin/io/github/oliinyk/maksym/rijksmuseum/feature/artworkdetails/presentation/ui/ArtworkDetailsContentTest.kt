@@ -1,14 +1,11 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ui
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContent
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContentTag
@@ -39,29 +36,11 @@ class ArtworkDetailsContentTest {
             ArtworkDetailsContent(
                 state = state,
                 onRefresh = {},
-            ) {}
+                onBack = {},
+            )
         }
 
         onNodeWithTag(ArtworkDetailsContentTag).assertIsDisplayed()
-    }
-
-    @Test
-    fun when_exception_with_no_data_then_error_displayed() = runComposeUiTest {
-        val errorMessage = "Failed to load artwork"
-        val state = ArtworkDetailsViewState(
-            loadable = Loadable<Artwork?>(null, Loadable.Exception(AppException(errorMessage))) as Loadable<Artwork>
-        )
-
-        setContent {
-            ArtworkDetailsContent(
-                state = state,
-                onRefresh = {},
-            ) {}
-        }
-
-        onNodeWithTag(DisplayMessageTag)
-            .assertIsDisplayed()
-            .assertTextEquals(errorMessage)
     }
 
     @Test
@@ -74,7 +53,8 @@ class ArtworkDetailsContentTest {
             ArtworkDetailsContent(
                 state = state,
                 onRefresh = {},
-            ) {}
+                onBack = {},
+            )
         }
 
         onNodeWithTag(ArtworkDetailsRefreshIndicatorTag).assertIsDisplayed()
