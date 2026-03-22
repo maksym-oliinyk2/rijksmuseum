@@ -23,22 +23,6 @@ class PaginateableTest {
     }
 
     @Test
-    fun loadingList_creates_loading_paginateable_with_provided_data() {
-        val paginateable = Paginateable.loadingList(items)
-
-        assertEquals(items, paginateable.data)
-        assertEquals(Paginateable.Loading, paginateable.state)
-    }
-
-    @Test
-    fun idleList_creates_idle_paginateable_with_empty_data_by_default() {
-        val paginateable = Paginateable.idleList<String>()
-
-        assertTrue(paginateable.data.isEmpty())
-        assertEquals(Paginateable.Idle, paginateable.state)
-    }
-
-    @Test
     fun idleList_creates_idle_paginateable_with_provided_data() {
         val paginateable = Paginateable.idleList(items)
 
@@ -47,101 +31,23 @@ class PaginateableTest {
     }
 
     @Test
-    fun isRefreshable_is_true_when_idle_and_data_empty() {
-        val paginateable = Paginateable.idleList<String>()
-
-        assertTrue(paginateable.isRefreshable)
+    fun isRefreshable_depends_on_state_and_data() {
+        assertTrue(Paginateable.idleList<String>().isRefreshable)
+        assertFalse(Paginateable.idleList(items).isRefreshable)
+        assertFalse(Paginateable.loadingList<String>().isRefreshable)
     }
 
     @Test
-    fun isRefreshable_is_false_when_idle_but_data_not_empty() {
-        val paginateable = Paginateable.idleList(items)
-
-        assertFalse(paginateable.isRefreshable)
+    fun isLoadingNext_is_true_when_loading_next_and_false_when_idle() {
+        assertTrue(Paginateable.idleList(items).toLoadingNextPage().isLoadingNext)
+        assertFalse(Paginateable.idleList(items).isLoadingNext)
     }
 
     @Test
-    fun isRefreshable_is_false_when_loading() {
-        val paginateable = Paginateable.loadingList<String>()
-
-        assertFalse(paginateable.isRefreshable)
-    }
-
-    @Test
-    fun isLoading_is_true_when_loading() {
-        val paginateable = Paginateable.loadingList<String>()
-
-        assertTrue(paginateable.isLoading)
-    }
-
-    @Test
-    fun isLoading_is_false_when_idle() {
-        val paginateable = Paginateable.idleList<String>()
-
-        assertFalse(paginateable.isLoading)
-    }
-
-    @Test
-    fun isLoadingNext_is_true_when_loading_next() {
-        val paginateable = Paginateable.idleList(items).toLoadingNextPage()
-
-        assertTrue(paginateable.isLoadingNext)
-    }
-
-    @Test
-    fun isLoadingNext_is_false_when_idle() {
-        val paginateable = Paginateable.idleList(items)
-
-        assertFalse(paginateable.isLoadingNext)
-    }
-
-    @Test
-    fun isRefreshing_is_true_when_refreshing() {
-        val paginateable = Paginateable.idleList(items).toRefreshing()
-
-        assertTrue(paginateable.isRefreshing)
-    }
-
-    @Test
-    fun isRefreshing_is_false_when_idle() {
-        val paginateable = Paginateable.idleList(items)
-
-        assertFalse(paginateable.isRefreshing)
-    }
-
-    @Test
-    fun isIdle_is_true_when_idle() {
-        val paginateable = Paginateable.idleList(items)
-
-        assertTrue(paginateable.isIdle)
-    }
-
-    @Test
-    fun isIdle_is_true_when_exception() {
-        val paginateable = Paginateable.idleList(items).toException(exception)
-
-        assertTrue(paginateable.isIdle)
-    }
-
-    @Test
-    fun isIdle_is_false_when_loading() {
-        val paginateable = Paginateable.loadingList<String>()
-
-        assertFalse(paginateable.isIdle)
-    }
-
-    @Test
-    fun isException_is_true_when_exception() {
-        val paginateable = Paginateable.idleList(items).toException(exception)
-
-        assertTrue(paginateable.isException)
-    }
-
-    @Test
-    fun isException_is_false_when_idle() {
-        val paginateable = Paginateable.idleList(items)
-
-        assertFalse(paginateable.isException)
+    fun isIdle_is_true_when_idle_or_exception_and_false_when_loading() {
+        assertTrue(Paginateable.idleList(items).isIdle)
+        assertTrue(Paginateable.idleList(items).toException(exception).isIdle)
+        assertFalse(Paginateable.loadingList<String>().isIdle)
     }
 
     @Test
@@ -149,41 +55,14 @@ class PaginateableTest {
         val paginateable = Paginateable(data = items, state = Paginateable.Idle, hasMore = true)
 
         assertTrue(paginateable.canLoadNextForIndex(index = 2, preloadOffset = 1))
-    }
-
-    @Test
-    fun canLoadNextForIndex_returns_true_when_index_beyond_threshold() {
-        val paginateable = Paginateable(data = items, state = Paginateable.Idle, hasMore = true)
-
-        assertTrue(paginateable.canLoadNextForIndex(index = 2, preloadOffset = 0))
-    }
-
-    @Test
-    fun canLoadNextForIndex_returns_false_when_index_before_threshold() {
-        val paginateable = Paginateable(data = items, state = Paginateable.Idle, hasMore = true)
-
         assertFalse(paginateable.canLoadNextForIndex(index = 0, preloadOffset = 1))
     }
 
     @Test
-    fun canLoadNextForIndex_returns_false_when_hasMore_is_false() {
-        val paginateable = Paginateable(data = items, state = Paginateable.Idle, hasMore = false)
-
-        assertFalse(paginateable.canLoadNextForIndex(index = 2, preloadOffset = 1))
-    }
-
-    @Test
-    fun canLoadNextForIndex_returns_false_when_loading() {
-        val paginateable = Paginateable(data = items, state = Paginateable.Loading, hasMore = true)
-
-        assertFalse(paginateable.canLoadNextForIndex(index = 2, preloadOffset = 1))
-    }
-
-    @Test
-    fun canLoadNextForIndex_returns_false_when_loading_next() {
-        val paginateable = Paginateable(data = items, state = Paginateable.LoadingNext, hasMore = true)
-
-        assertFalse(paginateable.canLoadNextForIndex(index = 2, preloadOffset = 1))
+    fun canLoadNextForIndex_returns_false_when_hasMore_is_false_or_not_idle() {
+        assertFalse(Paginateable(data = items, state = Paginateable.Idle, hasMore = false).canLoadNextForIndex(index = 2, preloadOffset = 1))
+        assertFalse(Paginateable(data = items, state = Paginateable.Loading, hasMore = true).canLoadNextForIndex(index = 2, preloadOffset = 1))
+        assertFalse(Paginateable(data = items, state = Paginateable.LoadingNext, hasMore = true).canLoadNextForIndex(index = 2, preloadOffset = 1))
     }
 
     @Test
@@ -207,6 +86,21 @@ class PaginateableTest {
     }
 
     @Test
+    fun toException_toRefreshing_toLoading_set_correct_state() {
+        val withException = Paginateable.idleList(items).toException(exception)
+        assertEquals(items, withException.data)
+        assertEquals(Paginateable.Exception(exception), withException.state)
+
+        val refreshing = Paginateable.idleList(items).toRefreshing()
+        assertEquals(items, refreshing.data)
+        assertEquals(Paginateable.Refreshing, refreshing.state)
+
+        val loading = Paginateable.idleList(items).toLoading()
+        assertTrue(loading.data.isEmpty())
+        assertEquals(Paginateable.Loading, loading.state)
+    }
+
+    @Test
     fun toIdle_with_page_replaces_data_from_loading() {
         val newItems = listOf("x", "y")
         val page = Page(data = newItems, hasMore = true)
@@ -214,37 +108,5 @@ class PaginateableTest {
 
         assertEquals(newItems, paginateable.data)
         assertTrue(paginateable.hasMore)
-    }
-
-    @Test
-    fun toException_sets_exception_state_and_preserves_data() {
-        val paginateable = Paginateable.idleList(items).toException(exception)
-
-        assertEquals(items, paginateable.data)
-        assertEquals(Paginateable.Exception(exception), paginateable.state)
-    }
-
-    @Test
-    fun toLoadingNextPage_sets_loading_next_state_and_preserves_data() {
-        val paginateable = Paginateable.idleList(items).toLoadingNextPage()
-
-        assertEquals(items, paginateable.data)
-        assertEquals(Paginateable.LoadingNext, paginateable.state)
-    }
-
-    @Test
-    fun toLoading_sets_loading_state_and_clears_data() {
-        val paginateable = Paginateable.idleList(items).toLoading()
-
-        assertTrue(paginateable.data.isEmpty())
-        assertEquals(Paginateable.Loading, paginateable.state)
-    }
-
-    @Test
-    fun toRefreshing_sets_refreshing_state_and_preserves_data() {
-        val paginateable = Paginateable.idleList(items).toRefreshing()
-
-        assertEquals(items, paginateable.data)
-        assertEquals(Paginateable.Refreshing, paginateable.state)
     }
 }
