@@ -3,12 +3,15 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
+import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContent
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsContentTag
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsExceptionIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsRefreshIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsViewState
 import kotlin.test.Test
@@ -58,5 +61,23 @@ class ArtworkDetailsContentTest {
         }
 
         onNodeWithTag(ArtworkDetailsRefreshIndicatorTag).assertIsDisplayed()
+    }
+
+    @Test
+    fun when_refresh_triggers_exception_then_exception_indicator_displayed() = runComposeUiTest {
+        val exception = AppException("Network error")
+        val state = ArtworkDetailsViewState(
+            loadable = Loadable.idleSingle(testArtwork).toException(exception)
+        )
+
+        setContent {
+            ArtworkDetailsContent(
+                state = state,
+                onRefresh = {},
+                onBack = {},
+            )
+        }
+
+        onNodeWithTag(ArtworkDetailsExceptionIndicatorTag).assertIsDisplayed()
     }
 }
