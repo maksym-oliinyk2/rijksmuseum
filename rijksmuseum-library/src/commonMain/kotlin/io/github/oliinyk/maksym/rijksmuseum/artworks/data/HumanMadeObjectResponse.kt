@@ -151,7 +151,7 @@ internal val HumanMadeObjectResponse.title: Title?
             }
         }
         ?.content
-        ?.let(::Title)
+        ?.let(Title::createOrNull)
 
 internal val HumanMadeObjectResponse.linguisticObjects: List<LinguisticObject>
     get() = referredToBy

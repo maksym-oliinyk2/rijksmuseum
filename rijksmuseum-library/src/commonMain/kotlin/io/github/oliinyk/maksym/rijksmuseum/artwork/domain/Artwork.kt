@@ -19,8 +19,17 @@ public data class Artwork(
 public value class NonEmptyString(
     public val value: String
 ) : CharSequence by value {
+
+    public companion object {
+        public fun createOrNull(
+            value: String
+        ): NonEmptyString? = if (isValid(value)) NonEmptyString(value) else null
+
+        public fun isValid(s: String): Boolean = s.isNotBlank()
+    }
+
     init {
-        require(value.isNotBlank()) { "Cannot be blank" }
+        require(isValid(value)) { "Cannot be blank" }
     }
 }
 

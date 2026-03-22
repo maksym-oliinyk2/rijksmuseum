@@ -122,7 +122,7 @@ class ArtworksViewModelTest : KoinTest {
             val stateHolder = get<ValueHolder<Artwork>>(named<Artwork>())
 
             assertEquals(artwork, stateHolder.value)
-            assertEquals(listOf<NavKey>(ArtworkDetailsDestination(artwork.url)), navigator)
+            assertEquals(listOf<NavKey>(ArtworkDetailsDestination(artwork.url)), navigator.toList())
             // state didn't change after navigation
             assertEquals(viewState, states.awaitItem())
             states.cancelAndConsumeRemainingEvents()
