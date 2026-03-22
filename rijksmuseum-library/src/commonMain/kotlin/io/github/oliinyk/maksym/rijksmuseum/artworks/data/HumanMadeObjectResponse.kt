@@ -104,9 +104,6 @@ internal data class HumanMadeObjectResponse(
     @Serializable
     data class Classification(
         @SerialName("id")
-        @Serializable(with = UrlSerializer::class)
-        val id: Url,
-        @SerialName("type")
         @Serializable(with = GettyAatTypeSerializer::class)
         val type: GettyAatType?,
     )
