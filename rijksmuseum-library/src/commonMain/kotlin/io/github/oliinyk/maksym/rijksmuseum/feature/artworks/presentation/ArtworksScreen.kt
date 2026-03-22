@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -50,11 +50,13 @@ import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.contentPaddingValues
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.canLoadNextForIndex
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.paddings
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.toImageRequest
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksViewState.Companion.StartPreloadBeforeItems
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_image_description
 import io.github.oliinyk.maksym.rijksmuseum.res.artworks_no_data_message
@@ -119,9 +121,11 @@ internal fun ArtworksContent(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
             ) {
                 if (state.artworks.data.isNotEmpty()) {
-                    artworkItems(state.artworks) {
-                        onMessage(Message.OnNavigateToDetails(it))
-                    }
+                    artworkItems(
+                        paginateable = state.artworks,
+                        onNavigateToDetails = { onMessage(Message.OnNavigateToDetails(it)) },
+                        onLoadNext = { onMessage(Message.OnLoadNext) },
+                    )
                 }
 
                 paginateableContent(
@@ -130,13 +134,6 @@ internal fun ArtworksContent(
                     onReload = { onMessage(Message.OnReload) },
                     onLoadNext = { onMessage(Message.OnLoadNext) }
                 )
-
-                item {
-                    // todo play with preloading strategy
-                    LaunchedEffect(Unit) {
-                        onMessage(Message.OnLoadNext)
-                    }
-                }
             }
 
             PullRefreshIndicator(
@@ -151,15 +148,22 @@ internal fun ArtworksContent(
 private fun LazyListScope.artworkItems(
     paginateable: Paginateable<Artwork>,
     onNavigateToDetails: (Artwork) -> Unit,
+    onLoadNext: () -> Unit,
 ) {
-    items(
+    itemsIndexed(
         items = paginateable.data,
-        key = { item -> item.url.toStringValue() },
-    ) { artwork ->
+        key = { _, item -> item.url.toStringValue() },
+    ) { i, artwork ->
         ArtworkCard(
             artwork = artwork,
             onClick = { onNavigateToDetails(artwork) }
         )
+
+        if (paginateable.canLoadNextForIndex(i, StartPreloadBeforeItems)) {
+            LaunchedEffect(Unit) {
+                onLoadNext()
+            }
+        }
     }
 }
 
