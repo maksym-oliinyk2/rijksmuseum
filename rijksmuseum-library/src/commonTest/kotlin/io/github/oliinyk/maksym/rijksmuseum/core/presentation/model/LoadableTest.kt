@@ -15,7 +15,7 @@ class LoadableTest {
     private val exception = AppException(Res.string.exception_unknown)
 
     @Test
-    fun idleSingle_creates_idle_loadable_with_data() {
+    fun when_idleSingle_then_idle_state_with_data() {
         val loadable = Loadable.idleSingle(data)
 
         assertEquals(data, loadable.data)
@@ -23,7 +23,7 @@ class LoadableTest {
     }
 
     @Test
-    fun loadingSingle_without_data_creates_loading_loadable_with_null() {
+    fun when_loadingSingle_without_data_then_loading_state_with_null() {
         val loadable = Loadable.loadingSingle<String>()
 
         assertNull(loadable.data)
@@ -31,7 +31,7 @@ class LoadableTest {
     }
 
     @Test
-    fun loadingList_creates_loading_loadable_with_empty_list() {
+    fun when_loadingList_then_loading_state_with_empty_list() {
         val loadable = Loadable.loadingList<String>()
 
         assertTrue(loadable.data.isEmpty())
@@ -39,39 +39,39 @@ class LoadableTest {
     }
 
     @Test
-    fun isRefreshable_is_true_when_idle_and_false_when_loading_or_refreshing() {
+    fun when_idle_then_isRefreshable_true_when_loading_or_refreshing_then_false() {
         assertTrue(Loadable.idleSingle(data).isRefreshable)
         assertFalse(Loadable.loadingSingle(data).isRefreshable)
         assertFalse(Loadable.idleSingle(data).toRefreshing().isRefreshable)
     }
 
     @Test
-    fun isLoading_is_true_when_loading_and_false_when_idle() {
+    fun when_loading_then_isLoading_true_when_idle_then_false() {
         assertTrue(Loadable.loadingSingle(data).isLoading)
         assertFalse(Loadable.idleSingle(data).isLoading)
     }
 
     @Test
-    fun isRefreshing_is_true_when_refreshing_and_false_when_idle() {
+    fun when_refreshing_then_isRefreshing_true_when_idle_then_false() {
         assertTrue(Loadable.idleSingle(data).toRefreshing().isRefreshing)
         assertFalse(Loadable.idleSingle(data).isRefreshing)
     }
 
     @Test
-    fun isIdle_is_true_when_idle_or_exception_and_false_when_loading() {
+    fun when_idle_or_exception_then_isIdle_true_when_loading_then_false() {
         assertTrue(Loadable.idleSingle(data).isIdle)
         assertTrue(Loadable.idleSingle(data).toException(exception).isIdle)
         assertFalse(Loadable.loadingSingle(data).isIdle)
     }
 
     @Test
-    fun isException_is_true_when_exception_and_false_when_idle() {
+    fun when_exception_then_isException_true_when_idle_then_false() {
         assertTrue(Loadable.idleSingle(data).toException(exception).isException)
         assertFalse(Loadable.idleSingle(data).isException)
     }
 
     @Test
-    fun toIdle_updates_data_and_sets_idle_state() {
+    fun when_toIdle_then_data_updated_and_idle_state() {
         val newData = "new data"
         val loadable = Loadable.loadingSingle(data).toIdle(newData)
 
@@ -80,7 +80,7 @@ class LoadableTest {
     }
 
     @Test
-    fun toException_sets_exception_state_and_preserves_data() {
+    fun when_toException_then_exception_state_and_data_preserved() {
         val loadable = Loadable.idleSingle(data).toException(exception)
 
         assertEquals(data, loadable.data)
@@ -88,7 +88,7 @@ class LoadableTest {
     }
 
     @Test
-    fun toRefreshing_and_toLoading_set_correct_state() {
+    fun when_toRefreshing_then_refreshing_state_when_toLoading_then_loading_state() {
         val refreshing = Loadable.idleSingle(data).toRefreshing()
         assertEquals(data, refreshing.data)
         assertEquals(Loadable.Refreshing, refreshing.state)

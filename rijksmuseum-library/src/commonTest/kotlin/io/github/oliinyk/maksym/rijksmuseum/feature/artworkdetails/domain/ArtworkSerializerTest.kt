@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 class ArtworkSerializerTest {
 
     @Test
-    fun testSerialization() {
+    fun when_serialize_and_deserialize_artwork_then_equal() {
         val artwork = Artwork(
             url = UrlFrom("https://example.com"),
             title = NonEmptyString("Title"),
@@ -35,7 +35,7 @@ class ArtworkSerializerTest {
     }
 
     @Test
-    fun testSerializationWithNulls() {
+    fun when_serialize_and_deserialize_artwork_with_nulls_then_equal() {
         val artwork = Artwork(
             url = UrlFrom("https://example.com"),
             title = NonEmptyString("Title"),

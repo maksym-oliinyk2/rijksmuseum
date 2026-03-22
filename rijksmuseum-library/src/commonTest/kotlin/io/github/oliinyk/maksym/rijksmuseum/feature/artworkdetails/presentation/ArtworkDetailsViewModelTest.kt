@@ -83,7 +83,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_displays_initial_artwork() = runTest {
+    fun when_initialized_then_displays_initial_artwork() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val states = viewModel(flowOf())
 
@@ -96,7 +96,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_refreshes_artwork() = runTest {
+    fun when_OnRefresh_then_refreshes_artwork() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val messages = MutableSharedFlow<Message>()
         val states = viewModel(messages)
@@ -116,7 +116,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_reloads_artwork() = runTest {
+    fun when_OnReload_then_reloads_artwork() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val messages = MutableSharedFlow<Message>()
         val states = viewModel(messages)
@@ -136,7 +136,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_navigates_back_on_OnBack() = runTest {
+    fun when_OnBack_then_navigates_back() = runTest {
         val backStack = mutableListOf<NavKey>(ArtworkDetailsDestination(artwork))
 
         declare {
@@ -161,7 +161,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_view_model_handles_data_loaded_error() = runTest {
+    fun when_OnDataLoaded_failure_then_exception() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val messages = MutableSharedFlow<Message>()
         val states = viewModel(messages)
