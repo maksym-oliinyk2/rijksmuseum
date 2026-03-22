@@ -6,6 +6,8 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.data.ArtworkSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
 
+// artwork is not expected to be huge for serialization, otherwise we can use in memory cache to pass
+// instance between screens
 @Serializable
 internal data class ArtworkDetailsDestination(
     @Serializable(with = ArtworkSerializer::class)

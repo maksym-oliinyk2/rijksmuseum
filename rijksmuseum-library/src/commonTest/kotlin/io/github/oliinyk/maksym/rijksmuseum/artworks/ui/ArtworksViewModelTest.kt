@@ -5,7 +5,6 @@ import app.cash.turbine.turbineScope
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsDestination
-import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
@@ -28,7 +27,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
@@ -59,8 +57,7 @@ class ArtworksViewModelTest : KoinTest {
         )
 
         single { SearchUseCase(SearchRepositoryImpl(api = api)) }
-        single(named<Artwork>()) { ValueHolder<Artwork>() }
-        single { Navigator(mutableListOf(), get(named<Artwork>())) }
+        single { Navigator(mutableListOf()) }
         single { ShareOptions(SharingStarted.Lazily, 1u) }
         factory { ArtworksViewModel(ArtworksViewState.Initial(), get()) }
     }
@@ -119,10 +116,8 @@ class ArtworksViewModelTest : KoinTest {
             messages.send(Message.OnNavigateToDetails(artwork))
 
             val navigator = get<Navigator>()
-            val stateHolder = get<ValueHolder<Artwork>>(named<Artwork>())
 
-            assertEquals(artwork, stateHolder.value)
-            assertEquals(listOf<NavKey>(ArtworkDetailsDestination(artwork.url)), navigator.toList())
+            assertEquals(listOf<NavKey>(ArtworkDetailsDestination(artwork)), navigator.toList())
             // state didn't change after navigation
             assertEquals(viewState, states.awaitItem())
             states.cancelAndConsumeRemainingEvents()

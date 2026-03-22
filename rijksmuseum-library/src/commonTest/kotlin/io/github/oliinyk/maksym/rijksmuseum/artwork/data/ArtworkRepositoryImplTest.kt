@@ -5,7 +5,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,29 +20,14 @@ class ArtworkRepositoryImplTest {
     )
 
     @Test
-    fun when_fetch_cache_empty_then_api_call() = runTest {
+    fun when_fetch_then_api_call() = runTest {
         val api = TestRijksmuseumApi(
             artworksDetails = mapOf(testUrl to testArtwork.right())
         )
-        val cache = ValueHolder<Artwork>()
-        val repository = ArtworkRepositoryImpl(api, StandardTestDispatcher(testScheduler))
+        val repository = ArtworkRepositoryImpl(api)
 
         val result = repository.fetchArtworkDetails(testUrl)
 
         assertEquals(testArtwork.right(), result)
-    }
-
-    @Test
-    fun when_fetch_cache_hit_then_cached_data() = runTest {
-        val api = TestRijksmuseumApi(
-            artworksDetails = emptyMap()
-        )
-        val cache = ValueHolder(testArtwork)
-        val repository = ArtworkRepositoryImpl(api, StandardTestDispatcher(testScheduler))
-
-        val result = repository.fetchArtworkDetails(testUrl)
-
-        assertEquals(testArtwork.right(), result)
-        assertEquals(null, cache.value)
     }
 }

@@ -4,7 +4,6 @@ import app.cash.turbine.turbineScope
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ArtworkRepository
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ArtworkRepositoryImpl
-import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.GetArtworkUseCase
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
@@ -24,7 +23,6 @@ import kotlinx.coroutines.test.setMain
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.test.KoinTest
@@ -44,7 +42,7 @@ class ArtworkDetailsViewModelTest : KoinTest {
         linguisticObjects = emptyList()
     )
 
-    private val destination = ArtworkDetailsDestination(artwork.url)
+    private val destination = ArtworkDetailsDestination(artwork)
 
     private val testModule = module {
         single {
@@ -52,13 +50,12 @@ class ArtworkDetailsViewModelTest : KoinTest {
                 artworksDetails = mapOf(artwork.url to artwork.right())
             )
         } bind RijksmuseumApi::class
-        single(named<Artwork>()) { ValueHolder(artwork) }
         single { ArtworkRepositoryImpl(get()) } bind ArtworkRepository::class
         single { GetArtworkUseCase(get()) }
         single { ShareOptions(SharingStarted.Lazily, 1u) }
         factory { params ->
             val dest = params.get<ArtworkDetailsDestination>()
-            ArtworkDetailsViewModel(ArtworkDetailsViewState.Initial(dest.id), get())
+            ArtworkDetailsViewModel(ArtworkDetailsViewState.Initial(dest.artwork), get())
         }
     }
 
@@ -77,21 +74,14 @@ class ArtworkDetailsViewModelTest : KoinTest {
     }
 
     @Test
-    fun test_loads_artwork_initially_given_cached_artwork() = runTest {
+    fun test_view_model_displays_initial_artwork() = runTest {
         val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
         val states = viewModel(flowOf())
 
         turbineScope {
             val actualStates = states.testIn(this)
-            val expectedStates = listOf(
-                ArtworkDetailsViewState(destination.id, Loadable.loadingSingle()),
-                ArtworkDetailsViewState(destination.id, Loadable.idleSingle(artwork)),
-            )
 
-            expectedStates.forEach { state ->
-                assertEquals(state, actualStates.awaitItem())
-            }
-
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
             actualStates.cancelAndConsumeRemainingEvents()
         }
     }

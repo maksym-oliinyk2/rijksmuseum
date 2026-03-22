@@ -12,7 +12,6 @@ import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContentTag
 import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
-import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
@@ -26,7 +25,6 @@ import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.flow.SharingStarted
 import org.koin.core.context.stopKoin
 import org.koin.core.module.Module
-import org.koin.core.qualifier.named
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
@@ -93,6 +91,5 @@ private fun TestAppModule(
 ): Module = module {
     single { ShareOptions(SharingStarted.Lazily, 1u) }
     single { testApi }.bind(RijksmuseumApi::class)
-    single { Navigator(backStack, get(named<Artwork>())) }
-    single(named<Artwork>()) { ValueHolder<Artwork>() }
+    single { Navigator(backStack) }
 }
