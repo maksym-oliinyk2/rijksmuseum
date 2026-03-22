@@ -48,7 +48,6 @@ internal fun RijksmuseumApp(
     // Also, we need to make sure we don't reference non-singletons inside nav entries!
     // see CompositionKoinApplicationLoader
     KoinApplication(
-        // todo check if rememberUpdatedState is needed here
         logLevel = logLevel,
         configuration = configurationProvider(
             rememberNavBackStack(SavedStateConfig, ArtworksDestination)

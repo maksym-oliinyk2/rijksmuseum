@@ -1,6 +1,8 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation
 
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
@@ -9,7 +11,6 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.ProgressIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
@@ -62,7 +63,7 @@ class ArtworksContentTest {
             )
         }
 
-        onNodeWithTag(ProgressIndicatorTag).assertExists()
+        onAllNodesWithTag(ArtworksShimmerItemTag).onFirst().assertExists()
     }
 
     @Test

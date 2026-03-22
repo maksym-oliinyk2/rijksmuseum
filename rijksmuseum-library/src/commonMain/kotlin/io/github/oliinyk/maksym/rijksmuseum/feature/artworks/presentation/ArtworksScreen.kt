@@ -74,7 +74,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
 internal const val ArtworksScreenTag = "Artworks screen"
-internal const val ArtworksScrollContainerTag = "Scroll container"
+internal const val ArtworksScrollContainerTag = "Artworks scroll container"
+internal const val ArtworksShimmerItemTag = "Artworks shimmer item"
 private val CardImageHeight = 200.dp
 private val ShimmerTitles = listOf(
     "The Night Watch",
@@ -256,7 +257,9 @@ private fun LazyListScope.shimmerItems() {
             )
 
             ShimmerCard(
-                modifier = Modifier.graphicsLayer { this.alpha = alpha },
+                modifier = Modifier
+                    .graphicsLayer { this.alpha = alpha }
+                    .testTag(ArtworksShimmerItemTag),
                 title = Title(ShimmerTitles[i])
             )
         }
