@@ -16,9 +16,9 @@ import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toLoading
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsDestination
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.SearchRepositoryImpl
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.ArtworksRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data.TestRijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.ArtworksUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
 import io.github.oliinyk.maksym.rijksmuseum.res.Res
 import io.github.oliinyk.maksym.rijksmuseum.res.exception_unknown
@@ -66,7 +66,7 @@ class ArtworksViewModelTest : KoinTest {
             )
         )
 
-        single { SearchUseCase(SearchRepositoryImpl(api = api)) }
+        single { ArtworksUseCase(ArtworksRepositoryImpl(api = api)) }
         single { Navigator(mutableListOf()) }
         single { ShareOptions(SharingStarted.Lazily, 1u) }
         factory { ArtworksViewModel(Initializer(ArtworksViewState(), LoadCommand(Paging(0, 1))), get()) }
@@ -205,7 +205,7 @@ class ArtworksViewModelTest : KoinTest {
         )
 
         declare {
-            SearchUseCase(SearchRepositoryImpl(api = api))
+            ArtworksUseCase(ArtworksRepositoryImpl(api = api))
         }
 
         val viewModel = get<ArtworksViewModel>()
@@ -248,7 +248,7 @@ class ArtworksViewModelTest : KoinTest {
                 searchResponses = mapOf(BuildConfig.InitialPageUrl to error.left())
             )
 
-            SearchUseCase(SearchRepositoryImpl(api = api))
+            ArtworksUseCase(ArtworksRepositoryImpl(api = api))
         }
 
         val viewModel = get<ArtworksViewModel>()

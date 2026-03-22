@@ -2,7 +2,7 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation
 
 import androidx.lifecycle.viewModelScope
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav.Navigator
-import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.SearchUseCase
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.domain.ArtworksUseCase
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.LoadCommand
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksCommand.NavigateToDetails
 import io.github.xlopec.tea.core.Component
@@ -21,7 +21,7 @@ internal class ArtworksViewModel(
     shareOptions: ShareOptions,
 ) : ScopeViewModel() {
 
-    private val searchUseCase: SearchUseCase by scope.inject()
+    private val artworksUseCase: ArtworksUseCase by scope.inject()
     private val navigator: Navigator by scope.inject()
     private val component = Component(
         initializer = initializer,
@@ -40,7 +40,7 @@ internal class ArtworksViewModel(
         snapshot.commands.forEach { command ->
             when (command) {
                 is LoadCommand -> ctx effect {
-                    Message.OnDataLoaded(searchUseCase.searchArtworks(command.paging))
+                    Message.OnDataLoaded(artworksUseCase.fetchArtworks(command.paging))
                 }
 
                 is NavigateToDetails -> ctx sideEffect {
