@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -23,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -37,6 +37,8 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.artwork_details_no_data
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.contentPaddingValues
@@ -48,6 +50,9 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
+
+internal const val ArtworkDetailsScreenTag = "Artwork details screen"
+internal const val ArtworkDetailsContentTag = "Artwork details content"
 
 private val TopBarImageHeight = 300.dp
 
@@ -73,7 +78,6 @@ internal fun ArtworkDetailsScreen(
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 internal fun ArtworkDetailsContent(
     state: ArtworkDetailsViewState,
     onRefresh: () -> Unit,
@@ -86,7 +90,7 @@ internal fun ArtworkDetailsContent(
     )
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.testTag(ArtworkDetailsScreenTag),
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -132,13 +136,11 @@ private fun ArtworkLoadableContent(
                 // Handle empty data if necessary, though for details it's likely an error if idle and null
                 DisplayMessage(
                     modifier = Modifier.fillMaxSize(),
-                    message = "No data available",
+                    message = stringResource(Res.string.artwork_details_no_data),
                     onRetry = onRefresh
                 )
             }
         }
-
-        else -> {}
     }
 }
 
@@ -148,7 +150,9 @@ private fun ArtworkDetails(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(ArtworkDetailsContentTag),
         contentPadding = contentPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal)
     ) {
@@ -175,7 +179,7 @@ private fun ArtworkDetails(
         }
 
         items(
-            items = artwork.descriptions,
+            items = artwork.linguisticObjects,
         ) { linguisticObject ->
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.small)) {
                 Text(
@@ -206,7 +210,7 @@ private fun ArtworkDetailsContentPreview() {
                         url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                         title = Title("The Night Watch"),
                         primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
-                        descriptions = listOf(
+                        linguisticObjects = listOf(
                             LinguisticObject(
                                 type = GettyAatType.Description,
                                 descriptions = NonEmptyList.of(

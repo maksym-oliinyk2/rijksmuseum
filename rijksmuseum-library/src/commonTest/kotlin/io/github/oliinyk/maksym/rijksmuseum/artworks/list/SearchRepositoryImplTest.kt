@@ -2,12 +2,12 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.list
 
 import arrow.core.left
 import arrow.core.right
+import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi.Companion.InitialPageUrl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
@@ -22,12 +22,12 @@ import kotlin.test.assertSame
 class SearchRepositoryImplTest {
 
     @Test
-    fun `when fetchArtworks and cache is empty then it fetches from api`() = runTest {
+    fun when_fetch_cache_empty_then_api_call() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-3262")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/en-SK-A-4878")
 
-        val searchResponse = createSearchResponse(
+        val searchResponse = ArtworksResponse(
             item1Id,
             item2Id,
             UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-3"),
@@ -45,13 +45,13 @@ class SearchRepositoryImplTest {
             url = item1Id,
             title = Title("The Night Watch"),
             primaryImage = UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B"),
-            descriptions = listOf(),
+            linguisticObjects = listOf(),
         )
         val artwork2 = Artwork(
             url = item2Id,
             title = Title("The Milkmaid"),
             primaryImage = UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B"),
-            descriptions = listOf(),
+            linguisticObjects = listOf(),
         )
 
         // Fill the details for all items to avoid errors during parMap
@@ -60,7 +60,7 @@ class SearchRepositoryImplTest {
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 primaryImage = UrlFrom("https://image.url/${item.id}"),
-                descriptions = listOf(),
+                linguisticObjects = listOf(),
             )
         }.toMutableMap()
 
@@ -87,7 +87,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and cache hit with enough items then it returns cached data`() = runTest {
+    fun when_fetch_cache_hit_enough_then_cached_data() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
@@ -107,7 +107,7 @@ class SearchRepositoryImplTest {
                 url = item.id,
                 title = Title("Title for ${item.id}"),
                 primaryImage = UrlFrom("https://image.url/${item.id}"),
-                descriptions = listOf(),
+                linguisticObjects = listOf(),
             )
         }
 
@@ -131,7 +131,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and cache hit and it is end of pagination then it returns end of page`() = runTest {
+    fun when_fetch_cache_hit_end_then_end_of_page() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
 
@@ -164,7 +164,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and cache hit but not enough items then it fetches next page`() =
+    fun when_fetch_cache_hit_not_enough_then_next_page() =
         runTest {
             // Setup
             val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
@@ -191,19 +191,19 @@ class SearchRepositoryImplTest {
                     url = item1Id,
                     title = Title("Title for $item1Id"),
                     primaryImage = UrlFrom("https://image.url/item-1"),
-                    descriptions = listOf()
+                    linguisticObjects = listOf()
                 ),
                 item2Id to Artwork(
                     url = item2Id,
                     title = Title("Title for $item2Id"),
                     primaryImage = UrlFrom("https://image.url/item-2"),
-                    descriptions = listOf()
+                    linguisticObjects = listOf()
                 ),
                 item3Id to Artwork(
                     url = item3Id,
                     title = Title("Title for $item3Id"),
                     primaryImage = UrlFrom("https://image.url/item-3"),
-                    descriptions = listOf()
+                    linguisticObjects = listOf()
                 )
             )
 
@@ -235,7 +235,7 @@ class SearchRepositoryImplTest {
         }
 
     @Test
-    fun `when fetchArtworks and request is beyond cache and no more pages then it returns end of page`() = runTest {
+    fun when_fetch_beyond_cache_no_more_then_end_of_page() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -266,7 +266,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and multiple pages need to be fetched then it fetches them all`() = runTest {
+    fun when_fetch_multiple_pages_then_fetches_all() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val item2Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-2")
@@ -277,19 +277,19 @@ class SearchRepositoryImplTest {
                 url = item1Id,
                 title = Title("Title for $item1Id"),
                 primaryImage = UrlFrom("https://image.url/item-1"),
-                descriptions = listOf()
+                linguisticObjects = listOf()
             ),
             item2Id to Artwork(
                 url = item2Id,
                 title = Title("Title for $item2Id"),
                 primaryImage = UrlFrom("https://image.url/item-2"),
-                descriptions = listOf()
+                linguisticObjects = listOf()
             ),
             item3Id to Artwork(
                 url = item3Id,
                 title = Title("Title for $item3Id"),
                 primaryImage = UrlFrom("https://image.url/item-3"),
-                descriptions = listOf()
+                linguisticObjects = listOf()
             )
         )
 
@@ -321,7 +321,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and fetching details fails then it returns failure`() = runTest {
+    fun when_fetch_details_fails_then_failure() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -350,7 +350,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when fetchArtworks and fetching ids fails then it returns failure`() = runTest {
+    fun when_fetch_ids_fails_then_failure() = runTest {
         // Setup
         val exception = AppException("Network error")
         val api = TestRijksmuseumApi(
@@ -368,7 +368,7 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `when hasMore and exactly at the end of items and no next page then it returns false`() = runTest {
+    fun when_hasMore_end_no_next_then_false() = runTest {
         // Setup
         val item1Id = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/item-1")
         val initialSearchResponse = HumanMadeObjectResponse.ArtworksResponse(
@@ -380,7 +380,7 @@ class SearchRepositoryImplTest {
                 url = item1Id,
                 title = Title("Title"),
                 primaryImage = null,
-                descriptions = listOf()
+                linguisticObjects = listOf()
             )
         )
         val api = TestRijksmuseumApi(
@@ -409,7 +409,7 @@ class SearchRepositoryImplTest {
     }
 }
 
-private fun createSearchResponse(
+private fun ArtworksResponse(
     vararg ids: Url
 ) = HumanMadeObjectResponse.ArtworksResponse(
     next = HumanMadeObjectResponse.NextPage(

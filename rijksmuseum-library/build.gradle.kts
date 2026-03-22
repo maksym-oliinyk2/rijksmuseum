@@ -17,7 +17,13 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xexpect-actual-classes",
-            "-Xconsistent-data-class-copy-visibility"
+            "-Xconsistent-data-class-copy-visibility",
+            "-opt-in=kotlin.experimental.ExperimentalObjCName",
+            "-opt-in=io.github.xlopec.tea.core.ExperimentalTeaApi",
+            "-opt-in=org.koin.core.annotation.KoinExperimentalAPI",
+            "-opt-in=org.koin.core.annotation.KoinViewModelScopeApi",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.ui.test.ExperimentalTestApi",
         )
 
         if (project.findProperty("enableComposeCompilerLogs").toString().toBoolean()) {
@@ -36,9 +42,10 @@ kotlin {
         minSdk = libs.versions.android.minSdk.get().toInt()
         androidResources.enable = true
 
-        withJava() // enable java compilation support
         withHostTestBuilder {}.configure {}
-        withDeviceTest {
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             execution = "HOST"
 
@@ -104,9 +111,15 @@ kotlin {
         }
 
         commonTest {
+            compilerOptions {
+                freeCompilerArgs.addAll("-opt-in=androidx.compose.ui.test.ExperimentalTestApi")
+            }
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.coroutines.test)
+                implementation(libs.compose.ui.test)
+                implementation(libs.koin.test)
+                implementation(libs.turbine)
             }
         }
 
@@ -126,15 +139,12 @@ kotlin {
 
         getByName("androidHostTest") {
             dependencies {
-                implementation(libs.kotlin.test)
                 implementation(libs.junit)
             }
         }
 
         getByName("androidDeviceTest") {
             dependencies {
-                implementation(libs.kotlin.test)
-                implementation(libs.compose.ui.test)
                 implementation(libs.compose.test.manifest)
             }
         }
@@ -150,6 +160,14 @@ buildConfig {
 
     logger.log(LogLevel.LIFECYCLE, "DEBUG enabled: $debugEnabled")
     buildConfigField("kotlin.Boolean", "DEBUG", "$debugEnabled")
+    buildConfigField("kotlin.Long", "RequestTimeoutMs", "5000L")
+    buildConfigField("kotlin.Long", "ConnectTimeoutMs", "5000L")
+    buildConfigField("kotlin.Long", "SocketTimeoutMs", "7000L")
+    buildConfigField(
+        "io.github.oliinyk.maksym.rijksmuseum.domain.Url",
+        "InitialPageUrl",
+        "io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom(\"https://data.rijksmuseum.nl/search/collection\")"
+    )
 }
 
 compose.resources {

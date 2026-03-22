@@ -17,8 +17,8 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsScreen
 import io.github.oliinyk.maksym.rijksmuseum.artwork.registerArtworkNavEntry
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksDestination
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksScreen
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.registerArtworksNavEntry
+import io.github.oliinyk.maksym.rijksmuseum.ui.nav.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.ui.theme.RijksmuseumTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

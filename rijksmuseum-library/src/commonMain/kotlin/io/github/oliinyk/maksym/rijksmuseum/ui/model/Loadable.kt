@@ -45,8 +45,6 @@ public data class Loadable<out T>(
 
     public data object Loading : State
 
-    public data object LoadingNext : State
-
     public data object Refreshing : State
 
     public data object Idle : State
@@ -75,8 +73,8 @@ internal fun <T> Loadable<T>.toException(
     cause: AppException,
 ): Loadable<T> = copy(state = Loadable.Exception(cause))
 
-internal fun <T> Loadable<T>.toLoading(): Loadable<T> =
-    copy(state = Loadable.Loading)
+internal fun <T> Loadable<T?>.toLoading(): Loadable<T?> =
+    copy(data = null, state = Loadable.Loading)
 
 internal fun <T> Loadable<T>.toRefreshing(): Loadable<T> =
     copy(state = Loadable.Refreshing)

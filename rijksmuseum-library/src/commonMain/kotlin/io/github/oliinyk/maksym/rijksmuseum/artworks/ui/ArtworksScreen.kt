@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -33,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,6 +61,8 @@ import io.github.oliinyk.maksym.rijksmuseum.ui.theme.paddings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
+internal const val ArtworksScreenTag = "Artworks screen"
+internal const val ArtworksScrollContainerTag = "Scroll container"
 private val CardImageHeight = 200.dp
 
 // todo document - more than 4 action handler lambdas -> use message handler
@@ -86,7 +88,6 @@ internal fun ArtworksScreen(
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 internal fun ArtworksContent(
     state: ArtworksViewState,
     onMessage: (Message) -> Unit,
@@ -98,7 +99,9 @@ internal fun ArtworksContent(
     )
 
     Scaffold(
-        modifier = modifier.navigationBarsPadding(),
+        modifier = modifier
+            .navigationBarsPadding()
+            .testTag(ArtworksScreenTag),
     ) { paddingValues ->
 
         Box(
@@ -108,7 +111,9 @@ internal fun ArtworksContent(
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(ArtworksScrollContainerTag),
                 contentPadding = contentPaddingValues(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
@@ -194,7 +199,6 @@ private fun LazyListScope.paginateableContent(
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 private fun ArtworkCard(
     artwork: Artwork,
     onClick: () -> Unit,
@@ -255,13 +259,13 @@ private fun ArtworksContentPreview() {
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                             title = Title("The Night Watch"),
                             primaryImage = UrlFrom("https://lh3.googleusercontent.com/nightwatch"),
-                            descriptions = emptyList()
+                            linguisticObjects = emptyList()
                         ),
                         Artwork(
                             url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-2344"),
                             title = Title("The Milkmaid"),
                             primaryImage = UrlFrom("https://lh3.googleusercontent.com/milkmaid"),
-                            descriptions = emptyList()
+                            linguisticObjects = emptyList()
                         )
                     )
                 )

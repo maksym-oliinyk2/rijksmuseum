@@ -2,11 +2,15 @@ package io.github.oliinyk.maksym.rijksmuseum.app
 
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
+import io.github.oliinyk.maksym.rijksmuseum.artwork.DetailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ValueHolder
-import io.github.oliinyk.maksym.rijksmuseum.artwork.detailsModule
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.artworks.searchModule
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
+import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
+import io.github.oliinyk.maksym.rijksmuseum.ui.nav.Navigator
+import io.github.xlopec.tea.core.ShareOptions
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
@@ -18,20 +22,23 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.bind
 
-@Suppress("FunctionName")
 internal fun AppModule(
     backStack: NavBackStack<NavKey>,
     engine: HttpClientEngineFactory<HttpClientEngineConfig>,
 ): Module = module {
-    includes(searchModule, detailsModule)
+    includes(SearchModule, DetailsModule)
     single { HttpClient(LogLevel.ALL, engine) }
     single { Navigator(backStack, get(named<Artwork>())) }
     single(named<Artwork>()) { ValueHolder<Artwork>() }
+    single { ShareOptions(SharingStarted.Lazily, 1u) }
+    single { RijksmuseumApiImpl(get()) }.bind(RijksmuseumApi::class)
 }
 
 private fun HttpClient(
@@ -45,10 +52,9 @@ private fun HttpClient(
     }
 
     install(HttpTimeout) {
-        // todo provide via build config
-        requestTimeoutMillis = RequestTimeoutMillis
-        connectTimeoutMillis = ConnectTimeoutMillis
-        socketTimeoutMillis = SocketTimeoutMillis
+        requestTimeoutMillis = BuildConfig.RequestTimeoutMs
+        connectTimeoutMillis = BuildConfig.ConnectTimeoutMs
+        socketTimeoutMillis = BuildConfig.SocketTimeoutMs
     }
 
     install(ContentNegotiation) {
@@ -56,7 +62,6 @@ private fun HttpClient(
             json = Json {
                 ignoreUnknownKeys = true
                 useAlternativeNames = false
-                isLenient = true
             }
         )
     }
@@ -66,7 +71,3 @@ private fun HttpClient(
         level = logLevel
     }
 }
-
-private const val RequestTimeoutMillis = 5000L
-private const val ConnectTimeoutMillis = 5000L
-private const val SocketTimeoutMillis = 7000L

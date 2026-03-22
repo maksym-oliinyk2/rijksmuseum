@@ -1,27 +1,21 @@
 package io.github.oliinyk.maksym.rijksmuseum.artworks
 
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
-import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepository
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.core.annotation.KoinViewModelScopeApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksViewState
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.scopedOf
-import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.bind
 import org.koin.viewmodel.scope.viewModelScope
 
-@OptIn(KoinExperimentalAPI::class, KoinViewModelScopeApi::class)
-internal val searchModule: Module = module {
-    viewModelOf(::ArtworksViewModel)
+internal val SearchModule: Module = module {
+    viewModel { ArtworksViewModel(ArtworksViewState.Initial(), get()) }
 
     viewModelScope {
-        scopedOf(::RijksmuseumApiImpl).bind(RijksmuseumApi::class)
         scoped { SearchRepositoryImpl(get()) }.bind(SearchRepository::class)
-        scopedOf(::SearchUseCase)
+        scoped { SearchUseCase(get()) }
     }
 }
