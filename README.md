@@ -137,3 +137,44 @@ Examples:
 ### Code style
 
 - when composable lambda takes more than 4 action lambdas → use message handler, see ArtworkDetailsScreen.kt for example
+
+### Naming conventions
+
+**`PascalCase` constants and top-level values in Compose sources**
+
+In Compose (and Compose Multiplatform) source files, file-level `val`/`const val` declarations that act as configuration or UI constants are named in `PascalCase` rather than the usual `SCREAMING_SNAKE_CASE`. This mirrors the style used by the Compose framework itself (e.g. `ContentScale.Crop`, `Arrangement.Center`).
+
+Examples from this project:
+
+```kotlin
+// ArtworksScreen.kt
+private val CardImageHeight = 200.dp
+private const val ShimmerDurationMillis = 1000
+private const val ShimmerPeakAlpha = 0.7f
+
+// ArtworksViewState.kt
+private const val StartPreloadBeforeItems = 3
+```
+
+The same convention applies to companion-object constants that serve as named defaults:
+
+```kotlin
+// Page.kt
+internal companion object {
+    const val ItemsPerPage = 10        // PascalCase, not ITEMS_PER_PAGE
+    val FirstPage = Paging(currentSize = 0)
+}
+```
+
+**Uppercase-starting functions**
+
+Functions whose name starts with an uppercase letter are allowed in this project when the function acts as a factory or constructor-like builder. This is consistent with how the Kotlin standard library itself names certain constructs (e.g. `kotlin.collections.List(n) { … }`, `kotlinx.coroutines.channels.Channel()`).
+
+Examples from this project:
+
+```kotlin
+// Url.kt
+public expect fun UrlFrom(value: String): Url   // factory for the expect class Url
+```
+
+This convention makes call sites read like constructor calls and signals that the function produces a new value of the named type.

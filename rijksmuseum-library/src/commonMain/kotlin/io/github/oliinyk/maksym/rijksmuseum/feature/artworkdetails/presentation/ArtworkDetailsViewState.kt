@@ -27,6 +27,8 @@ internal sealed interface Message {
     ) : Message
 }
 
+// would be nice to add artwork's images instead of just
+// a single primary image, but I'm out of time
 internal data class ArtworkDetailsViewState(
     val loadable: Loadable<Artwork>,
 ) {
