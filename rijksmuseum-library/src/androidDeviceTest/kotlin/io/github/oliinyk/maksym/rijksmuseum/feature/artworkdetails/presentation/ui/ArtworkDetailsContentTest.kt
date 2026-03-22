@@ -32,33 +32,31 @@ class ArtworkDetailsContentTest {
     @Test
     fun when_idle_with_artwork_then_details_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
-            artwork = Loadable.idleSingle(testArtwork)
+            loadable = Loadable.idleSingle(testArtwork)
         )
 
         setContent {
             ArtworkDetailsContent(
                 state = state,
                 onRefresh = {},
-                onReload = {}
-            )
+            ) {}
         }
 
         onNodeWithTag(ArtworkDetailsContentTag).assertIsDisplayed()
     }
 
     @Test
-    fun when_exception_then_error_displayed() = runComposeUiTest {
+    fun when_exception_with_no_data_then_error_displayed() = runComposeUiTest {
         val errorMessage = "Failed to load artwork"
         val state = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Exception(AppException(errorMessage)))
+            loadable = Loadable<Artwork?>(null, Loadable.Exception(AppException(errorMessage))) as Loadable<Artwork>
         )
 
         setContent {
             ArtworkDetailsContent(
                 state = state,
                 onRefresh = {},
-                onReload = {}
-            )
+            ) {}
         }
 
         onNodeWithTag(DisplayMessageTag)
@@ -69,15 +67,14 @@ class ArtworkDetailsContentTest {
     @Test
     fun when_refreshing_then_progress_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Refreshing)
+            loadable = Loadable(testArtwork, Loadable.Refreshing)
         )
 
         setContent {
             ArtworkDetailsContent(
                 state = state,
                 onRefresh = {},
-                onReload = {}
-            )
+            ) {}
         }
 
         onNodeWithTag(ArtworkDetailsRefreshIndicatorTag).assertIsDisplayed()

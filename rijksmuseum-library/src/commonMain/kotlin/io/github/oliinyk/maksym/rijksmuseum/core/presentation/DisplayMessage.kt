@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +41,7 @@ internal fun DisplayMessage(
             style = typography.body1
         )
         Spacer(modifier = Modifier.height(MaterialTheme.paddings.normal))
-        Button(onClick = onRetry) {
+        TextButton(onClick = onRetry) {
             Text(stringResource(Res.string.artworks_action_retry))
         }
     }

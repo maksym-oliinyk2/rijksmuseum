@@ -24,29 +24,29 @@ class ArtworkDetailsViewStateTest {
     @Test
     fun when_OnReload_then_loading() {
         val initialState = ArtworkDetailsViewState(
-            artwork = Loadable.idleSingle(testArtwork)
+            loadable = Loadable.idleSingle(testArtwork)
         )
         val (updatedState, commands) = initialState.update(Message.OnReload)
 
-        assertEquals(Loadable(testArtwork, Loadable.Loading), updatedState.artwork)
+        assertEquals(Loadable(testArtwork, Loadable.Loading), updatedState.loadable)
         assertEquals(setOf(LoadCommand(testUrl)), commands)
     }
 
     @Test
     fun when_OnRefresh_refreshable_then_refreshing() {
         val initialState = ArtworkDetailsViewState(
-            artwork = Loadable.idleSingle(testArtwork)
+            loadable = Loadable.idleSingle(testArtwork)
         )
         val (updatedState, commands) = initialState.update(Message.OnRefresh)
 
-        assertEquals(Loadable(testArtwork, Loadable.Refreshing), updatedState.artwork)
+        assertEquals(Loadable(testArtwork, Loadable.Refreshing), updatedState.loadable)
         assertEquals(setOf(LoadCommand(testUrl)), commands)
     }
 
     @Test
     fun when_OnRefresh_not_refreshable_then_no_change() {
         val initialState = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Loading)
+            loadable = Loadable(testArtwork, Loadable.Loading)
         )
         val (updatedState, commands) = initialState.update(Message.OnRefresh)
 
@@ -57,23 +57,23 @@ class ArtworkDetailsViewStateTest {
     @Test
     fun when_OnDataLoaded_success_then_idle_with_data() {
         val initialState = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Loading)
+            loadable = Loadable(testArtwork, Loadable.Loading)
         )
         val (updatedState, commands) = initialState.update(Message.OnDataLoaded(testArtwork.right()))
 
-        assertEquals(Loadable.idleSingle(testArtwork), updatedState.artwork)
+        assertEquals(Loadable.idleSingle(testArtwork), updatedState.loadable)
         assertTrue(commands.isEmpty())
     }
 
     @Test
     fun when_OnDataLoaded_failure_then_exception() {
         val initialState = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Loading)
+            loadable = Loadable(testArtwork, Loadable.Loading)
         )
         val exception = AppException("Test Exception")
         val (updatedState, commands) = initialState.update(Message.OnDataLoaded(exception.left()))
 
-        assertEquals(Loadable(testArtwork, Loadable.Exception(exception)), updatedState.artwork)
+        assertEquals(Loadable(testArtwork, Loadable.Exception(exception)), updatedState.loadable)
         assertTrue(commands.isEmpty())
     }
 }

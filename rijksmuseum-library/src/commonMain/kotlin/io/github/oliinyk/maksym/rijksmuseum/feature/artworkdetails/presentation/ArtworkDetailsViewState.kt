@@ -9,6 +9,7 @@ import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshabl
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toException
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toIdle
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.toRefreshing
+import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.Command.LoadCommand
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.Update
 import io.github.xlopec.tea.core.command
@@ -18,6 +19,7 @@ import kotlin.jvm.JvmInline
 internal sealed interface Message {
     data object OnReload : Message
     data object OnRefresh : Message
+    data object OnBack : Message
 
     @JvmInline
     value class OnDataLoaded(
@@ -26,36 +28,41 @@ internal sealed interface Message {
 }
 
 internal data class ArtworkDetailsViewState(
-    val artwork: Loadable<Artwork>,
+    val loadable: Loadable<Artwork>,
 ) {
     companion object {
-        fun Initial(artwork: Artwork): Initializer<ArtworkDetailsViewState, LoadCommand> =
-            Initializer(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), emptySet<LoadCommand>())
+        fun Initial(artwork: Artwork): Initializer<ArtworkDetailsViewState, Command> =
+            Initializer(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), setOf())
     }
 }
 
-@JvmInline
-internal value class LoadCommand(
-    val artworkId: Url,
-)
+internal sealed interface Command {
+    data object OnBack : Command
 
-internal fun ArtworkDetailsViewState.update(message: Message): Update<ArtworkDetailsViewState, LoadCommand> {
+    @JvmInline
+    value class LoadCommand(
+        val artworkId: Url,
+    ) : Command
+}
+
+internal fun ArtworkDetailsViewState.update(message: Message): Update<ArtworkDetailsViewState, Command> {
     return when (message) {
         is Message.OnDataLoaded -> onLoaded(message.result)
         Message.OnRefresh -> onRefresh()
         Message.OnReload -> onReload()
+        Message.OnBack -> command(Command.OnBack)
     }
 }
 
-private fun ArtworkDetailsViewState.onReload(): Update<ArtworkDetailsViewState, LoadCommand> {
-    return copy(artwork = Loadable(artwork.data, Loadable.Loading))
-        .command(LoadCommand(artwork.data.url))
+private fun ArtworkDetailsViewState.onReload(): Update<ArtworkDetailsViewState, Command> {
+    return copy(loadable = Loadable(loadable.data, Loadable.Loading))
+        .command(LoadCommand(loadable.data.url))
 }
 
-private fun ArtworkDetailsViewState.onRefresh(): Update<ArtworkDetailsViewState, LoadCommand> {
-    return if (artwork.isRefreshable) {
-        copy(artwork = artwork.toRefreshing())
-            .command(LoadCommand(artwork.data.url))
+private fun ArtworkDetailsViewState.onRefresh(): Update<ArtworkDetailsViewState, Command> {
+    return if (loadable.isRefreshable) {
+        copy(loadable = loadable.toRefreshing())
+            .command(LoadCommand(loadable.data.url))
     } else {
         noCommand()
     }
@@ -65,8 +72,8 @@ private fun ArtworkDetailsViewState.onLoaded(
     result: Either<AppException, Artwork>
 ): Update<ArtworkDetailsViewState, LoadCommand> {
     val updated = result.fold(
-        { artwork.toException(it) },
-        { artwork.toIdle(it) }
+        { loadable.toException(it) },
+        { loadable.toIdle(it) }
     )
-    return copy(artwork = updated).noCommand()
+    return copy(loadable = updated).noCommand()
 }

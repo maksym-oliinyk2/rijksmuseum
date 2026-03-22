@@ -1,22 +1,32 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,7 +47,6 @@ import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.displayMessage
-import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessage
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.contentPaddingValues
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Loadable
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshable
@@ -51,6 +60,7 @@ import org.jetbrains.compose.resources.stringResource
 internal const val ArtworkDetailsScreenTag = "Artwork details screen"
 internal const val ArtworkDetailsContentTag = "Artwork details content"
 internal const val ArtworkDetailsRefreshIndicatorTag = "Artwork details refresh indicator"
+internal const val ArtworkDetailsExceptionIndicatorTag = "Artwork details exception indicator"
 
 private val TopBarImageHeight = 300.dp
 
@@ -67,10 +77,10 @@ internal fun ArtworkDetailsScreen(
         val messageHandle = rememberMessageHandler(messages::emit)
 
         ArtworkDetailsContent(
-            modifier = modifier,
             state = currentState,
             onRefresh = { messageHandle(Message.OnRefresh) },
-            onReload = { messageHandle(Message.OnReload) },
+            onBack = { messageHandle(Message.OnBack) },
+            modifier = modifier,
         )
     }
 }
@@ -79,53 +89,68 @@ internal fun ArtworkDetailsScreen(
 internal fun ArtworkDetailsContent(
     state: ArtworkDetailsViewState,
     onRefresh: () -> Unit,
-    onReload: () -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val refreshState = rememberPullRefreshState(
-        refreshing = state.artwork.isRefreshing,
+        refreshing = state.loadable.isRefreshing,
         onRefresh = onRefresh,
     )
+    val scaffoldState = rememberScaffoldState()
 
     Scaffold(
         modifier = modifier.testTag(ArtworkDetailsScreenTag),
+        scaffoldState = scaffoldState,
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .testTag(ArtworkDetailsExceptionIndicatorTag),
+                hostState = it,
+            )
+        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
-                .pullRefresh(refreshState, state.artwork.isRefreshable),
+                .pullRefresh(refreshState, state.loadable.isRefreshable),
             contentAlignment = Alignment.TopCenter
         ) {
-            ArtworkLoadableContent(
-                state = state.artwork,
-                onReload = onReload,
+            val loadableState = state.loadable.state
+            if (loadableState is Loadable.Exception) {
+                val displayMessage = loadableState.exception.displayMessage
+
+                LaunchedEffect(loadableState) {
+                    scaffoldState.snackbarHostState.showSnackbar(displayMessage)
+                }
+            }
+
+            ArtworkDetails(
+                modifier = Modifier.fillMaxSize(),
+                artwork = state.loadable.data
             )
 
             PullRefreshIndicator(
                 modifier = Modifier
                     .statusBarsPadding()
                     .testTag(ArtworkDetailsRefreshIndicatorTag),
-                refreshing = state.artwork.isRefreshing,
+                refreshing = state.loadable.isRefreshing,
                 state = refreshState,
             )
-        }
-    }
-}
 
-@Composable
-private fun ArtworkLoadableContent(
-    state: Loadable<Artwork>,
-    onReload: () -> Unit,
-) {
-    when (val s = state.state) {
-        is Loadable.Exception -> DisplayMessage(
-            modifier = Modifier.fillMaxSize(),
-            message = s.exception.displayMessage,
-            onRetry = onReload
-        )
-
-        Loadable.Loading, Loadable.Idle, Loadable.Refreshing -> {
-            ArtworkDetails(state.data)
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(MaterialTheme.paddings.normal)
+                    .statusBarsPadding()
+                    .background(MaterialTheme.colors.surface, RoundedCornerShape(percent = 50)),
+                onClick = onBack
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = "Go back"
+                )
+            }
         }
     }
 }
@@ -190,7 +215,7 @@ private fun ArtworkDetailsContentPreview() {
     RijksmuseumTheme {
         ArtworkDetailsContent(
             state = ArtworkDetailsViewState(
-                artwork = Loadable.idleSingle(
+                loadable = Loadable.idleSingle(
                     Artwork(
                         url = UrlFrom("https://www.rijksmuseum.nl/en/collection/SK-A-4691"),
                         title = Title("The Night Watch"),
@@ -210,7 +235,7 @@ private fun ArtworkDetailsContentPreview() {
                 )
             ),
             onRefresh = {},
-            onReload = {}
+            onBack = {},
         )
     }
 }
