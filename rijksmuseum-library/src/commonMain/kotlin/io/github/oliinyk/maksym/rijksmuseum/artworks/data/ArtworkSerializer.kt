@@ -75,7 +75,10 @@ internal data class ArtworkSurrogate(
     val title: Title,
     @Serializable(with = UrlSerializer::class)
     val primaryImage: Url?,
-    val linguisticObjects: List<@Serializable(with = LinguisticObjectSerializer::class) LinguisticObject>,
+    val linguisticObjects: List<
+        @Serializable(with = LinguisticObjectSerializer::class)
+        LinguisticObject
+        >,
 )
 
 internal object ArtworkSerializer : KSerializer<Artwork> {

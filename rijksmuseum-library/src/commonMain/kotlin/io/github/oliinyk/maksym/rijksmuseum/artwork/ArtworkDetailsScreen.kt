@@ -98,7 +98,6 @@ internal fun ArtworkDetailsContent(
         ) {
             ArtworkLoadableContent(
                 state = state.artwork,
-                onRefresh = onRefresh,
                 onReload = onReload,
             )
 
@@ -114,7 +113,6 @@ internal fun ArtworkDetailsContent(
 @Composable
 private fun ArtworkLoadableContent(
     state: Loadable<Artwork>,
-    onRefresh: () -> Unit,
     onReload: () -> Unit,
 ) {
     when (val s = state.state) {

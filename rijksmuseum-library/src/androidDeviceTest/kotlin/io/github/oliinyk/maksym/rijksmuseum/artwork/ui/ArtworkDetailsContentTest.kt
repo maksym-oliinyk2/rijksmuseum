@@ -32,8 +32,7 @@ class ArtworkDetailsContentTest {
     @Test
     fun when_loading_then_progress_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
-            artworkId = testUrl,
-            artwork = Loadable.loadingSingle()
+            artwork = Loadable(testArtwork, Loadable.Loading)
         )
 
         setContent {
@@ -51,7 +50,6 @@ class ArtworkDetailsContentTest {
     @Test
     fun when_idle_with_artwork_then_details_displayed() = runComposeUiTest {
         val state = ArtworkDetailsViewState(
-            artworkId = testUrl,
             artwork = Loadable.idleSingle(testArtwork)
         )
 
@@ -70,8 +68,7 @@ class ArtworkDetailsContentTest {
     fun when_exception_then_error_displayed() = runComposeUiTest {
         val errorMessage = "Failed to load artwork"
         val state = ArtworkDetailsViewState(
-            artworkId = testUrl,
-            artwork = Loadable(null, Loadable.Exception(AppException(errorMessage)))
+            artwork = Loadable(testArtwork, Loadable.Exception(AppException(errorMessage)))
         )
 
         setContent {
