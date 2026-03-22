@@ -2,7 +2,6 @@ package io.github.oliinyk.maksym.rijksmuseum.core.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.typography
@@ -35,10 +34,9 @@ internal fun DisplayMessage(
 ) {
     Column(
         modifier = modifier
-            .semantics(true) { testTag = DisplayMessageTag }
-            .padding(MaterialTheme.paddings.normal),
+            .semantics(true) { testTag = DisplayMessageTag },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.paddings.normal, Alignment.CenterVertically),
     ) {
         if (imageVector != null) {
             Icon(

@@ -27,6 +27,8 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -74,6 +76,18 @@ import org.jetbrains.compose.resources.stringResource
 internal const val ArtworksScreenTag = "Artworks screen"
 internal const val ArtworksScrollContainerTag = "Scroll container"
 private val CardImageHeight = 200.dp
+private val ShimmerTitles = listOf(
+    "The Night Watch",
+    "Girl with a Pearl Earring",
+    "The Milkmaid",
+    "Starry Night",
+    "The Birth of Venus",
+    "The Persistence of Memory",
+    "Water Lilies",
+    "The Last Supper",
+    "The Scream",
+    "Las Meninas",
+)
 
 // todo document - more than 4 action handler lambdas -> use message handler
 @Composable
@@ -192,7 +206,8 @@ private fun LazyListScope.paginateableContent(
                     Modifier.fillParentMaxSize()
                 } else {
                     Modifier.fillParentMaxWidth()
-                },
+                }.padding(MaterialTheme.paddings.normal),
+                imageVector = Icons.Default.Error,
                 message = state.exception.displayMessage,
                 onRetry = if (paginateable.data.isEmpty()) onReload else onLoadNext
             )
@@ -213,7 +228,9 @@ private fun LazyListScope.paginateableContent(
         ) {
             if (paginateable.data.isEmpty()) {
                 DisplayMessage(
-                    modifier = Modifier.fillParentMaxSize(),
+                    modifier = Modifier
+                        .padding(MaterialTheme.paddings.normal)
+                        .fillParentMaxSize(),
                     message = stringResource(Res.string.artworks_no_data_message),
                     onRetry = onRefresh
                 )
@@ -223,7 +240,7 @@ private fun LazyListScope.paginateableContent(
 }
 
 private fun LazyListScope.shimmerItems() {
-    repeat(10) { i ->
+    repeat(ShimmerTitles.size) { i ->
         item {
             val infiniteTransition = rememberInfiniteTransition()
             val alpha by infiniteTransition.animateFloat(
@@ -240,7 +257,7 @@ private fun LazyListScope.shimmerItems() {
 
             ShimmerCard(
                 modifier = Modifier.graphicsLayer { this.alpha = alpha },
-                title = Title("Title $i")
+                title = Title(ShimmerTitles[i])
             )
         }
     }
