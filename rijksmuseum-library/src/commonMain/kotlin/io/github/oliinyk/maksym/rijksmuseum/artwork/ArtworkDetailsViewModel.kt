@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.viewmodel.scope.ScopeViewModel
 
 internal class ArtworkDetailsViewModel(
-    key: ArtworkDetailsDestination,
     initializer: Initializer<ArtworkDetailsViewState, LoadCommand>,
     shareOptions: ShareOptions,
 ) : ScopeViewModel() {
@@ -20,9 +19,9 @@ internal class ArtworkDetailsViewModel(
         initializer = initializer,
         updater = { message, state -> state.update(message) },
         resolver = { snapshot, ctx ->
-            snapshot.commands.forEach { _ ->
+            snapshot.commands.forEach { command ->
                 ctx effect {
-                    Message.OnDataLoaded(getArtworkUseCase.getArtwork(key.id))
+                    Message.OnDataLoaded(getArtworkUseCase.getArtwork(command.artworkId))
                 }
             }
         },

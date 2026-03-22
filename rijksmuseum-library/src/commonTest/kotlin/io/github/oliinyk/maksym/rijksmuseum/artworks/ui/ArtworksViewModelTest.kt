@@ -48,14 +48,14 @@ class ArtworksViewModelTest : KoinTest {
 
     private val testModule = module {
         val api = TestRijksmuseumApi(
-                artworksDetails = mapOf(artwork.url to artwork.right()),
-                searchResponses = mapOf(
-                    BuildConfig.InitialPageUrl to PaginatedIds(
-                        next = null,
-                        ids = listOf(artwork.url)
-                    ).right()
-                )
+            artworksDetails = mapOf(artwork.url to artwork.right()),
+            searchResponses = mapOf(
+                BuildConfig.InitialPageUrl to PaginatedIds(
+                    next = null,
+                    ids = listOf(artwork.url)
+                ).right()
             )
+        )
 
         single { SearchUseCase(SearchRepositoryImpl(api = api)) }
         single(named<Artwork>()) { ValueHolder<Artwork>() }
