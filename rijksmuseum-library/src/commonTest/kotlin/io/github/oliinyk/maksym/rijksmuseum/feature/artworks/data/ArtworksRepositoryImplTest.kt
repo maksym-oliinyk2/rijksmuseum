@@ -7,7 +7,6 @@ import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Page
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Paging
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
@@ -44,13 +43,13 @@ class ArtworksRepositoryImplTest {
 
         val artwork1 = Artwork(
             url = item1Id,
-            title = NonEmptyString("The Night Watch"),
+            title = "The Night Watch",
             primaryImage = UrlFrom("https://lh3.googleusercontent.com/NF7Z_E-S_6e-M-p8Bf8Bf8B"),
             linguisticObjects = listOf(),
         )
         val artwork2 = Artwork(
             url = item2Id,
-            title = NonEmptyString("The Milkmaid"),
+            title = "The Milkmaid",
             primaryImage = UrlFrom("https://lh3.googleusercontent.com/c6_9-f1_y-p8Bf8Bf8Bf8B"),
             linguisticObjects = listOf(),
         )
@@ -59,7 +58,7 @@ class ArtworksRepositoryImplTest {
         val artworksDetails = searchResponse.items.associate { item ->
             item.id to Artwork(
                 url = item.id,
-                title = NonEmptyString("Title for ${item.id}"),
+                title = "Title for ${item.id}",
                 primaryImage = UrlFrom("https://image.url/${item.id}"),
                 linguisticObjects = listOf(),
             )
@@ -106,7 +105,7 @@ class ArtworksRepositoryImplTest {
         val artworksDetails = initialSearchResponse.items.associate { item ->
             item.id to Artwork(
                 url = item.id,
-                title = NonEmptyString("Title for ${item.id}"),
+                title = "Title for ${item.id}",
                 primaryImage = UrlFrom("https://image.url/${item.id}"),
                 linguisticObjects = listOf(),
             )
@@ -190,19 +189,19 @@ class ArtworksRepositoryImplTest {
             val artworksDetails = mapOf(
                 item1Id to Artwork(
                     url = item1Id,
-                    title = NonEmptyString("Title for $item1Id"),
+                    title = "Title for $item1Id",
                     primaryImage = UrlFrom("https://image.url/item-1"),
                     linguisticObjects = listOf()
                 ),
                 item2Id to Artwork(
                     url = item2Id,
-                    title = NonEmptyString("Title for $item2Id"),
+                    title = "Title for $item2Id",
                     primaryImage = UrlFrom("https://image.url/item-2"),
                     linguisticObjects = listOf()
                 ),
                 item3Id to Artwork(
                     url = item3Id,
-                    title = NonEmptyString("Title for $item3Id"),
+                    title = "Title for $item3Id",
                     primaryImage = UrlFrom("https://image.url/item-3"),
                     linguisticObjects = listOf()
                 )
@@ -276,19 +275,19 @@ class ArtworksRepositoryImplTest {
         val artworksDetails = mapOf(
             item1Id to Artwork(
                 url = item1Id,
-                title = NonEmptyString("Title for $item1Id"),
+                title = "Title for $item1Id",
                 primaryImage = UrlFrom("https://image.url/item-1"),
                 linguisticObjects = listOf()
             ),
             item2Id to Artwork(
                 url = item2Id,
-                title = NonEmptyString("Title for $item2Id"),
+                title = "Title for $item2Id",
                 primaryImage = UrlFrom("https://image.url/item-2"),
                 linguisticObjects = listOf()
             ),
             item3Id to Artwork(
                 url = item3Id,
-                title = NonEmptyString("Title for $item3Id"),
+                title = "Title for $item3Id",
                 primaryImage = UrlFrom("https://image.url/item-3"),
                 linguisticObjects = listOf()
             )
@@ -379,7 +378,7 @@ class ArtworksRepositoryImplTest {
         val artworksDetails = mapOf(
             item1Id to Artwork(
                 url = item1Id,
-                title = NonEmptyString("Title"),
+                title = "Title",
                 primaryImage = null,
                 linguisticObjects = listOf()
             )

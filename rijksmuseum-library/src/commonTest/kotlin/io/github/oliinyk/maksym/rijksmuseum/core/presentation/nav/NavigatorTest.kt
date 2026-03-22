@@ -1,7 +1,6 @@
 package io.github.oliinyk.maksym.rijksmuseum.core.presentation.nav
 
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.presentation.ArtworkDetailsDestination
 import io.github.oliinyk.maksym.rijksmuseum.feature.artworks.presentation.ArtworksDestination
@@ -13,7 +12,7 @@ class NavigatorTest {
 
     private val testArtwork = Artwork(
         url = UrlFrom("https://example.com/1"),
-        title = NonEmptyString("Artwork 1"),
+        title = "Artwork 1",
         primaryImage = UrlFrom("https://example.com/1.jpg"),
         linguisticObjects = listOf()
     )
@@ -56,7 +55,7 @@ class NavigatorTest {
     fun when_navigateToDetails_multiple_times_then_all_destinations_added() {
         val backStack = mutableListOf<androidx.navigation3.runtime.NavKey>(ArtworksDestination)
         val navigator = Navigator(backStack)
-        val artwork2 = testArtwork.copy(url = UrlFrom("https://example.com/2"), title = NonEmptyString("Artwork 2"))
+        val artwork2 = testArtwork.copy(url = UrlFrom("https://example.com/2"), title = "Artwork 2")
 
         navigator.navigateToDetails(testArtwork)
         navigator.navigateToDetails(artwork2)

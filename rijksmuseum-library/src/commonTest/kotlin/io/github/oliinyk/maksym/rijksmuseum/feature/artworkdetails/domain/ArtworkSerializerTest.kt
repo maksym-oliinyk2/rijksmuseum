@@ -5,7 +5,6 @@ import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.ArtworkSerializer
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -17,12 +16,12 @@ class ArtworkSerializerTest {
     fun when_serialize_and_deserialize_artwork_then_equal() {
         val artwork = Artwork(
             url = UrlFrom("https://example.com"),
-            title = NonEmptyString("Title"),
+            title = "Title",
             primaryImage = UrlFrom("https://example.com/image.jpg"),
             linguisticObjects = listOf(
                 LinguisticObject(
                     type = GettyAatType.Description,
-                    descriptions = NonEmptyList.of(NonEmptyString("Description"))
+                    descriptions = NonEmptyList.of("Description")
                 )
             )
         )
@@ -38,7 +37,7 @@ class ArtworkSerializerTest {
     fun when_serialize_and_deserialize_artwork_with_nulls_then_equal() {
         val artwork = Artwork(
             url = UrlFrom("https://example.com"),
-            title = NonEmptyString("Title"),
+            title = "Title",
             primaryImage = null,
             linguisticObjects = emptyList()
         )

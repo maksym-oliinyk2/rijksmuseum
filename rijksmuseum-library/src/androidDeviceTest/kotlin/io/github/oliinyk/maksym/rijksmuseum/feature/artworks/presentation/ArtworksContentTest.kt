@@ -8,7 +8,6 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.DisplayMessageTag
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.Paginateable
@@ -27,7 +26,7 @@ class ArtworksContentTest {
         val artworks = List(TestItemsCount) { i ->
             Artwork(
                 url = UrlFrom("https://example.com/$i"),
-                title = NonEmptyString("Artwork $i"),
+                title = "Artwork $i",
                 primaryImage = UrlFrom("https://example.com/$i.jpg"),
                 linguisticObjects = listOf()
             )
@@ -45,8 +44,8 @@ class ArtworksContentTest {
         }
 
         artworks.forEach { artwork ->
-            onNodeWithTag(ArtworksScrollContainerTag).performScrollToNode(hasTestTag(artwork.title.value))
-            onNodeWithTag(artwork.title.value).assertExists()
+            onNodeWithTag(ArtworksScrollContainerTag).performScrollToNode(hasTestTag(artwork.title))
+            onNodeWithTag(artwork.title).assertExists()
         }
     }
 

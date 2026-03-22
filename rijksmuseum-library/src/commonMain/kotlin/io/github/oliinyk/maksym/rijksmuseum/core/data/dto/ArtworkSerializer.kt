@@ -1,12 +1,10 @@
 package io.github.oliinyk.maksym.rijksmuseum.core.data.dto
 
-import arrow.core.NonEmptyList
 import arrow.core.toNonEmptyListOrNull
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Description
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject
-import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import kotlinx.serialization.KSerializer
@@ -17,26 +15,16 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-internal object NonEmptyStringSerializer : KSerializer<NonEmptyString> {
-    override val descriptor: SerialDescriptor = String.serializer().descriptor
-
-    override fun deserialize(decoder: Decoder): NonEmptyString = NonEmptyString(decoder.decodeString())
-
-    override fun serialize(encoder: Encoder, value: NonEmptyString) {
-        encoder.encodeString(value.value)
-    }
-}
-
-internal object NonEmptyListSerializer : KSerializer<NonEmptyList<Description>> {
-    private val delegate = ListSerializer(NonEmptyStringSerializer)
+internal object NonEmptyListSerializer : KSerializer<List<Description>> {
+    private val delegate = ListSerializer(String.serializer())
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun deserialize(decoder: Decoder): NonEmptyList<Description> =
+    override fun deserialize(decoder: Decoder): List<Description> =
         decoder.decodeSerializableValue(delegate).toNonEmptyListOrNull()
             ?: throw IllegalArgumentException("Empty list is not allowed for NonEmptyList")
 
-    override fun serialize(encoder: Encoder, value: NonEmptyList<Description>) {
-        encoder.encodeSerializableValue(delegate, value.all)
+    override fun serialize(encoder: Encoder, value: List<Description>) {
+        encoder.encodeSerializableValue(delegate, value)
     }
 }
 
@@ -45,7 +33,7 @@ private data class LinguisticObjectSurrogate(
     @Serializable(with = GettyAatTypeSerializer::class)
     val type: GettyAatType?,
     @Serializable(with = NonEmptyListSerializer::class)
-    val descriptions: NonEmptyList<Description>,
+    val descriptions: List<Description>,
 )
 
 internal object LinguisticObjectSerializer : KSerializer<LinguisticObject> {
@@ -71,7 +59,6 @@ internal object LinguisticObjectSerializer : KSerializer<LinguisticObject> {
 internal data class ArtworkSurrogate(
     @Serializable(with = UrlSerializer::class)
     val url: Url,
-    @Serializable(with = NonEmptyStringSerializer::class)
     val title: Title,
     @Serializable(with = UrlSerializer::class)
     val primaryImage: Url?,
