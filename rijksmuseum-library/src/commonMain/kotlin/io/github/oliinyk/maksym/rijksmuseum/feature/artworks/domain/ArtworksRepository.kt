@@ -14,7 +14,8 @@ public interface ArtworksRepository {
      * Fetches a page of artworks according to the given [paging] state.
      *
      * @param paging Describes how many items have already been loaded and how many to fetch next.
-     * @return [arrow.core.Either.Right] with a [Page] of [Artwork] items on success, or [arrow.core.Either.Left] with an [AppException] on failure.
+     * @return [arrow.core.Either.Right] with a [Page] of [Artwork] items on success, or [arrow.core.Either.Left] with an [AppException]
+     * on failure.
      */
     public suspend fun fetchArtworks(paging: Paging): Either<AppException, Page<Artwork>>
 }
