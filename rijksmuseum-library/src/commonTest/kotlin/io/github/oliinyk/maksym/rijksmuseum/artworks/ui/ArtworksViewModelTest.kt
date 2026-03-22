@@ -2,21 +2,28 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 
 import androidx.navigation3.runtime.NavKey
 import app.cash.turbine.turbineScope
+import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsDestination
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.SearchRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksCommand.LoadCommand
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paginateable
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.Paging
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.toLoading
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.toRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.ui.nav.Navigator
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flowOf
@@ -36,6 +43,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ArtworksViewModelTest : KoinTest {
 
     private val artwork = Artwork(
@@ -59,7 +67,7 @@ class ArtworksViewModelTest : KoinTest {
         single { SearchUseCase(SearchRepositoryImpl(api = api)) }
         single { Navigator(mutableListOf()) }
         single { ShareOptions(SharingStarted.Lazily, 1u) }
-        factory { ArtworksViewModel(ArtworksViewState.Initial(), get()) }
+        factory { ArtworksViewModel(Initializer(ArtworksViewState(), LoadCommand(Paging(0, 1))), get()) }
     }
 
     @BeforeTest
@@ -121,6 +129,142 @@ class ArtworksViewModelTest : KoinTest {
             // state didn't change after navigation
             assertEquals(viewState, states.awaitItem())
             states.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_refreshes_artworks() = runTest {
+        val initialState = ArtworksViewState(artworks = Paginateable.idleList())
+        declare {
+            ArtworksViewModel(Initializer(initialState), get())
+        }
+        val viewModel = get<ArtworksViewModel>()
+        val messages = Channel<Message>(0)
+        val states = viewModel(messages.receiveAsFlow())
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            assertEquals(initialState, actualStates.awaitItem())
+
+            messages.send(Message.OnRefresh)
+
+            assertEquals(initialState.copy(artworks = initialState.artworks.toRefreshing()), actualStates.awaitItem())
+            assertEquals(ArtworksViewState(artworks = Paginateable.idleList(listOf(artwork))), actualStates.awaitItem())
+
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_reloads_artworks() = runTest {
+        val initialState = ArtworksViewState(artworks = Paginateable.idleList(listOf(artwork)))
+        declare {
+            ArtworksViewModel(Initializer(initialState), get())
+        }
+        val viewModel = get<ArtworksViewModel>()
+        val messages = Channel<Message>()
+        val states = viewModel(messages.receiveAsFlow())
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            assertEquals(initialState, actualStates.awaitItem())
+
+            messages.send(Message.OnReload)
+
+            assertEquals(initialState.copy(artworks = initialState.artworks.toLoading()), actualStates.awaitItem())
+            assertEquals(initialState, actualStates.awaitItem())
+
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_loads_next_page() = runTest {
+        val artwork2 = artwork.copy(url = UrlFrom("https://data.rijksmuseum.nl/api/en/collection/2"))
+        val nextUrl = UrlFrom("https://data.rijksmuseum.nl/api/en/collection?page=2")
+
+        val api = TestRijksmuseumApi(
+            artworksDetails = mapOf(
+                artwork.url to artwork.right(),
+                artwork2.url to artwork2.right()
+            ),
+            searchResponses = mapOf(
+                BuildConfig.InitialPageUrl to PaginatedIds(
+                    next = nextUrl,
+                    ids = listOf(artwork.url)
+                ).right(),
+                nextUrl to PaginatedIds(
+                    next = null,
+                    ids = listOf(artwork2.url)
+                ).right()
+            )
+        )
+
+        declare {
+            SearchUseCase(SearchRepositoryImpl(api = api))
+        }
+
+        val viewModel = get<ArtworksViewModel>()
+        val messages = Channel<Message>()
+        val states = viewModel(messages.receiveAsFlow())
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            // Initial load
+            assertEquals(ArtworksViewState(Paginateable.loadingList()), actualStates.awaitItem())
+            assertEquals(
+                ArtworksViewState(Paginateable(listOf(artwork), Paginateable.Idle, hasMore = true)),
+                actualStates.awaitItem()
+            )
+            messages.send(Message.OnLoadNext)
+
+            // We expect LoadingNext state
+            assertEquals(
+                ArtworksViewState(Paginateable(listOf(artwork), Paginateable.LoadingNext, hasMore = true)),
+                actualStates.awaitItem()
+            )
+            // Then Idle state with more data
+            assertEquals(
+                ArtworksViewState(Paginateable(listOf(artwork, artwork2), Paginateable.Idle, hasMore = false)),
+                actualStates.awaitItem()
+            )
+
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_handles_data_loaded_error() = runTest {
+        val error = AppException("Error")
+
+        declare {
+            val api = TestRijksmuseumApi(
+                artworksDetails = mapOf(),
+                searchResponses = mapOf(BuildConfig.InitialPageUrl to error.left())
+            )
+
+            SearchUseCase(SearchRepositoryImpl(api = api))
+        }
+
+        val viewModel = get<ArtworksViewModel>()
+        val messages = Channel<Message>()
+        val states = viewModel(messages.receiveAsFlow())
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            // Initial load
+            assertEquals(ArtworksViewState(artworks = Paginateable.loadingList()), actualStates.awaitItem())
+            // Exception
+            assertEquals(
+                ArtworksViewState(artworks = Paginateable(listOf(), Paginateable.Exception(error))),
+                actualStates.awaitItem()
+            )
+
+            actualStates.cancelAndConsumeRemainingEvents()
         }
     }
 }

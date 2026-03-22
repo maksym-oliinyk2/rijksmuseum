@@ -6,13 +6,13 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContent
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsContentTag
+import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsRefreshIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsViewState
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
 import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessageTag
-import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicatorTag
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
 import kotlin.test.Test
 
@@ -28,24 +28,6 @@ class ArtworkDetailsContentTest {
         primaryImage = UrlFrom("https://example.com/1.jpg"),
         linguisticObjects = listOf()
     )
-
-    @Test
-    fun when_loading_then_progress_displayed() = runComposeUiTest {
-        val state = ArtworkDetailsViewState(
-            artwork = Loadable(testArtwork, Loadable.Loading)
-        )
-
-        setContent {
-            ArtworkDetailsContent(
-                state = state,
-                onRefresh = {},
-                onReload = {}
-            )
-        }
-
-        onNodeWithTag(ProgressIndicatorTag).assertIsDisplayed()
-        onNodeWithTag(ArtworkDetailsContentTag).assertDoesNotExist()
-    }
 
     @Test
     fun when_idle_with_artwork_then_details_displayed() = runComposeUiTest {
@@ -82,5 +64,22 @@ class ArtworkDetailsContentTest {
         onNodeWithTag(DisplayMessageTag)
             .assertIsDisplayed()
             .assertTextEquals(errorMessage)
+    }
+
+    @Test
+    fun when_refreshing_then_progress_displayed() = runComposeUiTest {
+        val state = ArtworkDetailsViewState(
+            artwork = Loadable(testArtwork, Loadable.Refreshing)
+        )
+
+        setContent {
+            ArtworkDetailsContent(
+                state = state,
+                onRefresh = {},
+                onReload = {}
+            )
+        }
+
+        onNodeWithTag(ArtworkDetailsRefreshIndicatorTag).assertIsDisplayed()
     }
 }

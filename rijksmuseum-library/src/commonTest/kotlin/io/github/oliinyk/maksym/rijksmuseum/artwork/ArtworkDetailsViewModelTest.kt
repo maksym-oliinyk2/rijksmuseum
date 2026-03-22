@@ -1,19 +1,23 @@
 package io.github.oliinyk.maksym.rijksmuseum.artwork
 
 import app.cash.turbine.turbineScope
+import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ArtworkRepository
 import io.github.oliinyk.maksym.rijksmuseum.artwork.data.ArtworkRepositoryImpl
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.GetArtworkUseCase
 import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Title
+import io.github.oliinyk.maksym.rijksmuseum.artworks.AppException
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
+import io.github.oliinyk.maksym.rijksmuseum.ui.model.toException
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -82,6 +86,69 @@ class ArtworkDetailsViewModelTest : KoinTest {
             val actualStates = states.testIn(this)
 
             assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_refreshes_artwork() = runTest {
+        val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
+        val messages = MutableSharedFlow<Message>()
+        val states = viewModel(messages)
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            messages.emit(Message.OnRefresh)
+
+            assertEquals(ArtworkDetailsViewState(Loadable(artwork, Loadable.Refreshing)), actualStates.awaitItem())
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_reloads_artwork() = runTest {
+        val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
+        val messages = MutableSharedFlow<Message>()
+        val states = viewModel(messages)
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            messages.emit(Message.OnReload)
+
+            assertEquals(ArtworkDetailsViewState(Loadable(artwork, Loadable.Loading)), actualStates.awaitItem())
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            actualStates.cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun test_view_model_handles_data_loaded_error() = runTest {
+        val viewModel = get<ArtworkDetailsViewModel> { parametersOf(destination) }
+        val messages = MutableSharedFlow<Message>()
+        val states = viewModel(messages)
+
+        turbineScope {
+            val actualStates = states.testIn(this)
+
+            assertEquals(ArtworkDetailsViewState(Loadable.idleSingle(artwork)), actualStates.awaitItem())
+
+            val error = AppException("Error")
+            messages.emit(Message.OnDataLoaded(error.left()))
+
+            assertEquals(
+                ArtworkDetailsViewState(Loadable.idleSingle(artwork).toException(error)),
+                actualStates.awaitItem()
+            )
+
             actualStates.cancelAndConsumeRemainingEvents()
         }
     }

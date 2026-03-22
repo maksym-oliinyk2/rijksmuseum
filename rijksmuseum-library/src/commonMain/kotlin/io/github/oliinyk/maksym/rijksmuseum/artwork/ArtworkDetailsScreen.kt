@@ -38,7 +38,6 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.data.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.artworks.displayMessage
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.DisplayMessage
-import io.github.oliinyk.maksym.rijksmuseum.ui.common.ProgressIndicator
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.contentPaddingValues
 import io.github.oliinyk.maksym.rijksmuseum.ui.common.toImageRequest
 import io.github.oliinyk.maksym.rijksmuseum.ui.model.Loadable
@@ -51,6 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 
 internal const val ArtworkDetailsScreenTag = "Artwork details screen"
 internal const val ArtworkDetailsContentTag = "Artwork details content"
+internal const val ArtworkDetailsRefreshIndicatorTag = "Artwork details refresh indicator"
 
 private val TopBarImageHeight = 300.dp
 
@@ -102,7 +102,9 @@ internal fun ArtworkDetailsContent(
             )
 
             PullRefreshIndicator(
-                modifier = Modifier.statusBarsPadding(),
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .testTag(ArtworkDetailsRefreshIndicatorTag),
                 refreshing = state.artwork.isRefreshing,
                 state = refreshState,
             )
@@ -122,9 +124,7 @@ private fun ArtworkLoadableContent(
             onRetry = onReload
         )
 
-        Loadable.Loading -> ProgressIndicator(modifier = Modifier.fillMaxSize())
-
-        Loadable.Idle, Loadable.Refreshing -> {
+        Loadable.Loading, Loadable.Idle, Loadable.Refreshing -> {
             ArtworkDetails(state.data)
         }
     }
