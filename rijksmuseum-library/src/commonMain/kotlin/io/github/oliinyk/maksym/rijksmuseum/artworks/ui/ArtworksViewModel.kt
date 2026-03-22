@@ -3,6 +3,7 @@ package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
 import androidx.lifecycle.viewModelScope
 import io.github.oliinyk.maksym.rijksmuseum.artworks.domain.SearchUseCase
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksCommand.LoadCommand
+import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksCommand.NavigateToDetails
 import io.github.xlopec.tea.core.Component
 import io.github.xlopec.tea.core.Initializer
 import io.github.xlopec.tea.core.ResolveCtx
@@ -43,7 +44,7 @@ internal class ArtworksViewModel(
                     Message.OnDataLoaded(searchUseCase.searchArtworks(command.paging))
                 }
 
-                is ArtworksCommand.NavigateToDetails -> ctx sideEffect {
+                is NavigateToDetails -> ctx sideEffect {
                     withContext(Dispatchers.Main.immediate) {
                         navigator.navigateToDetails(command.artwork)
                     }

@@ -14,7 +14,7 @@ import org.koin.viewmodel.scope.viewModelScope
 internal val DetailsModule = module {
     viewModel { params ->
         val destination = params.get<ArtworkDetailsDestination>()
-        ArtworkDetailsViewModel(destination,ArtworkDetailsViewState.Initial(destination.id), get())
+        ArtworkDetailsViewModel(destination, ArtworkDetailsViewState.Initial(destination.id), get())
     }
 
     viewModelScope {
