@@ -60,9 +60,27 @@ class PaginateableTest {
 
     @Test
     fun when_hasMore_false_or_not_idle_then_canLoadNextForIndex_false() {
-        assertFalse(Paginateable(data = items, state = Paginateable.Idle, hasMore = false).canLoadNextForIndex(index = 2, preloadOffset = 1))
-        assertFalse(Paginateable(data = items, state = Paginateable.Loading, hasMore = true).canLoadNextForIndex(index = 2, preloadOffset = 1))
-        assertFalse(Paginateable(data = items, state = Paginateable.LoadingNext, hasMore = true).canLoadNextForIndex(index = 2, preloadOffset = 1))
+        assertFalse(
+            Paginateable(
+                data = items,
+                state = Paginateable.Idle,
+                hasMore = false
+            ).canLoadNextForIndex(index = 2, preloadOffset = 1)
+        )
+        assertFalse(
+            Paginateable(
+                data = items,
+                state = Paginateable.Loading,
+                hasMore = true
+            ).canLoadNextForIndex(index = 2, preloadOffset = 1)
+        )
+        assertFalse(
+            Paginateable(
+                data = items,
+                state = Paginateable.LoadingNext,
+                hasMore = true
+            ).canLoadNextForIndex(index = 2, preloadOffset = 1)
+        )
     }
 
     @Test
