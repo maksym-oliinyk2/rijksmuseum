@@ -41,7 +41,7 @@ internal data class ArtworksViewState(
     val artworks: Paginateable<Artwork> = Paginateable.loadingList(),
 ) {
     companion object {
-        const val StartPreloadBeforeItems = 3
+        const val StartPreloadBeforeItems = 4
         fun Initial() = Initializer(ArtworksViewState(), LoadCommand(Paging.FirstPage))
     }
 }
