@@ -63,7 +63,7 @@ class AppTest {
         )
 
         setContent {
-            App { backStack ->
+            RijksmuseumApp { backStack ->
                 KoinConfiguration {
                     modules(TestAppModule(testApi, backStack), SearchModule, DetailsModule)
                 }

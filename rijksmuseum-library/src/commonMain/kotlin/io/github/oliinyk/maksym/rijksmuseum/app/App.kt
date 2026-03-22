@@ -37,7 +37,7 @@ private val SavedStateConfig = SavedStateConfiguration {
 }
 
 @Composable
-internal fun App(
+internal fun RijksmuseumApp(
     logLevel: Level = if (BuildConfig.Debug) Level.DEBUG else Level.NONE,
     configurationProvider: (NavBackStack<NavKey>) -> KoinConfiguration,
 ) {

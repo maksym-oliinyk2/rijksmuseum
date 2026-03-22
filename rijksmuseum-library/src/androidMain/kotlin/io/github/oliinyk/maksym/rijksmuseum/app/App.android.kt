@@ -5,6 +5,6 @@ import io.ktor.client.engine.cio.CIO
 import org.koin.dsl.koinConfiguration
 
 @Composable
-public fun App() {
-    App { koinConfiguration { modules(AppModule(it, CIO)) } }
+public fun RijksmuseumApp() {
+    RijksmuseumApp { koinConfiguration { modules(AppModule(it, CIO)) } }
 }
