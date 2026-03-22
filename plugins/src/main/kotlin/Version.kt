@@ -10,7 +10,9 @@ data class MajorMinorPatch(
  * * Snapshot - `hash-SNAPSHOT` or just `SNAPSHOT`
  * * Stable - `v1.2.3`
  */
-sealed class Version
+sealed class Version {
+    abstract val versionCode: Int
+}
 
 data class Snapshot(
     val commit: String?,
@@ -18,6 +20,9 @@ data class Snapshot(
     init {
         require(commit == null || commit.length >= CommitHashLength) { "Invalid hash: $commit" }
     }
+
+    override val versionCode: Int
+        get() = 1
 }
 
 data class Stable(
@@ -29,6 +34,9 @@ data class Stable(
             rawTag: String,
         ) = Stable(rawTag, StableRegexp.groupValues(rawTag).toMajorMinorPatch())
     }
+
+    override val versionCode: Int
+        get() = mainVersion.major * 10000 + mainVersion.minor * 100 + mainVersion.patch
 }
 
 fun Version(

@@ -15,7 +15,7 @@ val tag: String?
 val commitSha: String?
     get() = getenvSafe("GITHUB_SHA")
 
-val libraryVersion: Version
+val projectVersion: Version
     get() = Version(tag, commitSha)
 
 val Project.detektConfig: File

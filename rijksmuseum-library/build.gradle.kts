@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.oliinyk.maksym.rijksmuseum"
-version = libraryVersion.toVersionName()
+version = projectVersion.toVersionName()
 
 kotlin {
     explicitApi()
@@ -156,7 +156,7 @@ buildConfig {
     useKotlinOutput { internalVisibility = true }
 
     val debugEnabled = project.findProperty("forceDebug")?.toString()
-        ?.toBoolean() == true || libraryVersion.isSnapshot
+        ?.toBoolean() == true || projectVersion.isSnapshot
 
     logger.log(LogLevel.LIFECYCLE, "Debug enabled: $debugEnabled")
     buildConfigField("kotlin.Boolean", "Debug", "$debugEnabled")
