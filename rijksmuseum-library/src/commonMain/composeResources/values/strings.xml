@@ -6,6 +6,7 @@
     <string name="artworks_action_retry">Opnieuw proberen</string>
 
     <string name="artwork_details_no_data">Geen gegevens beschikbaar</string>
+    <string name="artwork_details_navigate_back">Terug navigeren</string>
 
     <string name="getty_aat_type_inscription">Inscriptie</string>
     <string name="getty_aat_type_notes">Notities</string>

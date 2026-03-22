@@ -51,6 +51,8 @@ import io.github.oliinyk.maksym.rijksmuseum.core.presentation.model.isRefreshing
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.RijksmuseumTheme
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.theme.paddings
 import io.github.oliinyk.maksym.rijksmuseum.core.presentation.toImageRequest
+import io.github.oliinyk.maksym.rijksmuseum.res.Res
+import io.github.oliinyk.maksym.rijksmuseum.res.artwork_details_navigate_back
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.jetbrains.compose.resources.stringResource
 
@@ -140,7 +142,7 @@ internal fun ArtworkDetailsContent(
                     .align(Alignment.TopStart)
                     .padding(MaterialTheme.paddings.normal),
                 imageVector = Icons.Outlined.Close,
-                contentDescription = "Navigate back",
+                contentDescription = stringResource(Res.string.artwork_details_navigate_back),
                 onClick = onBack,
             )
         }
