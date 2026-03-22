@@ -9,13 +9,13 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 internal fun HttpClient(
     logLevel: LogLevel,
+    logger: Logger,
     engine: HttpClientEngineFactory<HttpClientEngineConfig>,
 ): HttpClient = HttpClient(engine) {
     expectSuccess = true
@@ -40,7 +40,7 @@ internal fun HttpClient(
     }
 
     Logging {
-        logger = Logger.SIMPLE
-        level = logLevel
+        this.logger = logger
+        this.level = logLevel
     }
 }
