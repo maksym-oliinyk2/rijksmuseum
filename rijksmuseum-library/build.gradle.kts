@@ -164,9 +164,9 @@ buildConfig {
     buildConfigField("kotlin.Long", "ConnectTimeoutMs", "5000L")
     buildConfigField("kotlin.Long", "SocketTimeoutMs", "7000L")
     buildConfigField(
-        "io.github.oliinyk.maksym.rijksmuseum.domain.Url",
+        "io.github.oliinyk.maksym.rijksmuseum.core.domain.Url",
         "InitialPageUrl",
-        "io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom(\"https://data.rijksmuseum.nl/search/collection\")"
+        "io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom(\"https://data.rijksmuseum.nl/search/collection\")"
     )
 }
 
