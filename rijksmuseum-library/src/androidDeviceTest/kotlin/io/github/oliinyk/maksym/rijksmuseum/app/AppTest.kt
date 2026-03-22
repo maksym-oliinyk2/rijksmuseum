@@ -20,8 +20,8 @@ import io.github.oliinyk.maksym.rijksmuseum.artworks.data.PaginatedIds
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.list.TestRijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.ArtworksScrollContainerTag
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
 import io.github.oliinyk.maksym.rijksmuseum.domain.UrlFrom
+import io.github.oliinyk.maksym.rijksmuseum.ui.nav.Navigator
 import io.github.xlopec.tea.core.ShareOptions
 import kotlinx.coroutines.flow.SharingStarted
 import org.koin.core.module.Module

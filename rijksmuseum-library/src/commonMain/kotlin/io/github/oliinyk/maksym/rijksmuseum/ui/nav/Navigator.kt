@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.artworks.ui
+package io.github.oliinyk.maksym.rijksmuseum.ui.nav
 
 import androidx.navigation3.runtime.NavKey
 import io.github.oliinyk.maksym.rijksmuseum.artwork.ArtworkDetailsDestination

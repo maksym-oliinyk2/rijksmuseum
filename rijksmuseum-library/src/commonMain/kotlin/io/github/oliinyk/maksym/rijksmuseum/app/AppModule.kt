@@ -9,7 +9,7 @@ import io.github.oliinyk.maksym.rijksmuseum.artwork.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.artworks.SearchModule
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApi
 import io.github.oliinyk.maksym.rijksmuseum.artworks.data.RijksmuseumApiImpl
-import io.github.oliinyk.maksym.rijksmuseum.artworks.ui.Navigator
+import io.github.oliinyk.maksym.rijksmuseum.ui.nav.Navigator
 import io.github.xlopec.tea.core.ShareOptions
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
