@@ -1,10 +1,13 @@
 package io.github.oliinyk.maksym.rijksmuseum.core.data
 
 import arrow.core.Either
-import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.ArtworksResponse
-import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.DigitalObject
-import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.DigitalObjectDetails
-import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse.VisualItemDetails
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse.ArtworksResponse
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse.DigitalObject
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse.DigitalObjectDetails
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse.VisualItemDetails
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.linguisticObjects
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.title
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url

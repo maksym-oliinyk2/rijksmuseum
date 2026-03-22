@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.core.data
+package io.github.oliinyk.maksym.rijksmuseum.core.data.dto
 
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Url
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.UrlFrom

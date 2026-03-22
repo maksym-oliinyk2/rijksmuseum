@@ -1,4 +1,4 @@
-package io.github.oliinyk.maksym.rijksmuseum.core.data
+package io.github.oliinyk.maksym.rijksmuseum.core.data.dto
 
 import arrow.core.toNonEmptyListOrNull
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Description

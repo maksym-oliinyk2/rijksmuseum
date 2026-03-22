@@ -26,4 +26,3 @@ internal fun AppModule(
     single { ShareOptions(SharingStarted.Lazily, 1u) }
     single { RijksmuseumApiImpl(get()) }.bind(RijksmuseumApi::class)
 }
-

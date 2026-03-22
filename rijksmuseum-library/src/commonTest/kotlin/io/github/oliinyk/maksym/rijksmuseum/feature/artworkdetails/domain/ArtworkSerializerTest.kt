@@ -1,7 +1,7 @@
 package io.github.oliinyk.maksym.rijksmuseum.feature.artworkdetails.domain
 
 import arrow.core.NonEmptyList
-import io.github.oliinyk.maksym.rijksmuseum.core.data.ArtworkSerializer
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.ArtworkSerializer
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.GettyAatType
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.LinguisticObject

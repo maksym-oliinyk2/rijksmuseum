@@ -3,8 +3,8 @@ package io.github.oliinyk.maksym.rijksmuseum.feature.artworks.data
 import arrow.core.left
 import arrow.core.right
 import io.github.oliinyk.maksym.rijksmuseum.BuildConfig.InitialPageUrl
-import io.github.oliinyk.maksym.rijksmuseum.core.data.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.core.data.PaginatedIds
+import io.github.oliinyk.maksym.rijksmuseum.core.data.dto.HumanMadeObjectResponse
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.AppException
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.Artwork
 import io.github.oliinyk.maksym.rijksmuseum.core.domain.NonEmptyString
