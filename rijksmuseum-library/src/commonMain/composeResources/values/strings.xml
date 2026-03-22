@@ -1,5 +1,5 @@
 <resources>
-    <string name="exception_unknown">Onbekende fout</string>
+    <string name="exception_unknown">Er is iets misgegaan.</string>
 
     <string name="artworks_no_data_message">Geen kunstwerken gevonden</string>
     <string name="artworks_image_description">Afbeelding van het kunstwerk</string>

@@ -8,6 +8,7 @@ import io.github.oliinyk.maksym.rijksmuseum.app.App
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.RijksmuseumTheme)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
