@@ -34,22 +34,3 @@ public data class LinguisticObject(
     val type: GettyAatType,
     val descriptions: List<Description>,
 )
-
-// This should be used instead of Title & Description but this crashes when deserializing from Bundle
-// @JvmInline
-// public value class NonEmptyString(
-//    public val value: String
-// ) : CharSequence by value {
-//
-//    public companion object {
-//        public fun createOrNull(
-//            value: String
-//        ): NonEmptyString? = if (isValid(value)) NonEmptyString(value) else null
-//
-//        public fun isValid(s: String): Boolean = s.isNotBlank()
-//    }
-//
-//    init {
-//        require(isValid(value)) { "Cannot be blank" }
-//    }
-// }
